@@ -1,46 +1,46 @@
-const AIX360_SERVER_URL = location.protocol+'//'+location.hostname+(location.port ? ':'+(parseInt(location.port,10)+1): '')+'/';
+const AIX360_SERVER_URL = location.protocol + '//' + location.hostname + (location.port ? ':' + (parseInt(location.port, 10) + 1) : '') + '/';
 console.log('AIX360_SERVER_URL:', AIX360_SERVER_URL);
-const GET_SAMPLE_API = AIX360_SERVER_URL+"sample";
-const GET_CLASSIFICATION_API = AIX360_SERVER_URL+"classification";
-const GET_EXPLAINABLE_CLASSIFICATION_API = AIX360_SERVER_URL+"explainable_classification";
-const OKE_SERVER_URL = location.protocol+'//'+location.hostname+(location.port ? ':'+(parseInt(location.port,10)+2): '')+'/';
+const GET_SAMPLE_API = AIX360_SERVER_URL + "sample";
+const GET_CLASSIFICATION_API = AIX360_SERVER_URL + "classification";
+const GET_EXPLAINABLE_CLASSIFICATION_API = AIX360_SERVER_URL + "explainable_classification";
+const OKE_SERVER_URL = location.protocol + '//' + location.hostname + (location.port ? ':' + (parseInt(location.port, 10) + 2) : '') + '/';
 console.log('OKE_SERVER_URL:', OKE_SERVER_URL);
-const GET_OVERVIEW_API = OKE_SERVER_URL+"overview";
-const GET_ANSWER_API = OKE_SERVER_URL+"answer";
-const GET_ANNOTATION_API = OKE_SERVER_URL+"annotation";
+const GET_OVERVIEW_API = OKE_SERVER_URL + "overview";
+const GET_ANSWER_API = OKE_SERVER_URL + "answer";
+const GET_ANNOTATION_API = OKE_SERVER_URL + "annotation";
 
 var PROCESS_GRAPH = [];
 var COUNTERFACTUAL_SUGGESTION_DICT = {};
 
 const PROCESS_ID = 'my:AIPoweredCreditApprovalSystem';
 var PARAMETER_DICT = {
-	"ExternalRiskEstimate": "Consolidated risk markers", 
-	"MSinceOldestTradeOpen": "Age of oldest account in months", 
-	"MSinceMostRecentTradeOpen": "Age of most recent account in months", 
-	"AverageMInFile": "Average age of accounts in months", 
-	"NumSatisfactoryTrades": "Number of satisfactory accounts", 
-	"NumTrades60Ever2DerogPubRec": "Number of accounts ever delinquent by 60 days or more", 
-	"NumTrades90Ever2DerogPubRec": "Number of accounts ever delinquent by 90 days or more", 
-	"PercentTradesNeverDelq": "Percentage of accounts that were never delinquent", 
-	"MSinceMostRecentDelq": "Months since most recent delinquency", 
-	"MaxDelq2PublicRecLast12M": "Worst delinquency score from last 12 months of public record", 
-	"MaxDelqEver": "Worst delinquency score ever", 
-	"NumTotalTrades": "Total number of accounts", 
-	"NumTradesOpeninLast12M": "Number of accounts opened in last 12 months", 
-	"PercentInstallTrades": "Percentage of accounts that are installment debt", 
-	"MSinceMostRecentInqexcl7days": "Months since most recent credit inquiry not within the last 7 days", 
-	"NumInqLast6M": "Number of credit inquiries in last 6 months", 
-	"NumInqLast6Mexcl7days": "Number of credit inquiries in last 6 months excluding the last 7 days", 
-	"NetFractionRevolvingBurden": "Revolving debt (e.g. credit card) balance as a percentage of credit limit", 
-	"NetFractionInstallBurden": "Installment debt (e.g. car loan) balance as a percentage of original loan amount", 
-	"NumRevolvingTradesWBalance": "Number of revolving debt accounts with a balance", 
-	"NumInstallTradesWBalance": "Number of installment debt accounts with a balance", 
-	"NumBank2NatlTradesWHighUtilization": "Number of accounts with high utilization", 
-	"PercentTradesWBalance": "Percentage of accounts with a balance", 
+	"ExternalRiskEstimate": "Consolidated risk markers",
+	"MSinceOldestTradeOpen": "Age of oldest account in months",
+	"MSinceMostRecentTradeOpen": "Age of most recent account in months",
+	"AverageMInFile": "Average age of accounts in months",
+	"NumSatisfactoryTrades": "Number of satisfactory accounts",
+	"NumTrades60Ever2DerogPubRec": "Number of accounts ever delinquent by 60 days or more",
+	"NumTrades90Ever2DerogPubRec": "Number of accounts ever delinquent by 90 days or more",
+	"PercentTradesNeverDelq": "Percentage of accounts that were never delinquent",
+	"MSinceMostRecentDelq": "Months since most recent delinquency",
+	"MaxDelq2PublicRecLast12M": "Worst delinquency score from last 12 months of public record",
+	"MaxDelqEver": "Worst delinquency score ever",
+	"NumTotalTrades": "Total number of accounts",
+	"NumTradesOpeninLast12M": "Number of accounts opened in last 12 months",
+	"PercentInstallTrades": "Percentage of accounts that are installment debt",
+	"MSinceMostRecentInqexcl7days": "Months since most recent credit inquiry not within the last 7 days",
+	"NumInqLast6M": "Number of credit inquiries in last 6 months",
+	"NumInqLast6Mexcl7days": "Number of credit inquiries in last 6 months excluding the last 7 days",
+	"NetFractionRevolvingBurden": "Revolving debt (e.g. credit card) balance as a percentage of credit limit",
+	"NetFractionInstallBurden": "Installment debt (e.g. car loan) balance as a percentage of original loan amount",
+	"NumRevolvingTradesWBalance": "Number of revolving debt accounts with a balance",
+	"NumInstallTradesWBalance": "Number of installment debt accounts with a balance",
+	"NumBank2NatlTradesWHighUtilization": "Number of accounts with high utilization",
+	"PercentTradesWBalance": "Percentage of accounts with a balance",
 	"RiskPerformance": "Risk Performance",
 }
 for (var k in PARAMETER_DICT)
-	PARAMETER_DICT[k] = annotate_text('my:'+k,PARAMETER_DICT[k]);
+	PARAMETER_DICT[k] = annotate_text('my:' + k, PARAMETER_DICT[k]);
 
 Vue.component('apexchart', VueApexCharts);
 var app = new Vue({
@@ -57,7 +57,7 @@ var app = new Vue({
 					"Understand what you can improve to increase the likelihood that your loan application is going to be accepted.",
 				],
 				'title': `The AI-Powered Credit Approval System`,
-				'summary': `The Bank is using an ${annotate_text('my:neural_network','Artificial Neural Network')} for predicting your ${annotate_text('my:risk_performance','Risk Performance')}, and on top of it the Bank is using the ${annotate_text('my:cem','Contrastive Explanations Method (CEM)')} to suggest avenues for improvement. CEM should help you to detect the things (e.g. amount of time since last credit ${annotate_text('my:inquiry','inquiry')}, average age of accounts) that caused your ${annotate_text('my:loan_application','loan application')} rejection, by falling outside the acceptable range.`,
+				'summary': `The Bank is using an ${annotate_text('my:neural_network', 'Artificial Neural Network')} for predicting your ${annotate_text('my:risk_performance', 'Risk Performance')}, and on top of it the Bank is using the ${annotate_text('my:cem', 'Contrastive Explanations Method (CEM)')} to suggest avenues for improvement. CEM should help you to detect the things (e.g. amount of time since last credit ${annotate_text('my:inquiry', 'inquiry')}, average age of accounts) that caused your ${annotate_text('my:loan_application', 'loan application')} rejection, by falling outside the acceptable range.`,
 			},
 			'contrastiveExplanation': {
 				'factorsCount': 0,
@@ -101,21 +101,23 @@ var app = new Vue({
 		show_overview_modal: false,
 		cards: [],
 		current_card_index: 0,
+		// new stuff
+		server_response: "",
 	},
 	methods: {
 		getCustomerName: function (id) {
-			const names = ['John','Mary','Bob','Judy'];
-			return names[id%names.length];
+			const names = ['John', 'Mary', 'Bob', 'Judy'];
+			return names[id % names.length];
 		},
 		getExplanation: function () {
-			this.loader.value = clip(this.loader.value, this.loader.min,this.loader.max);
+			this.loader.value = clip(this.loader.value, this.loader.min, this.loader.max);
 			this.loader.loading = true;
 
 			const self = this;
 			$.ajax({
 				type: "GET",
 				url: GET_SAMPLE_API,
-				responseType:'application/json',
+				responseType: 'application/json',
 				data: {
 					'idx': this.loader.value,
 				},
@@ -128,7 +130,7 @@ var app = new Vue({
 					$.ajax({
 						type: "GET",
 						url: GET_EXPLAINABLE_CLASSIFICATION_API,
-						responseType:'application/json',
+						responseType: 'application/json',
 						data: {
 							'sample_value': JSON.stringify(sample_value),
 						},
@@ -153,8 +155,8 @@ var app = new Vue({
 			var explanation_dict = this.application.contrastiveExplanation;
 
 			explanation_dict.resultHeader = `Final Decision`;
-			explanation_dict.result = `Your ${PARAMETER_DICT['RiskPerformance']} has been predicted to be <b>${data.output.value}</b>, thus your ${annotate_text('my:loan_application','loan application')} has been <b>${is_approved?'Approved':'Denied'}</b>.`;
-			explanation_dict.factorHeader = `Factors contributing to application ${is_approved?'Approval':'Denial'}`;
+			explanation_dict.result = `Your ${PARAMETER_DICT['RiskPerformance']} has been predicted to be <b>${data.output.value}</b>, thus your ${annotate_text('my:loan_application', 'loan application')} has been <b>${is_approved ? 'Approved' : 'Denied'}</b>.`;
+			explanation_dict.factorHeader = `Factors contributing to application ${is_approved ? 'Approval' : 'Denial'}`;
 
 			explanation_dict.factors = [];
 			// 0 is the normalized sample
@@ -164,23 +166,22 @@ var app = new Vue({
 			var example_difference_length = example_difference.length;
 			var performance_dict = {};
 			COUNTERFACTUAL_SUGGESTION_DICT = {};
-			for (var index in example_difference)
-			{
+			for (var index in example_difference) {
 				if (index == example_difference_length - 1)
 					continue
 				var elem = example_difference[index]
 				var param = contrastive_explanations.columns[index];
 				var val = Math.round(contrastive_explanations.data[0][index]);
-				COUNTERFACTUAL_SUGGESTION_DICT[param] = [null,val];
+				COUNTERFACTUAL_SUGGESTION_DICT[param] = [null, val];
 				if (elem == 0)
 					continue;
 				var expected = Math.round(contrastive_explanations.data[1][index]);
 				if (val == expected)
 					continue;
 				var param_label = PARAMETER_DICT[param];
-				COUNTERFACTUAL_SUGGESTION_DICT[param] = [expected,val];
+				COUNTERFACTUAL_SUGGESTION_DICT[param] = [expected, val];
 				var change_action = val > expected ? "reduced" : "increased";
-				var new_factor = `Your <b>${param_label}</b> should be ${change_action} from ${val.toString().replace('.',',')} to ${expected.toString().replace('.',',')}. `;
+				var new_factor = `Your <b>${param_label}</b> should be ${change_action} from ${val.toString().replace('.', ',')} to ${expected.toString().replace('.', ',')}. `;
 				explanation_dict.factors.push(new_factor);
 				performance_dict[param] = performance[index];
 			}
@@ -188,8 +189,7 @@ var app = new Vue({
 
 			if (is_approved)
 				explanation_dict.factorIncipit = `We observe that your loan application would still have been accepted even if:`;
-			else
-			{
+			else {
 				if (explanation_dict.factorsCount == 1)
 					explanation_dict.factorIncipit = `One thing in your loan application falls outside the acceptable range:`;
 				else
@@ -197,12 +197,11 @@ var app = new Vue({
 			}
 
 			// Add factors relevance
-			if (explanation_dict.factorsCount > 1)
-			{
-				var sorted_performance = Object.entries(performance_dict).sort((b, a) => a[1]-b[1]);
+			if (explanation_dict.factorsCount > 1) {
+				var sorted_performance = Object.entries(performance_dict).sort((b, a) => a[1] - b[1]);
 				console.log('Performance:', sorted_performance);
 				var [sorted_performance_labels, sorted_performance_values] = zip(sorted_performance);
-				sorted_performance_values = sorted_performance_values.map(x=>Math.round(x * 10) / 10);
+				sorted_performance_values = sorted_performance_values.map(x => Math.round(x * 10) / 10);
 				// Display chart
 				// explanation_dict.chartLabels = sorted_performance_labels.map(x=>$(PARAMETER_DICT[x]).text());
 				// explanation_dict.chartData = [sorted_performance_values];
@@ -229,11 +228,11 @@ var app = new Vue({
 						enabled: false
 					},
 					xaxis: {
-						categories: sorted_performance_labels.map(x=>$(PARAMETER_DICT[x]).text()),
+						categories: sorted_performance_labels.map(x => $(PARAMETER_DICT[x]).text()),
 					},
 				};
 				// Display summary
-				explanation_dict.importantFactorHeader = `Relative importance of factors contributing to ${is_approved?'Approval':'Denial'}`
+				explanation_dict.importantFactorHeader = `Relative importance of factors contributing to ${is_approved ? 'Approval' : 'Denial'}`
 				var mostImportant = PARAMETER_DICT[sorted_performance_labels[0]];
 				if (is_approved)
 					explanation_dict.importantFactorIncipit = `While all ${explanation_dict.factorsCount} factors influenced positively on the final decision, the most important is the <b>${mostImportant}</b>.`
@@ -246,7 +245,7 @@ var app = new Vue({
 				'@id': PROCESS_ID,
 				'rdfs:label': 'AI-Powered Credit Approval System',
 				'dbo:abstract': "This Credit Approval System is used to decide whether to give a loan to a Bank customer. The automated decision process used for this Credit Approval System is based on a customized Artificial Neural Network (ANN) obtained by training the ANN on the HELOC dataset. This customized ANN takes as input some information about the Bank customer, and it produces as output an estimate of the risk (of giving a loan to that customer) together with a brief attempt of explanation of the reasons behind the ANN's decision.",
-				'rdfs:seeAlso': ['my:artificial_neural_network','my:fico_heloc_dataset'],
+				'rdfs:seeAlso': ['my:artificial_neural_network', 'my:fico_heloc_dataset'],
 				'@type': 'my:Process',
 				'my:api_list': [
 					{
@@ -265,15 +264,14 @@ var app = new Vue({
 						'rdfs:label': 'get_explainable_classification',
 					},
 				],
-				'my:process_input': [], 
+				'my:process_input': [],
 				'my:process_output': [],
 			};
-			for (var i in sample.label)
-			{
-				var input_id = 'Input_'+i;
+			for (var i in sample.label) {
+				var input_id = 'Input_' + i;
 				var feature_label = sample.label[i];
 				var feature_value = sample.value[i];
-				var feature_id = 'my:'+feature_label;
+				var feature_id = 'my:' + feature_label;
 				jsonld_graph['my:process_input'].push({
 					'@id': feature_id,
 					// 'rdfs:label': $(PARAMETER_DICT[feature_label]).text(),
@@ -283,12 +281,31 @@ var app = new Vue({
 				});
 			}
 			jsonld_graph['my:process_output'].push({
-				'@id': 'my:'+explainable_classification.output.label,
+				'@id': 'my:' + explainable_classification.output.label,
 				// 'rdfs:label': $(PARAMETER_DICT[explainable_classification.output.label]).text(),
 				'my:value': explainable_classification.output.value,
 			});
 			return format_jsonld(jsonld_graph);
 		},
+		getHelloWorld: function () {
+			console.log("helloworld is this");
+
+			$.ajax('http://localhost:8080/ping',
+				{
+					success: (ans) => {
+						console.log(ans);
+						self.server_response = ans;
+						console.log("called server");
+					}
+				}
+			);
+			$.post('http://localhost:8080/graph',
+				{ 'giorgio': { 'a': 1, 'b': 2, 'c': 3 } },
+				(ans) => {
+					console.log(ans);
+					console.log("post completed");
+				})
+		}
 	}
 })
 app.getExplanation();

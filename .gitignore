@@ -20,6 +20,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.python-version
+
+# vs-code
+.vscode
 
 # MAC-only files
 .DS_Store
