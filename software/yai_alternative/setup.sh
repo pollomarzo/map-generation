@@ -35,6 +35,7 @@ pip install -U pip setuptools wheel twine
 # cd ..
 # cd ../..
 pip install -r requirements.txt
+pip install -U wn==0.0.23 # fixing a bug with pywsd
 python3 -m spacy download en_core_web_md
 # python3 -m spacy download en_core_web_sm
 python3 -m nltk.downloader stopwords punkt averaged_perceptron_tagger framenet_v17 wordnet brown
