@@ -3,6 +3,9 @@
 In this repository you'll find the source code and the data used in the experiments of our paper: "From Philosophy to Interfaces: an Explanatory Method and a Tool Inspired by Achinstein’s Theory of Explanation".
 This paper has been presented at [ACM IUI 2021](https://iui.acm.org/2021/), the 26th annual meeting of the intelligent interfaces, in April the 15th.
 
+# What this for is
+As part of my internship, I'm writing the "visualize and test user comprehension" section. This is a WIP. To run the server, go into `software/yai_alternative/graph/server` and run `node server.js` or `nodemon server.js` for reload. Then use the rest of the app normally; when explanations are loaded, a POST request goes to `localhost:8080` to tell node server about what the user is seeing. Once you're ready to see the result (or at any point inbetween) open `localhost:3000`. Graph data is only fetched on page load, so reload the page to see changes. Server can't be restarted in-between. I included a `curl.txt` file with two simple requests for tests so that you don't need to run the whole thing but just node server on 8080 and frontend on 3000.
+
 Installation
 -------
 Before installation, be sure that virtualenv and pip are both available to your local python environment. To install virtualenv run `pip install virtualenv`.

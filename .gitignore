@@ -22,6 +22,8 @@ env.bak/
 venv.bak/
 .python-version
 
+node_modules
+
 # vs-code
 .vscode
 
