@@ -239,6 +239,16 @@ var app = new Vue({
 				else
 					explanation_dict.importantFactorIncipit = `While all ${explanation_dict.factorsCount} factors need to improve as indicated above, the most important to improve first is the <b>${mostImportant}</b>. You now have insight into what you can do to improve your likelihood of being accepted.`
 			}
+			// [NEW] relay relevant info to server
+			$.post('http://localhost:8080/approval',
+				{
+					is_approved: is_approved,
+					factors: explanation_dict.factors
+				},
+				(ans) => {
+					console.log(ans);
+					console.log("post completed");
+				})
 		},
 		buildProcessGraph: function (sample, explainable_classification) {
 			var jsonld_graph = {
@@ -286,25 +296,6 @@ var app = new Vue({
 				'my:value': explainable_classification.output.value,
 			});
 			return format_jsonld(jsonld_graph);
-		},
-		getHelloWorld: function () {
-			console.log("helloworld is this");
-
-			$.ajax('http://localhost:8080/ping',
-				{
-					success: (ans) => {
-						console.log(ans);
-						self.server_response = ans;
-						console.log("called server");
-					}
-				}
-			);
-			$.post('http://localhost:8080/graph',
-				{ 'giorgio': { 'a': 1, 'b': 2, 'c': 3 } },
-				(ans) => {
-					console.log(ans);
-					console.log("post completed");
-				})
 		}
 	}
 })

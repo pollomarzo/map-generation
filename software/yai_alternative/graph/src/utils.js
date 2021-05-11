@@ -37,25 +37,69 @@ const parseHTMLString = (text) => {
         position: { x: 0, y: 0 }
     }));
 
-    return nodes
+    return nodes;
 }
 
-export const questionToGraph = (
+const inflateWithAbstracts = (nodes, abstracts) => {
+    return nodes.map(node => {
+        let abstract = abstracts.find((abstract) => abstract.original_uri === node.id);
+        if (abstract)
+            return ({
+                ...node,
+                // if no abstract, no point making a collapse. also different style
+                type: 'collapseNode',
+                data: {
+                    ...node.data,
+                    type: 'factor',
+                    ans: abstract.text,
+                    open: false,
+                }
+            });
+        return node;
+    });
+}
+
+export const decisionToElements = (is_approved, factors, abstracts) => {
+    const startNode = {
+        id: 'decision_node',
+        type: 'input',
+        data: { label: is_approved ? 'YES' : 'NO' },
+        position: DEFAULT_POSITION
+    };
+
+    let factorsNodes = factors.map((factor) => parseHTMLString(factor)).flat();
+    // inflate with abstracts and convert to collapseNode
+    factorsNodes = inflateWithAbstracts(factorsNodes, abstracts);
+
+    console.log(factorsNodes);
+    // connect start and factors
+    const factorsEdges = factorsNodes.map(node => ({
+        id: `decision_node-${node.id}-edge`,
+        source: 'decision_node',
+        target: node.id,
+        animated: true,
+        arrowHeadType: 'full'
+    }));
+    return [startNode, ...factorsNodes, ...factorsEdges];
+}
+
+export const questionToElements = (
     elements,
     { original_uri, original_label, question, annotated_text, text },
-    setShouldLayout
+    abstracts
 ) => {
     let els = parseHTMLString(annotated_text);
     console.log("called with elements: ", elements);
     console.log("and rest: ", original_uri, original_label);
     // find node (or edge) if exist else create it and update existing (thanks ES6 for find!)
     const addNode = (el) => {
-        return elements.find(node => node.id === el.id) || elements.push(el);
+        return elements.find(node => node.id === el.id) ||
+            elements.push(...inflateWithAbstracts([el], abstracts));
     };
 
+    // topic node
     addNode({
         id: original_uri,
-        type: 'input',
         data: { label: original_label, type: 'topic' },
         position: DEFAULT_POSITION
     });
@@ -98,6 +142,6 @@ export const questionToGraph = (
         animated: true,
         arrowHeadType: 'arrow',
     })));
-    // order may matter: react-flow renders in order, so won't find yet-to-be-declared ids
+    // order may matter: react-flow renders in order, so may not find yet-to-be-declared ids
     return elements;
 }

@@ -42,13 +42,16 @@ Vue.component("template_tree", {
 			// console.log('Annotating with:', this.annotation_list);
 			ANNOTATED_HTML_CACHE[txt] = annotate_html(txt, this.annotation_list, linkify);
 			console.log("annotatedText:", ANNOTATED_HTML_CACHE[txt]);
+
+			const target = '<b>Abstract</b>: ';
+			// [NEW] send questions and corresponding answers
 			if (this.question_overview_tree) {
 				console.log("NOW i'd be telling the graph to add");
 				console.log("original_uri", this.original_uri);
 				console.log("original_label", this.original_label);
 				console.log("current_question", this.question);
 				console.log(ANNOTATED_HTML_CACHE[txt]);
-				$.post('http://localhost:8080/graph',
+				$.post('http://localhost:8080/question',
 					{
 						'original_uri': this.original_uri,
 						'original_label': this.original_label,
@@ -58,7 +61,30 @@ Vue.component("template_tree", {
 					},
 					(ans) => {
 						console.log(ans);
-						console.log("post completed");
+						console.log("question post completed");
+					})
+
+			}
+			// hey it's ugly but... if we wanna do it here i see no alternative
+
+			else if (txt.includes(target)) {
+				console.log("This is the abstract!", txt);
+				console.log({
+					'original_uri': this.original_uri,
+					'original_label': this.original_label,
+					'text': txt,
+				});
+				const clean = txt.replace(target, '');
+				$.post('http://localhost:8080/abstract',
+					{
+						'original_uri': this.original_uri,
+						'original_label': this.original_label,
+						'annotated_text': ANNOTATED_HTML_CACHE[txt].replace(target, ''),
+						'text': clean,
+					},
+					(ans) => {
+						console.log(ans);
+						console.log("question post completed");
 					})
 
 			}
@@ -93,7 +119,8 @@ Vue.component("overview", {
 						<div v-if="taxonomical_view.length>0">
 							<ul>
 								<li v-for="view in taxonomical_view">
-									<template_tree :item="view" :annotation_list="annotation_list"></template_tree>
+									<template_tree :item="view" :annotation_list="annotation_list"
+									:original_uri="uri" :original_label="label"></template_tree>
 								</li>
 							</ul>						
 						</div>
@@ -102,8 +129,8 @@ Vue.component("overview", {
 							<ul>
 								<li v-for="overview in overview_tree">
 								<!--
-								for now i'll just pass a bit of everything. I'm sure there's vastly
-								better ways, but I don't want to bother with checking Vue state update
+								for now i'll just pass everything. I'm sure there's vastly
+								better ways, but I don't want to check Vue state update
 								logic. I'll just drill a couple props
 								-->
 									<template_tree :item="overview" :annotation_list="annotation_list"
@@ -216,8 +243,6 @@ Vue.component("overview", {
 						self.question_overview_tree[question] = summary_tree;
 					}
 				}
-				console.log("question overview tree:");
-				console.log(self.question_overview_tree);
 				// Set taxonomical_view
 				const prefixed_string = prefixed_string_to_uri(self.uri);
 				self.taxonomical_view = jsonld_to_nestedlist(nest_jsonld(KNOWN_ENTITY_DICT[prefixed_string], KNOWN_ENTITY_DICT, [prefixed_string], 2));

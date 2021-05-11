@@ -3,7 +3,14 @@ const path = require('path');
 const app = express();
 var cors = require('cors')
 
-var CACHE = [];
+var CACHE = {
+    is_approved: false,
+    questions: [],
+    factors: [],
+    abstracts: [],
+};
+
+const cleanup = (text) => text.replace(/\s\s+/g, ' ');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -25,15 +32,50 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.post('/graph', function (req, res) {
+app.post('/abstract', function (req, res) {
+    console.log("received this: ", req.body);
+    if (req.body.original_uri &&
+        req.body.original_label &&
+        req.body.text &&
+        req.body.annotated_text &&
+        !CACHE.abstracts.some((q) => q.original_uri === req.body.original_uri))
+        CACHE.abstracts.push({
+            ...req.body,
+            text: cleanup(req.body.text)
+        });
+    return res.send('got your abstract thx');
+});
+
+
+app.post('/question', function (req, res) {
     console.log("received this: ", req.body);
     if (req.body.original_uri &&
         req.body.original_label &&
         req.body.question &&
         req.body.text &&
-        req.body.annotated_text)
-        CACHE = [...CACHE, req.body];
-    return res.send('got your shit thx');
+        req.body.annotated_text &&
+        !CACHE.questions.some((q) => q.original_uri === req.body.original_uri))
+        CACHE.questions.push({
+            ...req.body,
+            text: cleanup(req.body.text)
+        });
+    return res.send('got your question-ans pair thx');
+});
+
+app.post('/approval', function (req, res) {
+    console.log("received this: ", req.body);
+    if (req.body.is_approved && req.body.factors) {
+        CACHE.is_approved = req.body.is_approved;
+        CACHE.factors = req.body.factors.map(text => cleanup(text));
+        /** or maybe this looks better
+         * CACHE = {
+         *  ...CACHE,
+         *  ...req.body,
+         * };
+         * pretty nice... will think about it
+         */
+    }
+    return res.send('got your factor list thx');
 });
 
 app.listen(process.env.PORT || 8080);

@@ -28,8 +28,7 @@ const LayoutFlow = ({
     elements, setElements,
     shouldLayout, setShouldLayout,
     onConnect, onElementsRemove }) => {
-    console.log(elements);
-    // im not good enough to use this... i guess hardcoded stuff will have
+
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
 
@@ -44,9 +43,9 @@ const LayoutFlow = ({
     ]);
 
     const onLayout = useCallback(() => {
+        console.log("reviewing layout...");
         nodes.forEach((el) =>
             dagreGraph.setNode(el.id, { width: el.__rf.width, height: el.__rf.height }));
-        console.log(nodes[1].__rf.width);
         edges.forEach((ed) =>
             dagreGraph.setEdge(ed.source, ed.target));
 
