@@ -1,6 +1,6 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, { memo, useEffect, useCallback } from 'react';
 
-import { Handle, Position, NodeProps, Connection, Edge } from 'react-flow-renderer';
+import { Handle, Position, NodeProps, Connection, Edge, } from 'react-flow-renderer';
 
 import Collapse from 'react-collapse';
 
@@ -11,16 +11,18 @@ const sourceHandleStyleA = { ...targetHandleStyle /** do we need any style? */ }
 
 const onConnect = (params) => console.log('handle onConnect', params);
 
-const CollapseNode = ({ data }) => {/* 
+const CollapseNode = ({ id, data }) => {/* 
     const [open, setOpen] = useState(false); */
     const { label, ans, open } = data;
 
     return (
         <div style={{ padding: 20, backgroundColor: '#ffff', width: '300px' }}>
             <Handle type="target" position={Position.Left} style={targetHandleStyle} onConnect={onConnect} />
-            {label}
+            <div style={{}}> {/**bold? change font? have to make it decent... */}
+                {label}
+            </div>
 
-            <Collapse isOpened={open}>
+            <Collapse isOpened={open} >
                 <div>
                     {ans}
                 </div>

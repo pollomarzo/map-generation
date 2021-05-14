@@ -54,7 +54,7 @@ app.post('/question', function (req, res) {
         req.body.question &&
         req.body.text &&
         req.body.annotated_text &&
-        !CACHE.questions.some((q) => q.original_uri === req.body.original_uri))
+        !CACHE.questions.some((q) => q.original_uri === req.body.original_uri && q.question === req.body.question))
         CACHE.questions.push({
             ...req.body,
             text: cleanup(req.body.text)

@@ -84,9 +84,8 @@ Vue.component("template_tree", {
 					},
 					(ans) => {
 						console.log(ans);
-						console.log("question post completed");
-					})
-
+						console.log("abstract post completed");
+					});
 			}
 			return ANNOTATED_HTML_CACHE[txt];
 		},

@@ -5,10 +5,14 @@ import ReactFlow, {
     removeElements,
     isNode,
     useStoreState,
-    Position
+    Position,
+    Controls,
+    ControlButton,
+    useUpdateNodeInternals
 } from 'react-flow-renderer';
 import dagre from 'dagre';
 import CollapseNode from './CollapseNode';
+import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
 
 const dagreGraph = new dagre.graphlib.Graph()
     .setGraph({ rankdir: 'LR', edgesep: 10, ranksep: 100, nodesep: 20 });
@@ -32,20 +36,26 @@ const LayoutFlow = ({
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
 
-    const onElementClick = (event, element) => setElements([
-        ...elements.filter((node) => node.id !== element.id), {
-            ...element,
-            data: {
-                ...element.data,
-                open: !element.data.open
-            }
-        }
-    ]);
+    const onElementClick = (event, element) => {
+        if (isNode(element))
+            setElements(
+                [
+                    ...elements.filter((node) => node.id !== element.id),
+                    {
+                        ...element,
+                        data: {
+                            ...element.data,
+                            open: !element.data.open
+                        }
+                    }
+                ]);
+    };
 
     const onLayout = useCallback(() => {
         console.log("reviewing layout...");
         nodes.forEach((el) =>
-            dagreGraph.setNode(el.id, { width: el.__rf.width, height: el.__rf.height }));
+            dagreGraph.setNode(el.id, { width: el.__rf.width, height: el.__rf.height })
+        );
         edges.forEach((ed) =>
             dagreGraph.setEdge(ed.source, ed.target));
 
@@ -59,7 +69,7 @@ const LayoutFlow = ({
                 // we need to pass a slighlty different position in order to notify react flow about the change
                 el.position = {
                     x: nodeWithPosition.x - nodeWithPosition.width / 2 + Math.random() / 1000,
-                    y: nodeWithPosition.y /* - nodeWithPosition.height / 2 */,
+                    y: nodeWithPosition.y - nodeWithPosition.height / 2,
                 };
             }
 
@@ -76,14 +86,20 @@ const LayoutFlow = ({
 
     return (
         <div className="layoutflow" style={{ height: '100vh' }}>
-            <input type="button" text={"layout"} onClick={onLayout} />
+            {/* <input type="button" text={"layout"} onClick={onLayout} /> */}
             <ReactFlow
                 elements={elements}
                 onConnect={onConnect}
                 onElementsRemove={onElementsRemove}
                 nodeTypes={nodeTypes}
                 onElementClick={onElementClick}
-            />
+            >
+                <Controls showInteractive={false}>
+                    <ControlButton onClick={onLayout}>
+                        <FilterCenterFocusIcon />
+                    </ControlButton>
+                </Controls>
+            </ReactFlow>
         </div>
     );
 };

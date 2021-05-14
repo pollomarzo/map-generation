@@ -22,11 +22,15 @@ export default function App() {
         const { is_approved, questions, factors, abstracts } = res.data;
         // convert HTML strings to nodes, inflate with abstracts when you have them
         // starting node and decision factors
-        let decisionElements = decisionToElements(is_approved, factors, abstracts);
+        console.log("creating decision elements...");
+        let updatedElements = decisionToElements(is_approved, factors, abstracts);
         // questions and answers
-        const questionElements = questions.reduce((acc, curr) => questionToElements(acc, curr, abstracts), []);
+        console.log("questions: ", questions);
+        updatedElements = questions.reduce((acc, curr) =>
+          questionToElements(acc, curr, abstracts), updatedElements);
 
-        return setElements([...decisionElements, ...questionElements]);
+        console.log("final updatedElements: ", updatedElements);
+        return setElements([...updatedElements]);
       })
       .catch(err => console.error(err));
   }, []);
@@ -39,20 +43,17 @@ export default function App() {
       setElements(els => removeElements(elementsToRemove, els));
   */
   return (
-    <div>
-      <h1>Hello!</h1>
-      <div style={{ height: '100%', width: '100%' }}>
-        <ReactFlowProvider>
-          <LayoutFlow
-            elements={elements}
-            setElements={setElements}
-            shouldLayout={shouldLayout}
-            setShouldLayout={setShouldLayout}
-          //onConnect={onConnect}
-          //onElementsRemove={onElementsRemove}
-          />
-        </ReactFlowProvider>
-      </div>
+    <div style={{ height: '100%', width: '100%' }}>
+      <ReactFlowProvider>
+        <LayoutFlow
+          elements={elements}
+          setElements={setElements}
+          shouldLayout={shouldLayout}
+          setShouldLayout={setShouldLayout}
+        //onConnect={onConnect}
+        //onElementsRemove={onElementsRemove}
+        />
+      </ReactFlowProvider>
     </div>
   );
 }
