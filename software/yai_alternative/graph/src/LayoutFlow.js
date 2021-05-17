@@ -8,7 +8,7 @@ import ReactFlow, {
     Position,
     Controls,
     ControlButton,
-    useUpdateNodeInternals
+    getConnectedEdges
 } from 'react-flow-renderer';
 import dagre from 'dagre';
 import CollapseNode from './CollapseNode';
@@ -36,19 +36,37 @@ const LayoutFlow = ({
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
 
-    const onElementClick = (event, element) => {
-        if (isNode(element))
-            setElements(
-                [
-                    ...elements.filter((node) => node.id !== element.id),
-                    {
-                        ...element,
-                        data: {
-                            ...element.data,
-                            open: !element.data.open
-                        }
-                    }
-                ]);
+    const onElementClick = (_, element) => {
+        // if it's a collapse node and we're opening it
+        if (element.type === 'collapseNode') {
+            const updatedNode = {
+                ...element,
+                data: {
+                    ...element.data,
+                    open: !element.data.open
+                }
+            };
+            let modifEdges = getConnectedEdges([element], edges).filter((edge) => edge.source === element.id);
+            const remainingNodes = nodes.filter((node) => node.id !== element.id);
+            const remainingEdges = removeElements(modifEdges, edges);
+            // then we need to update some edges... without CREATING any. just update present ones
+            if (element.data.open) {
+                modifEdges = modifEdges.map((edge) => ({
+                    ...edge,
+                    sourceHandle: 'default',
+                }))
+            }
+            else {
+                modifEdges = modifEdges.map((edge) => ({
+                    ...edge,
+                    sourceHandle: `${element.id}_${edge.target}_handle`,
+                }))
+            }
+
+            setElements([...remainingNodes, updatedNode, ...modifEdges, ...remainingEdges]);
+
+        }
+        else console.log(element);
     };
 
     const onLayout = useCallback(() => {
@@ -93,6 +111,7 @@ const LayoutFlow = ({
                 onElementsRemove={onElementsRemove}
                 nodeTypes={nodeTypes}
                 onElementClick={onElementClick}
+                elementsSelectable={false}
             >
                 <Controls showInteractive={false}>
                     <ControlButton onClick={onLayout}>

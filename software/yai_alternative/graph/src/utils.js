@@ -1,12 +1,11 @@
 import { isNode } from 'react-flow-renderer';
-export const annotatedText =
-    '<b>Abstract</b>: The «Consolidated <annotation><annotation><span  class="link" data-topic="my:risk">risk</span></annotation></annotation> markers» are an external estimate of <annotation><annotation><span  class="link" data-topic="my:risk">the risk</span></annotation></annotation> that you might not pay back <annotation><annotation><span  class="link" data-topic="my:loan">the loan</span></annotation></annotation>. To <annotation><annotation><span  class="link" data-topic="my:customer">every customer</span></annotation></annotation> (included you) has been associated a value for the external <annotation><annotation><span  class="link" data-topic="my:risk">risk</span></annotation></annotation> estimate, and this value is used to compute <annotation><annotation><span  class="link" data-topic="my:fico_score">the FICO Score</span></annotation></annotation> and to <annotation><annotation><span  class="link" data-topic="my:decide">decide</span></annotation></annotation> whether to assign <annotation><annotation><span  class="link" data-topic="my:loan">the loan</span></annotation></annotation>.';
 
 const SERVER_URL = 'http://localhost:8080'
 export const GET_DATA_URL = SERVER_URL + '/data'
 
 const DEFAULT_POSITION = { x: 0, y: 0 }
 
+var parser = new DOMParser();
 
 function uniq(arr, f) {
     let seen = new Set();
@@ -18,9 +17,10 @@ function uniq(arr, f) {
 
 // extract nodes from HTML string
 const parseHTMLString = (text) => {
-    var parser = new DOMParser();
+
     // parse String into HTML
     var htmlDoc = parser.parseFromString(text, 'text/html');
+    const cleanText = text.replace(/<[^>]+>/g, '');
 
     // get annotations
     const annotationList = [...htmlDoc.getElementsByTagName('annotation')];
@@ -30,14 +30,42 @@ const parseHTMLString = (text) => {
     );
     const cleanSpanList = uniq(spanList, (item) => item.getAttribute('data-topic'));
 
-    // convert to better format
-    const nodes = cleanSpanList.map((it, idx) => ({
+    // create gaps, return an array of strings and gaps
+    // could move it to diff func, but still needs spanList
+    let restText = cleanText;
+    let gappedText = [];
+    let label;
+    let splitText;
+    let rest;
+    for (const span of cleanSpanList) {
+        label = span.innerText;
+        [splitText, ...rest] = restText.split(label);
+        // i agree, this looks like shit. more readable than regexes though
+        // needed to handle multiple occurrences of label in text
+        restText = rest.join(label);
+        gappedText.push({
+            type: 'piece',
+            text: splitText
+        });
+        gappedText.push({
+            type: 'gap',
+            targetId: span.getAttribute('data-topic'),
+            text: label
+        });
+        restText = restText || '';
+    }
+    gappedText.push({
+        type: 'piece',
+        text: restText,
+    });
+
+    const nodes = cleanSpanList.map((it) => ({
         id: it.getAttribute('data-topic'),
         data: { label: it.innerText },
-        position: { x: 0, y: 0 }
+        position: DEFAULT_POSITION
     }));
 
-    return nodes;
+    return { nodes, gappedText };
 }
 
 const inflateWithAbstracts = (nodes, abstracts) => {
@@ -45,7 +73,7 @@ const inflateWithAbstracts = (nodes, abstracts) => {
         let abstract = abstracts.find((abstract) => abstract.original_uri === curr.id);
         if (abstract) {
             // which topics were mentioned in the abstract?
-            const abstractNodes = parseHTMLString(abstract.annotated_text);
+            const { nodes: abstractNodes, gappedText: gaps } = parseHTMLString(abstract.annotated_text);
             const inflatedNode = {
                 ...curr,
                 // if no abstract, no point making a collapse. also different style
@@ -53,7 +81,7 @@ const inflateWithAbstracts = (nodes, abstracts) => {
                 data: {
                     ...curr.data,
                     type: 'factor',
-                    ans: abstract.text,
+                    gappedText: gaps,
                     open: false,
                 }
             };
@@ -100,13 +128,13 @@ export const decisionToElements = (is_approved, factors, abstracts) => {
         data: { label: is_approved ? 'YES' : 'NO' },
         position: DEFAULT_POSITION
     };
-    let factorsNodes = factors.reduce((acc, factor) => acc.concat(parseHTMLString(factor)), []);
+    let factorsNodes = factors.reduce((acc, factor) => acc.concat(parseHTMLString(factor).nodes), []);
     // connect start and factors
     const factorsEdges = factorsNodes.map(node => ({
         id: `decision_node-${node.id}-edge`,
         source: 'decision_node',
         target: node.id,
-        animated: true,
+        animated: false,
         arrowHeadType: 'full'
     }));
     // inflate with abstracts and convert to collapseNode
@@ -119,9 +147,8 @@ export const questionToElements = (
     { original_uri, original_label, question, annotated_text, text },
     abstracts
 ) => {
-    let els = parseHTMLString(annotated_text);
+    let { nodes: els, gappedText: gaps } = parseHTMLString(annotated_text);
 
-    console.log("MANAGING QUESTION: ", question);
     // topic node
     const topicNode = {
         id: original_uri,
@@ -137,7 +164,7 @@ export const questionToElements = (
         data: {
             label: question,
             type: 'question',
-            ans: text,
+            gappedText: gaps,
             open: false
         },
         position: DEFAULT_POSITION
@@ -148,7 +175,7 @@ export const questionToElements = (
         id: `${questionId}-edge`,
         source: original_uri,
         target: questionId,
-        animated: true
+        animated: false
     };
 
     // add single nodes
@@ -164,7 +191,7 @@ export const questionToElements = (
         id: `${questionId}-${node.id}-edge`,
         source: questionId,
         target: node.id,
-        animated: true,
+        animated: false,
         arrowHeadType: 'arrow',
     }));
 
