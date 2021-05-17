@@ -1,4 +1,4 @@
-import { isNode } from 'react-flow-renderer';
+import { NODE_TYPE, EDGE_IDS, NODE_IDS, FRAGMENT_TYPE, COLLAPSE_HANDLE_IDS } from './const';
 
 const SERVER_URL = 'http://localhost:8080'
 export const GET_DATA_URL = SERVER_URL + '/data'
@@ -44,24 +44,24 @@ const parseHTMLString = (text) => {
         // needed to handle multiple occurrences of label in text
         restText = rest.join(label);
         gappedText.push({
-            type: 'piece',
+            type: FRAGMENT_TYPE.PIECE,
             text: splitText
         });
         gappedText.push({
-            type: 'gap',
+            type: FRAGMENT_TYPE.GAP,
             targetId: span.getAttribute('data-topic'),
             text: label
         });
         restText = restText || '';
     }
     gappedText.push({
-        type: 'piece',
+        type: FRAGMENT_TYPE.PIECE,
         text: restText,
     });
 
     const nodes = cleanSpanList.map((it) => ({
         id: it.getAttribute('data-topic'),
-        type: 'output',
+        type: NODE_TYPE.OUTPUT,
         data: { label: it.innerText },
         position: DEFAULT_POSITION
     }));
@@ -78,7 +78,7 @@ const inflateWithAbstracts = (nodes, abstracts) => {
             const inflatedNode = {
                 ...curr,
                 // if no abstract, no point making a collapse. also different style
-                type: 'collapseNode',
+                type: NODE_TYPE.COLLAPSE_NODE,
                 data: {
                     ...curr.data,
                     type: 'factor',
@@ -87,9 +87,9 @@ const inflateWithAbstracts = (nodes, abstracts) => {
                 }
             };
             const abstractEdges = abstractNodes.map(node => ({
-                id: `${curr.id}-${node.id}-edge`,
+                id: EDGE_IDS.ABSTRACT_EDGE(curr.id, node.id),
                 source: curr.id,
-                sourceHandle: 'default',
+                sourceHandle: COLLAPSE_HANDLE_IDS.DEFAULT,
                 target: node.id,
                 data: {
                     type: 'abstract'
@@ -128,18 +128,18 @@ const addNode = (nodes, newNode, updateProps) => {
 
 export const decisionToElements = (is_approved, factors, abstracts) => {
     const startNode = {
-        id: 'decision_node',
-        type: 'input',
+        id: NODE_IDS.DECISION_NODE,
+        type: NODE_TYPE.INPUT,
         data: { label: is_approved ? 'YES' : 'NO' },
         position: DEFAULT_POSITION
     };
     let factorsNodes = factors.reduce((acc, factor) => acc.concat(parseHTMLString(factor).nodes), []);
     // connect start and factors
     const factorsEdges = factorsNodes.map(node => ({
-        id: `decision_node-${node.id}-edge`,
-        type: 'output',
-        source: 'decision_node',
-        sourceHandle: 'default',
+        id: EDGE_IDS.FACTOR_EDGE(node.id),
+        type: NODE_TYPE.OUTPUT,
+        source: NODE_IDS.DECISION_NODE,
+        sourceHandle: COLLAPSE_HANDLE_IDS.DEFAULT,
         target: node.id,
         animated: false,
         data: {
@@ -173,8 +173,8 @@ export const questionToElements = (
     // create question node
     const questionId = `${original_uri}-${question}`;
     const questionNode = {
-        id: questionId,
-        type: 'collapseNode',
+        id: NODE_IDS.QUESTION_NODE(original_uri, question),
+        type: NODE_TYPE.COLLAPSE_NODE,
         data: {
             label: question,
             type: 'question',
@@ -186,31 +186,31 @@ export const questionToElements = (
 
     // attach topic and question
     const tqEdge = {
-        id: `${questionId}-edge`,
-        sourceHandle: 'questions',
+        id: EDGE_IDS.TOPIC_QUESTION_EDGE(original_uri, question),
+        sourceHandle: COLLAPSE_HANDLE_IDS.QUESTIONS,
         source: original_uri,
         target: questionId,
         data: {
             type: 'question'
         },
         type: 'straight',
-        style: { strokeWidth: 5 },
+        style: { strokeWidth: 3 },
         animated: false
     };
 
     // add single nodes
     const singleNodes = els.map(node => ({
         id: node.id,
-        type: 'output',
+        type: NODE_TYPE.OUTPUT,
         data: { ...node.data, type: 'single' },
         position: node.position
     }));
 
     // create question-node edges
     const qnEdges = els.map(node => ({
-        id: `${questionId}-${node.id}-edge`,
+        id: EDGE_IDS.QUESTION_NODE_EDGE(original_uri, question, node.id),
         source: questionId,
-        sourceHandle: 'default',
+        sourceHandle: COLLAPSE_HANDLE_IDS.DEFAULT,
         target: node.id,
         animated: false,
         data: {

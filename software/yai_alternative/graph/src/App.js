@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  addEdge,
   ReactFlowProvider,
-  removeElements,
 } from 'react-flow-renderer';
 import LayoutFlow from './LayoutFlow';
 import { questionToElements, decisionToElements, GET_DATA_URL } from './utils';

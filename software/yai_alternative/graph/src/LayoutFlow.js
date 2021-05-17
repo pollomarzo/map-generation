@@ -1,7 +1,5 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, } from 'react';
 import ReactFlow, {
-    ReactFlowProvider,
-    addEdge,
     removeElements,
     isNode,
     useStoreState,
@@ -13,6 +11,7 @@ import ReactFlow, {
 import dagre from 'dagre';
 import CollapseNode from './CollapseNode';
 import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
+import { NODE_TYPE, COLLAPSE_HANDLE_IDS, EDGE_DATA_TYPE } from './const';
 
 const dagreGraph = new dagre.graphlib.Graph()
     .setGraph({ rankdir: 'LR', edgesep: 10, ranksep: 100, nodesep: 20 });
@@ -21,12 +20,6 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 const nodeTypes = {
     collapseNode: CollapseNode,
 };
-
-// In order to keep this example simple the node width and height are hardcoded.
-// In a real world app you would use the correct width and height values of
-// const nodes = useStoreState(state => state.nodes) and then node.__rf.width, node.__rf.height
-const direction = 'LR';
-
 
 const LayoutFlow = ({
     elements, setElements,
@@ -38,7 +31,7 @@ const LayoutFlow = ({
 
     const onElementClick = (_, element) => {
         // if it's a collapse node and we're opening it
-        if (element.type === 'collapseNode') {
+        if (element.type === NODE_TYPE.COLLAPSE_NODE) {
             const updatedNode = {
                 ...element,
                 data: {
@@ -48,20 +41,20 @@ const LayoutFlow = ({
             };
             // ignore question nodes. immutable
             let modifEdges = getConnectedEdges([element], edges).filter((edge) =>
-                edge.source === element.id && edge.data.type !== 'question');
+                edge.source === element.id && edge.data.type !== EDGE_DATA_TYPE.QUESTION);
             const remainingNodes = nodes.filter((node) => node.id !== element.id);
             const remainingEdges = removeElements(modifEdges, edges);
             // then we need to update some edges... without CREATING any. just update present ones
             if (element.data.open) {
                 modifEdges = modifEdges.map((edge) => ({
                     ...edge,
-                    sourceHandle: 'default',
+                    sourceHandle: COLLAPSE_HANDLE_IDS.DEFAULT,
                 }))
             }
             else {
                 modifEdges = modifEdges.map((edge) => ({
                     ...edge,
-                    sourceHandle: `${element.id}_${edge.target}_handle`,
+                    sourceHandle: COLLAPSE_HANDLE_IDS.GAP_HANDLE_ID(element.id, edge.target),
                 }))
             }
 
