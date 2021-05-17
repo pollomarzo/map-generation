@@ -61,6 +61,7 @@ const parseHTMLString = (text) => {
 
     const nodes = cleanSpanList.map((it) => ({
         id: it.getAttribute('data-topic'),
+        type: 'output',
         data: { label: it.innerText },
         position: DEFAULT_POSITION
     }));
@@ -88,7 +89,11 @@ const inflateWithAbstracts = (nodes, abstracts) => {
             const abstractEdges = abstractNodes.map(node => ({
                 id: `${curr.id}-${node.id}-edge`,
                 source: curr.id,
+                sourceHandle: 'default',
                 target: node.id,
+                data: {
+                    type: 'abstract'
+                },
                 animated: false
             }));
             // add inflated node, changing props if present
@@ -132,9 +137,14 @@ export const decisionToElements = (is_approved, factors, abstracts) => {
     // connect start and factors
     const factorsEdges = factorsNodes.map(node => ({
         id: `decision_node-${node.id}-edge`,
+        type: 'output',
         source: 'decision_node',
+        sourceHandle: 'default',
         target: node.id,
         animated: false,
+        data: {
+            type: 'node'
+        },
         arrowHeadType: 'full'
     }));
     // inflate with abstracts and convert to collapseNode
@@ -152,7 +162,11 @@ export const questionToElements = (
     // topic node
     const topicNode = {
         id: original_uri,
-        data: { label: original_label, type: 'topic' },
+        data: {
+            label: original_label,
+            type: 'topic',
+            hasQuestions: true,
+        },
         position: DEFAULT_POSITION
     };
 
@@ -173,8 +187,14 @@ export const questionToElements = (
     // attach topic and question
     const tqEdge = {
         id: `${questionId}-edge`,
+        sourceHandle: 'questions',
         source: original_uri,
         target: questionId,
+        data: {
+            type: 'question'
+        },
+        type: 'straight',
+        style: { strokeWidth: 5 },
         animated: false
     };
 
@@ -190,8 +210,12 @@ export const questionToElements = (
     const qnEdges = els.map(node => ({
         id: `${questionId}-${node.id}-edge`,
         source: questionId,
+        sourceHandle: 'default',
         target: node.id,
         animated: false,
+        data: {
+            type: 'node'
+        },
         arrowHeadType: 'arrow',
     }));
 
@@ -199,7 +223,7 @@ export const questionToElements = (
     const inflatedNodes = inflateWithAbstracts([topicNode, questionNode, ...singleNodes], abstracts);
 
     elements = [...inflatedNodes, tqEdge, ...qnEdges].reduce((acc, curr) =>
-        addNode(acc, curr), elements);
+        addNode(acc, curr, true), elements);
     // order may matter: react-flow renders in order, so may not find yet-to-be-declared ids
     return elements;
 }

@@ -46,7 +46,9 @@ const LayoutFlow = ({
                     open: !element.data.open
                 }
             };
-            let modifEdges = getConnectedEdges([element], edges).filter((edge) => edge.source === element.id);
+            // ignore question nodes. immutable
+            let modifEdges = getConnectedEdges([element], edges).filter((edge) =>
+                edge.source === element.id && edge.data.type !== 'question');
             const remainingNodes = nodes.filter((node) => node.id !== element.id);
             const remainingEdges = removeElements(modifEdges, edges);
             // then we need to update some edges... without CREATING any. just update present ones

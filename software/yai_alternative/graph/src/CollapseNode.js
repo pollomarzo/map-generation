@@ -14,7 +14,7 @@ const onConnect = (params) => console.log('handle onConnect', params);
 
 
 const CollapseNode = ({ id, data }) => {
-    const { label, gappedText, open } = data;
+    const { label, gappedText, open, hasQuestions } = data;
     const edges = useStoreState(store => store.edges);
 
 
@@ -28,26 +28,6 @@ const CollapseNode = ({ id, data }) => {
     }), [edges, gappedText, id]);
 
     const content = useMemo(() => populateContent(gappedText, edges), [populateContent, gappedText, edges]);
-
-    const handles = useMemo(() => {
-        if (open) {
-            return (
-                gappedText.filter((el) => (el.type === 'gap')).map((el, idx) => (
-                    <Handle
-                        key={idx}
-                        type="source"
-                        position={Position.Right}
-                        style={{ position: 'static' }}
-                        id={`${id}_${el.targetId}_handle`}
-                    />
-                ))
-            )
-        }
-        // can't do it like this. see comment in jsx
-        // return (
-        //     <Handle type="source" position={Position.Right} id="default" style={sourceHandleStyleA} />
-        // )
-    }, [gappedText, open, id]);
 
 
     return (
@@ -63,6 +43,12 @@ const CollapseNode = ({ id, data }) => {
                 </div>
             </Collapse>
 
+            {hasQuestions && <Handle
+                type="source"
+                position={Position.Bottom}
+                id="questions"
+            />}
+
             <Handle
                 type="source"
                 position={Position.Right}
@@ -73,6 +59,7 @@ const CollapseNode = ({ id, data }) => {
                 // render, which causes warnings to go off but everything to work correctly)
                 style={{ display: (open ? 'none' : 'block') }} />
 
+
             <div style={{
                 position: 'absolute',
                 top: 0, bottom: 0, right: -4,
@@ -80,7 +67,15 @@ const CollapseNode = ({ id, data }) => {
                 flexDirection: 'column',
                 justifyContent: 'space-evenly'
             }}>
-                {handles}
+                {gappedText.filter((el) => (el.type === 'gap')).map((el, idx) => (
+                    <Handle
+                        key={idx}
+                        type="source"
+                        position={Position.Right}
+                        style={{ position: 'static', display: (!open ? 'none' : 'block') }}
+                        id={`${id}_${el.targetId}_handle`}
+                    />
+                ))}
             </div>
 
 
