@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useMemo } from 'react';
 
-import { Handle, Position, useStoreState } from 'react-flow-renderer';
+import { getConnectedEdges, Handle, Position, useStoreState } from 'react-flow-renderer';
 
 import Collapse from 'react-collapse';
 
@@ -8,7 +8,7 @@ import { COLLAPSE_HANDLE_IDS, FRAGMENT_TYPE, HANDLE_TYPE } from './const';
 
 const targetHandleStyle = { background: '#555' };
 
-const connectedStyle = { background: '#c8f7ba' };
+const connectedStyle = (correct) => ({ background: (correct ? '#c8f7ba' : '#ff4d64') });
 const notConnectedStyle = { background: '#bdbbb3' };
 
 const onConnect = (params) => console.log('handle onConnect', params);
@@ -16,20 +16,39 @@ const onConnect = (params) => console.log('handle onConnect', params);
 
 const CollapseNode = ({ id, data }) => {
     const { label, gappedText, open, hasQuestions } = data;
+    const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
 
+    const handles = useMemo(() => gappedText.filter((el) => (el.type === 'gap')).map((el, idx) => (
+        <Handle
+            key={idx}
+            type={HANDLE_TYPE.SOURCE}
+            position={Position.Right}
+            style={{ position: 'static', display: (!open ? 'none' : 'block') }}
+            id={el.handleId}
+        />
+    )), [gappedText, open]);
 
-    const populateContent = useCallback(() => gappedText.map((it, idx) => {
-        if (it.type === FRAGMENT_TYPE.PIECE) return (<span key={idx}>{it.text}</span>);
-        // if the node is connected to the correct node then display the words
-        if (edges.find((edge) => edge.source === id && edge.target === it.targetId))
-            return <span key={idx} style={connectedStyle}>{it.text}</span>;
-        // otherwise set style and empty content
-        return <span key={idx} style={notConnectedStyle}>_____</span>;
-    }), [edges, gappedText, id]);
+
+    const populateContent = useCallback(() => {
+        const connectedEdges = edges.filter((edge) => edge.source === id);
+        return gappedText.map((it, idx) => {
+            if (it.type === FRAGMENT_TYPE.PIECE) return (<span key={idx}>{it.text}</span>);
+            // if the node is connected to the correct node then display the words
+            const edge = connectedEdges.find((edge) => (edge.source === id &&
+                edge.sourceHandle === it.handleId));
+            if (edge) {
+                return <span key={idx} style={connectedStyle(edge.target === it.targetId)}>{
+                    nodes.find(
+                        (node) => node.id === edge.target).data.label}</span>;
+            }
+            // otherwise set style and empty content
+            return <span key={idx} style={notConnectedStyle}>_____</span>;
+        });
+    }, [edges, gappedText, id, nodes]);
 
     const content = useMemo(() => populateContent(gappedText, edges), [populateContent, gappedText, edges]);
-
+    // console.log(gappedText);
 
     return (
         <div style={{ padding: 20, backgroundColor: '#ffff', width: '300px', position: 'relative' }}>
@@ -73,15 +92,7 @@ const CollapseNode = ({ id, data }) => {
                 flexDirection: 'column',
                 justifyContent: 'space-evenly'
             }}>
-                {gappedText.filter((el) => (el.type === 'gap')).map((el, idx) => (
-                    <Handle
-                        key={idx}
-                        type={HANDLE_TYPE.SOURCE}
-                        position={Position.Right}
-                        style={{ position: 'static', display: (!open ? 'none' : 'block') }}
-                        id={COLLAPSE_HANDLE_IDS.GAP_HANDLE_ID(id, el.targetId)}
-                    />
-                ))}
+                {handles}
             </div>
 
 

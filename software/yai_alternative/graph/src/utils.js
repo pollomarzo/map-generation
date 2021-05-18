@@ -16,7 +16,7 @@ function uniq(arr, f) {
 }
 
 // extract nodes from HTML string
-const parseHTMLString = (text) => {
+const parseHTMLString = (text, parentNodeId) => {
 
     // parse String into HTML
     var htmlDoc = parser.parseFromString(text, 'text/html');
@@ -43,14 +43,16 @@ const parseHTMLString = (text) => {
         // i agree, this looks like shit. more readable than regexes though
         // needed to handle multiple occurrences of label in text
         restText = rest.join(label);
+        const targetId = span.getAttribute('data-topic');
         gappedText.push({
             type: FRAGMENT_TYPE.PIECE,
             text: splitText
         });
         gappedText.push({
             type: FRAGMENT_TYPE.GAP,
-            targetId: span.getAttribute('data-topic'),
-            text: label
+            text: label,
+            handleId: COLLAPSE_HANDLE_IDS.GAP_HANDLE_ID(parentNodeId, targetId),
+            targetId: targetId,
         });
         restText = restText || '';
     }
@@ -74,7 +76,8 @@ const inflateWithAbstracts = (nodes, abstracts) => {
         let abstract = abstracts.find((abstract) => abstract.original_uri === curr.id);
         if (abstract) {
             // which topics were mentioned in the abstract?
-            const { nodes: abstractNodes, gappedText: gaps } = parseHTMLString(abstract.annotated_text);
+            const { nodes: abstractNodes, gappedText: gaps } =
+                parseHTMLString(abstract.annotated_text, curr.id);
             const inflatedNode = {
                 ...curr,
                 // if no abstract, no point making a collapse. also different style
@@ -133,7 +136,7 @@ export const decisionToElements = (is_approved, factors, abstracts) => {
         data: { label: is_approved ? 'YES' : 'NO' },
         position: DEFAULT_POSITION
     };
-    let factorsNodes = factors.reduce((acc, factor) => acc.concat(parseHTMLString(factor).nodes), []);
+    let factorsNodes = factors.reduce((acc, factor) => acc.concat(parseHTMLString(factor, startNode.id).nodes), []);
     // connect start and factors
     const factorsEdges = factorsNodes.map(node => ({
         id: EDGE_IDS.FACTOR_EDGE(node.id),
@@ -157,7 +160,8 @@ export const questionToElements = (
     { original_uri, original_label, question, annotated_text, text },
     abstracts
 ) => {
-    let { nodes: els, gappedText: gaps } = parseHTMLString(annotated_text);
+    const questionId = `${original_uri}-${question}`;
+    let { nodes: els, gappedText: gaps } = parseHTMLString(annotated_text, questionId);
 
     // topic node
     const topicNode = {
@@ -171,7 +175,6 @@ export const questionToElements = (
     };
 
     // create question node
-    const questionId = `${original_uri}-${question}`;
     const questionNode = {
         id: NODE_IDS.QUESTION_NODE(original_uri, question),
         type: NODE_TYPE.COLLAPSE_NODE,
@@ -216,7 +219,7 @@ export const questionToElements = (
         data: {
             type: 'node'
         },
-        arrowHeadType: 'arrow',
+        style: { strokeWidth: 3 },
     }));
 
     // inflate everything with abstracts
