@@ -15,7 +15,7 @@ const onConnect = (params) => console.log('handle onConnect', params);
 
 
 const CollapseNode = ({ id, data }) => {
-    const { label, gappedText, open, hasQuestions } = data;
+    const { label, gappedText, open, hasQuestions, onGapClick } = data;
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
 
@@ -29,7 +29,6 @@ const CollapseNode = ({ id, data }) => {
         />
     )), [gappedText, open]);
 
-
     const populateContent = useCallback(() => {
         const connectedEdges = edges.filter((edge) => edge.source === id);
         return gappedText.map((it, idx) => {
@@ -38,9 +37,12 @@ const CollapseNode = ({ id, data }) => {
             const edge = connectedEdges.find((edge) => (edge.source === id &&
                 edge.sourceHandle === it.handleId));
             if (edge) {
-                return <span key={idx} style={connectedStyle(edge.target === it.targetId)}>{
-                    nodes.find(
-                        (node) => node.id === edge.target).data.label}</span>;
+                return <span
+                    key={idx}
+                    style={connectedStyle(edge.target === it.targetId)}
+                    onClick={onGapClick}>{
+                        nodes.find(
+                            (node) => node.id === edge.target).data.label}</span>;
             }
             // otherwise set style and empty content
             return <span key={idx} style={notConnectedStyle}>_____</span>;

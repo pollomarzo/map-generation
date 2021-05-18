@@ -6,7 +6,8 @@ export const NODE_TYPE = {
     INPUT: 'input',
     DEFAULT: 'default',
     OUTPUT: 'output',
-    COLLAPSE_NODE: 'collapseNode'
+    COLLAPSE_NODE: 'collapseNode',
+    DETACH_NODE: 'detachNode'
 };
 
 export const NODE_IDS = {
@@ -19,6 +20,7 @@ export const EDGE_IDS = {
     ABSTRACT_EDGE: (subjId, topicId) => `${subjId}-${topicId}-edge`,
     TOPIC_QUESTION_EDGE: (topicId, question) => `${NODE_IDS.QUESTION_NODE(topicId, question)}-edge`,
     QUESTION_NODE_EDGE: (topicId, question, nodeId) => `${NODE_IDS.QUESTION_NODE(topicId, question)}-${nodeId}-edge`,
+    TEST_EDGE: (rootId, targetId) => `${rootId}-${targetId}-test-edge`,
 };
 
 export const EDGE_DATA_TYPE = {

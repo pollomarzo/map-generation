@@ -11,6 +11,7 @@ import ReactFlow, {
 import dagre from 'dagre';
 import CollapseNode from './CollapseNode';
 import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
+import DetachNode from './DetachNode';
 
 const dagreGraph = new dagre.graphlib.Graph()
     .setGraph({ rankdir: 'LR', edgesep: 10, ranksep: 100, nodesep: 20 });
@@ -18,6 +19,7 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const nodeTypes = {
     collapseNode: CollapseNode,
+    detachNode: DetachNode,
 };
 
 const LayoutFlow = ({

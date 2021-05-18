@@ -19,7 +19,6 @@ export default function App() {
   const [test, setTest] = useState(false);
   // TODO: does this need to exist?
   const [testRoot, setTestRoot] = useState();
-  const [testNodes, setTestNodes] = useState();
 
   const prepareForTest = () => {
     // TODO: move this into a new component inside provider, so that on change graph
@@ -36,9 +35,6 @@ export default function App() {
       }
     }
     setTestRoot(target);
-    let nodes = [target, ...getOutgoers(target, elements)];
-    // need to do anything else?
-    setTestNodes(nodes);
   };
 
   // fetch initial data and parse it into a graph 
@@ -77,10 +73,9 @@ export default function App() {
         {test ?
           <TestFlow
             rootNode={testRoot}
-            elements={testNodes}
-            setElements={setTestNodes}
-            testShouldLayout={testShouldLayout}
-            setTestShouldLayout={setTestShouldLayout} /> :
+            allElements={elements}
+            shouldLayout={shouldLayout}
+            setShouldLayout={setShouldLayout} /> :
           <ViewFlow
             elements={elements}
             setElements={setElements}
