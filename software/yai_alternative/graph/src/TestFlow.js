@@ -8,7 +8,10 @@ import {
     useStoreState,
     getOutgoers
 } from 'react-flow-renderer';
-import { COLLAPSE_HANDLE_IDS, EDGE_IDS, NODE_TYPE } from './const';
+import { COLLAPSE_HANDLE_IDS, EDGE_IDS, NODE_TYPE, FRAGMENT_TYPE } from './const';
+import { getRandom } from './utils';
+import { TEST_CONF } from './config';
+
 
 const TestFlow = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     const [elements, setElements] = useState([rootNode]);
@@ -17,20 +20,45 @@ const TestFlow = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
 
     const onGapClick = () => console.log("I GOT CLICKED!");
 
-    useEffect(() => {
-        const modifiedRoot = {
-            ...rootNode,
-            data: {
-                ...rootNode.data,
-                onGapClick,
-            }
+    const shrinkGappedText = (gappedText) => {
+        const gaps = gappedText.filter(el => el.type === FRAGMENT_TYPE.GAP);
+        const gapsToRemove = new Set(getRandom(
+            gaps, Math.min(gaps.length, gaps.length - TEST_CONF.NUM_GAPS)));
+        //
+        return {
+            gappedText: gappedText.map((el) => {
+                if (el.type === FRAGMENT_TYPE.GAP && gapsToRemove.has(el)) return {
+                    type: FRAGMENT_TYPE.PIECE,
+                    text: el.text,
+                }
+                return el;
+            }), removedGaps: gapsToRemove
         }
+
+    };
+
+    useEffect(() => {
+        // remove unnecessary gaps
+        const { gappedText: rootText, removedGaps } = shrinkGappedText(rootNode.data.gappedText);
+        const gapIds = new Set(Array.from(removedGaps).map((el) => el.targetId))
+        // get all mentioned nodes, remove the ones that shouldn't be there
         const modifiedNodes = getOutgoers(rootNode, allElements)
+            .filter(el => !gapIds.has(el.id))
             .map((node) => ({
                 ...node,
                 type: NODE_TYPE.DETACH_NODE
             }
             ));
+
+        const modifiedRoot = {
+            ...rootNode,
+            data: {
+                ...rootNode.data,
+                onGapClick,
+                noTargetHandle: true,
+                gappedText: rootText,
+            }
+        }
         setElements([modifiedRoot, ...modifiedNodes])
     }, [setElements, rootNode, allElements])
 
@@ -38,7 +66,7 @@ const TestFlow = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     useEffect(() => {
         fitView({ padding: 0.5 });
         setShouldLayout(true);
-    }, [fitView]);
+    }, [fitView, setShouldLayout]);
 
     const onRemoveEdge = (edgeId, targetId) => {
         console.log("called with : ", edgeId, targetId);
@@ -63,7 +91,7 @@ const TestFlow = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
             const newEdge = {
                 ...params,
                 id: edgeId,
-                animated: true,
+                animated: false,
                 data: { type: 'test' }
             }
             let node = elements.find((el) => el.id === params.target);
@@ -73,7 +101,7 @@ const TestFlow = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
                 data: {
                     ...node.data,
                     onHandleClick: () => onRemoveEdge(edgeId, node.id),
-                    connected: true
+                    connected: true,
                 }
             }
             setElements([...remainingElements, node, newEdge]);

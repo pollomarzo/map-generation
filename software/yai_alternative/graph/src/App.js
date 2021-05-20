@@ -21,11 +21,9 @@ export default function App() {
   const [testRoot, setTestRoot] = useState();
 
   const prepareForTest = () => {
-    // TODO: move this into a new component inside provider, so that on change graph
-    // we can fitViewAction({ padding: 0.5 }); (useStoreActions((actions) => actions.fitView);)
     console.log("preparing for test!");
     setTest(!test);
-    // randomElement = array[Math.floor(Math.random() * array.length)];
+
     let target = elements.find((e) => e.id === 'my:risk-What?');
     target = {
       ...target,

@@ -5,21 +5,24 @@ import { getConnectedEdges, Handle, Position, useStoreState } from 'react-flow-r
 import Collapse from 'react-collapse';
 
 import { COLLAPSE_HANDLE_IDS, FRAGMENT_TYPE, HANDLE_TYPE } from './const';
+import { TEST_CONF } from './config';
+
 
 const targetHandleStyle = { background: '#555' };
 
-const connectedStyle = (correct) => ({ background: (correct ? '#c8f7ba' : '#ff4d64') });
 const notConnectedStyle = { background: '#bdbbb3' };
+const connectedStyle = (correct) => (TEST_CONF.COLORED_FEEDBACK ?
+    { background: (correct ? '#c8f7ba' : '#ff4d64') } : notConnectedStyle);
 
-const onConnect = (params) => console.log('handle onConnect', params);
+// const onConnect = (params) => console.log('handle onConnect', params);
 
 
 const CollapseNode = ({ id, data }) => {
-    const { label, gappedText, open, hasQuestions, onGapClick } = data;
+    const { label, gappedText, open, hasQuestions, onGapClick, noTargetHandle } = data;
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
 
-    const handles = useMemo(() => gappedText.filter((el) => (el.type === 'gap')).map((el, idx) => (
+    const handles = useMemo(() => gappedText.filter((el) => (el.type === FRAGMENT_TYPE.GAP)).map((el, idx) => (
         <Handle
             key={idx}
             type={HANDLE_TYPE.SOURCE}
@@ -33,7 +36,7 @@ const CollapseNode = ({ id, data }) => {
         const connectedEdges = edges.filter((edge) => edge.source === id);
         return gappedText.map((it, idx) => {
             if (it.type === FRAGMENT_TYPE.PIECE) return (<span key={idx}>{it.text}</span>);
-            // if the node is connected to the correct node then display the words
+            // if the node is connected to a node then display the words
             const edge = connectedEdges.find((edge) => (edge.source === id &&
                 edge.sourceHandle === it.handleId));
             if (edge) {
@@ -47,18 +50,20 @@ const CollapseNode = ({ id, data }) => {
             // otherwise set style and empty content
             return <span key={idx} style={notConnectedStyle}>_____</span>;
         });
-    }, [edges, gappedText, id, nodes]);
+    }, [edges, gappedText, id, nodes, onGapClick]);
 
     const content = useMemo(() => populateContent(gappedText, edges), [populateContent, gappedText, edges]);
     // console.log(gappedText);
 
     return (
         <div style={{ padding: 20, backgroundColor: '#ffff', width: '300px', position: 'relative' }}>
-            <Handle
+
+            { noTargetHandle || <Handle
                 type={HANDLE_TYPE.TARGET}
                 position={Position.Left}
                 style={targetHandleStyle}
-                onConnect={onConnect} />
+                /* onConnect={onConnect} */ />
+            }
             <div style={{}}> {/**bold? change font? have to make it decent... */}
                 {label}
             </div>
