@@ -67,6 +67,7 @@ const parseHTMLString = (text, parentNodeId) => {
             text: label,
             handleId: COLLAPSE_HANDLE_IDS.GAP_HANDLE_ID(parentNodeId, targetId),
             targetId: targetId,
+            selected: false,
         });
         restText = restText || '';
     }

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 
 import { getConnectedEdges, Handle, Position, useStoreState } from 'react-flow-renderer';
 
@@ -10,17 +10,42 @@ import { TEST_CONF } from './config';
 
 const targetHandleStyle = { background: '#555' };
 
-const notConnectedStyle = { background: '#bdbbb3' };
-const connectedStyle = (correct) => (TEST_CONF.COLORED_FEEDBACK ?
-    { background: (correct ? '#c8f7ba' : '#ff4d64') } : notConnectedStyle);
+const notConnectedStyle = {
+    background: '#bdbbb3'
+};
+
+const connectedStyle = (selected, correct) => (TEST_CONF.COLORED_FEEDBACK ?
+    {
+        cursor: 'pointer',
+        background: (correct ? '#c8f7ba' : '#ff4d64'),
+        border: `${selected ? '1px' : '0px'} solid red`
+    } : notConnectedStyle);
 
 // const onConnect = (params) => console.log('handle onConnect', params);
 
 
 const CollapseNode = ({ id, data }) => {
-    const { label, gappedText, open, hasQuestions, onGapClick, noTargetHandle } = data;
+    const { label, gappedText, open, hasQuestions, onGapClick: propagateGapClick, noTargetHandle } = data;
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
+    const [selected, setSelected] = useState();
+
+    // this sets selected gap
+    const editedGappedText = useMemo(() => {
+        if (!selected) return gappedText;
+        return gappedText.map(
+            gap => gap.handleId === selected.handleId ? {
+                ...gap,
+                selected: !gap.selected
+            } : gap)
+    }, [gappedText, selected])
+
+    // once a gap is clicked memorize it (for style) then propagate event
+    const onGapClick = (edge, gap) => {
+        // click twice to remove
+        setSelected(gap.selected ? undefined : gap);
+        propagateGapClick(edge);
+    };
 
     const handles = useMemo(() => gappedText.filter((el) => (el.type === FRAGMENT_TYPE.GAP)).map((el, idx) => (
         <Handle
@@ -34,7 +59,7 @@ const CollapseNode = ({ id, data }) => {
 
     const populateContent = useCallback(() => {
         const connectedEdges = edges.filter((edge) => edge.source === id);
-        return gappedText.map((it, idx) => {
+        return editedGappedText.map((it, idx) => {
             if (it.type === FRAGMENT_TYPE.PIECE) return (<span key={idx}>{it.text}</span>);
             // if the node is connected to a node then display the words
             const edge = connectedEdges.find((edge) => (edge.source === id &&
@@ -42,17 +67,17 @@ const CollapseNode = ({ id, data }) => {
             if (edge) {
                 return <span
                     key={idx}
-                    style={connectedStyle(edge.target === it.targetId)}
-                    onClick={onGapClick}>{
+                    style={connectedStyle(it.selected, edge.target === it.targetId)}
+                    onClick={() => onGapClick(edge, it)}>{
                         nodes.find(
                             (node) => node.id === edge.target).data.label}</span>;
             }
             // otherwise set style and empty content
             return <span key={idx} style={notConnectedStyle}>_____</span>;
         });
-    }, [edges, gappedText, id, nodes, onGapClick]);
+    }, [edges, editedGappedText, id, nodes, onGapClick]);
 
-    const content = useMemo(() => populateContent(gappedText, edges), [populateContent, gappedText, edges]);
+    const content = useMemo(() => populateContent(), [populateContent, edges]);
     // console.log(gappedText);
 
     return (
