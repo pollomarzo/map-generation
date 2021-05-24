@@ -1,9 +1,9 @@
 .handle{
-    background: url('res/remove_circle_outline_black_24dp.svg');
+    background: url('../res/remove_circle_outline_black_24dp.svg');
     background-size: 10px 10px;
 }
 /* sure they should be IDs not classes whatever */
 .removeIcon{
-    background: url('res/delete_black_24dp.svg');
+    background: url('../res/delete_black_24dp.svg');
     background-size: 10px 10px;
 }

@@ -1,12 +1,8 @@
 import LayoutFlow from './LayoutFlow';
-import { NODE_TYPE, COLLAPSE_HANDLE_IDS, EDGE_DATA_TYPE } from './const';
-import ReactFlow, {
+import { NODE_TYPE, COLLAPSE_HANDLE_IDS, EDGE_DATA_TYPE } from '../const';
+import {
     removeElements,
-    isNode,
     useStoreState,
-    Position,
-    Controls,
-    ControlButton,
     getConnectedEdges
 } from 'react-flow-renderer';
 

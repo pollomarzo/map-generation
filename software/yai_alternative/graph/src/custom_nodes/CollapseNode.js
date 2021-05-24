@@ -1,11 +1,11 @@
 import React, { memo, useCallback, useMemo, useState } from 'react';
 
-import { getConnectedEdges, Handle, Position, useStoreState } from 'react-flow-renderer';
+import { Handle, Position, useStoreState } from 'react-flow-renderer';
 
 import Collapse from 'react-collapse';
 
-import { COLLAPSE_HANDLE_IDS, FRAGMENT_TYPE, HANDLE_TYPE } from './const';
-import { TEST_CONF } from './config';
+import { COLLAPSE_HANDLE_IDS, FRAGMENT_TYPE, HANDLE_TYPE } from '../const';
+import { TEST_CONF } from '../config';
 
 
 const targetHandleStyle = { background: '#555' };
@@ -41,11 +41,11 @@ const CollapseNode = ({ id, data }) => {
     }, [gappedText, selected])
 
     // once a gap is clicked memorize it (for style) then propagate event
-    const onGapClick = (edge, gap) => {
+    const onGapClick = useCallback((edge, gap) => {
         // click twice to remove
         setSelected(gap.selected ? undefined : gap);
         propagateGapClick(edge);
-    };
+    }, [propagateGapClick]);
 
     const handles = useMemo(() => gappedText.filter((el) => (el.type === FRAGMENT_TYPE.GAP)).map((el, idx) => (
         <Handle
@@ -77,7 +77,7 @@ const CollapseNode = ({ id, data }) => {
         });
     }, [edges, editedGappedText, id, nodes, onGapClick]);
 
-    const content = useMemo(() => populateContent(), [populateContent, edges]);
+    const content = useMemo(() => populateContent(), [populateContent]);
     // console.log(gappedText);
 
     return (

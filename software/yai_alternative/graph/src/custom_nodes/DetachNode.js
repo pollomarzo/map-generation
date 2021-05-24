@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 
 import { Handle } from 'react-flow-renderer';
-import CancelIcon from '@material-ui/icons/Cancel';
 import './DetachNodeStyle.css';
 
 const DetachNode = memo(({ id, data }) => {

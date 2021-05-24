@@ -1,13 +1,13 @@
-import React, { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback } from 'react';
-import ReactFlow, {
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import {
   ReactFlowProvider,
   removeElements,
   getOutgoers,
-  isNode
+  isNode,
 } from 'react-flow-renderer';
-import TestFlow from './TestFlow';
+import TestFlow from './flows/TestFlow';
 import './dnd.css';
-import { NODE_IDS, EDGE_IDS, NODE_TYPE, FRAGMENT_TYPE } from './const';
+import { NODE_IDS, NODE_TYPE, FRAGMENT_TYPE } from './const';
 import { getRandom, uniq } from './utils';
 import { TEST_CONF } from './config';
 
@@ -45,8 +45,10 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     (updateF) => setSidebarElements((els) => updateF(els).sort((a, b) => a.id - b.id)),
     [setSidebarElements]);
 
-  const onLoad = (_reactFlowInstance) =>
+  const onLoad = (_reactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance);
+    _reactFlowInstance.fitView();
+  };
 
   const onDragOver = (event) => {
     event.preventDefault();
@@ -132,6 +134,7 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
 
     const modifiedRoot = {
       ...rootNode,
+      id: NODE_IDS.TEST_NODE(rootNode.id),
       data: {
         ...rootNode.data,
         onGapClick,
@@ -152,7 +155,6 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
             rootNode={rootNode}
             elements={elements}
             setElements={setElements}
-            allElements={allElements}
             shouldLayout={shouldLayout}
             setShouldLayout={setShouldLayout}
             flowProps={{

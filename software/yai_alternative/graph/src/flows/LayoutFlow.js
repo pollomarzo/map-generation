@@ -1,17 +1,15 @@
 import React, { useCallback, useEffect, } from 'react';
 import ReactFlow, {
-    removeElements,
     isNode,
     useStoreState,
     Position,
     Controls,
-    ControlButton,
-    getConnectedEdges
+    ControlButton
 } from 'react-flow-renderer';
 import dagre from 'dagre';
-import CollapseNode from './CollapseNode';
+import CollapseNode from '../custom_nodes/CollapseNode';
 import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
-import DetachNode from './DetachNode';
+import DetachNode from '../custom_nodes/DetachNode';
 
 
 const nodeTypes = {

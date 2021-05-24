@@ -1,25 +1,24 @@
 import LayoutFlow from './LayoutFlow';
-import { useEffect, useMemo, useState, useLayoutEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
     useZoomPanHelper,
     removeElements,
-    addEdge,
     isEdge,
     useStoreState,
-    getOutgoers,
 } from 'react-flow-renderer';
-import { NODE_IDS, EDGE_IDS, NODE_TYPE, FRAGMENT_TYPE } from './const';
-import { getRandom } from './utils';
-import { TEST_CONF } from './config';
+import { EDGE_IDS } from '../const';
 
 
 const TestFlow = ({ rootNode, elements, setElements,
-    allElements,
     shouldLayout,
     setShouldLayout,
     flowProps }) => {
     const { fitView } = useZoomPanHelper();
     const edges = useMemo(() => elements.filter(isEdge), [elements]);
+
+    const nodes = useStoreState(state => state.nodes);
+    const { setCenter } = useZoomPanHelper();
+
 
     const onRemoveEdge = (edge, targetId) => {
         const node = elements.find((el) => targetId === el.id);
@@ -36,11 +35,20 @@ const TestFlow = ({ rootNode, elements, setElements,
 
 
     // on render, view should be reset. might change later
+    // ouch. nodes is a new array every time, even if only position changes.
+    // i'll just keep the warning for now
     useEffect(() => {
-        fitView({ padding: 0.5 });
-        setShouldLayout(true);
-    }, [fitView, setShouldLayout]);
+        // setShouldLayout(true);
+        if (nodes.length > 0) {
+            const node = nodes[0];
 
+            const x = node.__rf.position.x + 150;
+            const y = node.__rf.position.y + 100;
+            const zoom = 1.85;
+
+            setCenter(x, y, zoom);
+        }
+    }, [setShouldLayout, fitView, setCenter]);
 
 
 

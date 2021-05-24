@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
-  getOutgoers,
   ReactFlowProvider,
 } from 'react-flow-renderer';
-import LayoutFlow from './LayoutFlow';
 import { questionToElements, decisionToElements, GET_DATA_URL } from './utils';
 import axios from 'axios';
-import TestFlow from './TestFlow';
-import ViewFlow from './ViewFlow';
+import ViewFlow from './flows/ViewFlow';
 import TestView from './TestView';
 
 
