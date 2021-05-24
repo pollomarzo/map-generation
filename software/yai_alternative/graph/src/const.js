@@ -12,7 +12,8 @@ export const NODE_TYPE = {
 
 export const NODE_IDS = {
     DECISION_NODE: 'decision_node',
-    QUESTION_NODE: (topicId, question) => `${topicId}-${question}`
+    QUESTION_NODE: (topicId, question) => `${topicId}-${question}`,
+    TEST_NODE: (oldId) => `${oldId}-test`,
 };
 
 export const EDGE_IDS = {

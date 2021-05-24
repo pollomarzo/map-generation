@@ -55,7 +55,9 @@ const ViewFlow = ({ elements, setElements, shouldLayout, setShouldLayout }) => {
             setElements={setElements}
             shouldLayout={shouldLayout}
             setShouldLayout={setShouldLayout}
-            onElementClick={onElementClick}
+            flowProps={{
+                onElementClick
+            }}
         //onConnect={onConnect}
         //onElementsRemove={onElementsRemove}
         />)

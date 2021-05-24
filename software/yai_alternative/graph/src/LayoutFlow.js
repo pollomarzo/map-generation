@@ -13,19 +13,27 @@ import CollapseNode from './CollapseNode';
 import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
 import DetachNode from './DetachNode';
 
-const dagreGraph = new dagre.graphlib.Graph()
-    .setGraph({ rankdir: 'LR', edgesep: 10, ranksep: 100, nodesep: 20 });
-dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const nodeTypes = {
     collapseNode: CollapseNode,
     detachNode: DetachNode,
 };
+const dagreGraph = new dagre.graphlib.Graph()
+    .setGraph({ rankdir: 'LR', edgesep: 10, ranksep: 100, nodesep: 20 });
+dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const LayoutFlow = ({
     elements, setElements,
     shouldLayout, setShouldLayout,
-    onConnect, onElementsRemove, onElementClick }) => {
+    onElementsRemove,
+    flowProps }) => {
+
+    const { onElementClick,
+        onConnect,
+        onDrop,
+        onDragOver,
+        onLoad } = flowProps;
+
 
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
@@ -69,15 +77,17 @@ const LayoutFlow = ({
 
 
     return (
-        <div className="layoutflow" style={{ height: '100vh' }}>
-            {/* <input type="button" text={"layout"} onClick={onLayout} /> */}
+        <div className="layoutflow" style={{ height: '100%' }}>
             <ReactFlow
                 elements={elements}
-                onConnect={onConnect}
                 onElementsRemove={onElementsRemove}
                 nodeTypes={nodeTypes}
-                onElementClick={onElementClick}
                 elementsSelectable={false}
+                onElementClick={onElementClick}
+                onConnect={onConnect}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                onLoad={onLoad}
             >
                 <Controls showInteractive={false}>
                     <ControlButton onClick={onLayout}>
@@ -85,7 +95,7 @@ const LayoutFlow = ({
                     </ControlButton>
                 </Controls>
             </ReactFlow>
-        </div>
+        </div >
     );
 };
 

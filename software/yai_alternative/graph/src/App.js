@@ -8,6 +8,7 @@ import { questionToElements, decisionToElements, GET_DATA_URL } from './utils';
 import axios from 'axios';
 import TestFlow from './TestFlow';
 import ViewFlow from './ViewFlow';
+import TestView from './TestView';
 
 
 export default function App() {
@@ -15,7 +16,6 @@ export default function App() {
   const [elements, setElements] = useState([]);
   // going to keep this here to call a graph layout when it's needed
   const [shouldLayout, setShouldLayout] = useState(true);
-  const [testShouldLayout, setTestShouldLayout] = useState(true);
   const [test, setTest] = useState(false);
   // TODO: does this need to exist?
   const [testRoot, setTestRoot] = useState();
@@ -31,7 +31,7 @@ export default function App() {
         ...target.data,
         open: true,
       }
-    }
+    };
     setTestRoot(target);
   };
 
@@ -64,16 +64,17 @@ export default function App() {
       setElements(els => removeElements(elementsToRemove, els));
   */
   return (
-    <div style={{ height: '100%', width: '100%', position: 'relative' }}>
+    <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
       <button style={{ position: 'absolute', bottom: '5%', right: '10%', zIndex: '5' }}
-        onClick={() => prepareForTest()}>{!test ? 'Test me baby' : 'Please no more'}</button>
-      <ReactFlowProvider>
-        {test ?
-          <TestFlow
-            rootNode={testRoot}
-            allElements={elements}
-            shouldLayout={shouldLayout}
-            setShouldLayout={setShouldLayout} /> :
+        onClick={prepareForTest}>{!test ? 'Test me baby' : 'Please no more'}</button>
+      {test ?
+        <TestView
+          rootNode={testRoot}
+          allElements={elements}
+          shouldLayout={shouldLayout}
+          setShouldLayout={setShouldLayout} />
+        :
+        <ReactFlowProvider>
           <ViewFlow
             elements={elements}
             setElements={setElements}
@@ -81,9 +82,8 @@ export default function App() {
             setShouldLayout={setShouldLayout}
           //onConnect={onConnect}
           //onElementsRemove={onElementsRemove}
-          />
-        }
-      </ReactFlowProvider>
+          /></ReactFlowProvider>
+      }
     </div>
   );
 }
