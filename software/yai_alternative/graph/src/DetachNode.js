@@ -5,7 +5,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import './DetachNodeStyle.css';
 
 const DetachNode = memo(({ id, data }) => {
-    const { label, connected, onHandleClick } = data;
+    const { label, connected, onHandleClick, onDelete } = data;
 
     return (
         <div style={{
@@ -44,6 +44,15 @@ const DetachNode = memo(({ id, data }) => {
             <div style={{ textAlign: 'center' }}>
                 {label}
             </div>
+            <div className="removeIcon" onClick={() => onDelete()} style={{
+                width: '10px',
+                height: '10px',
+                cursor: 'pointer',
+                position: 'absolute',
+                zIndex: 3,
+                top: '5px',
+                right: '5px',
+            }} />
         </div>
     );
 });

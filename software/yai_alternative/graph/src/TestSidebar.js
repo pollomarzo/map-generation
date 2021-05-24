@@ -15,7 +15,7 @@ const nodeStyle = (disabled) => ({
 
 const TestSidebar = ({ nodes }) => {
     const onDragStart = (event, node) => {
-        event.dataTransfer.setData('application/reactflow', JSON.stringify(node));
+        event.dataTransfer.setData('application/reactflow', node.id);
         event.dataTransfer.effectAllowed = 'move';
     };
 

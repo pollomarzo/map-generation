@@ -67,10 +67,6 @@ const TestFlow = ({ rootNode, elements, setElements,
             setElements([...remainingElements, node, newEdge]);
         }
     };
-    // source: "my:risk-What?"
-    // sourceHandle: "default"
-    // target: "my:borrower"
-    // targetHandle: null
 
 
     return (

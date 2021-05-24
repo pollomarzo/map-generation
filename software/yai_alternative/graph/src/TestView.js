@@ -4,7 +4,7 @@ import ReactFlow, {
   addEdge,
   removeElements,
   Controls,
-  getOutgoers
+  getOutgoers,
 } from 'react-flow-renderer';
 import TestFlow from './TestFlow';
 import './dnd.css';
@@ -14,6 +14,27 @@ import { TEST_CONF } from './config';
 
 import TestSidebar from './TestSidebar';
 
+// remove a selected number of random gaps and update the remaining ones
+const shrinkGappedText = (gappedText) => {
+  const gaps = gappedText.filter(el => el.type === FRAGMENT_TYPE.GAP);
+  const gapsToRemove = new Set(getRandom(
+    gaps, Math.min(gaps.length, gaps.length - TEST_CONF.NUM_GAPS)));
+
+  return {
+    gappedText: gappedText.map((el) => {
+      if (el.type === FRAGMENT_TYPE.GAP)
+        if (gapsToRemove.has(el)) return {
+          type: FRAGMENT_TYPE.PIECE,
+          text: el.text,
+        }
+        else return {
+          ...el,
+          targetId: NODE_IDS.TEST_NODE(el.targetId)
+        }
+      return el;
+    }), removedGaps: gapsToRemove
+  }
+};
 
 const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
   const reactFlowWrapper = useRef(null);
@@ -33,7 +54,8 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     event.preventDefault();
 
     const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-    const node = JSON.parse(event.dataTransfer.getData('application/reactflow'));
+    const nodeId = event.dataTransfer.getData('application/reactflow');
+    const node = sidebarElements.find((node) => node.id === nodeId);
     console.log("adding node: ", node);
     const position = reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left,
@@ -45,16 +67,14 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     };
 
     setElements((es) => es.concat(newNode));
-    setSidebarElements((els) => {
-      const sidebarNode = els.find((n) => n.id === node.id);
-      return [...els.filter((el) => el.id !== node.id), {
-        ...sidebarNode,
-        data: {
-          ...sidebarNode.data,
-          disabled: true,
-        }
-      }]
-    });
+    // disable corresponding sidebar element
+    setSidebarElements((els) => els.map((el) => el.id === node.id ? {
+      ...el,
+      data: {
+        ...el.data,
+        disabled: true
+      }
+    } : el));
   };
 
   const onGapClick = (edge) => {
@@ -64,28 +84,19 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     })));
   };
 
-  // remove a selected number of random gaps and update the remaining ones
-  const shrinkGappedText = (gappedText) => {
-    const gaps = gappedText.filter(el => el.type === FRAGMENT_TYPE.GAP);
-    const gapsToRemove = new Set(getRandom(
-      gaps, Math.min(gaps.length, gaps.length - TEST_CONF.NUM_GAPS)));
-    //
-    return {
-      gappedText: gappedText.map((el) => {
-        if (el.type === FRAGMENT_TYPE.GAP)
-          if (gapsToRemove.has(el)) return {
-            type: FRAGMENT_TYPE.PIECE,
-            text: el.text,
-          }
-          else return {
-            ...el,
-            targetId: NODE_IDS.TEST_NODE(el.targetId)
-          }
-        return el;
-      }), removedGaps: gapsToRemove
-    }
+  const onClickDeleteIcon = (node) => {
+    console.log("deleting node...", node);
+    setElements((els) => removeElements([node], els));
+    setSidebarElements((els) => els.map((el) => el.id === node.id ? {
+      ...el,
+      data: {
+        ...el.data,
+        disabled: false
+      }
+    } : el))
+  }
 
-  };
+
 
   //should this be moved to upper component?
   useEffect(() => {
@@ -94,12 +105,21 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
 
     const gapIds = new Set(Array.from(removedGaps).map((el) => el.targetId))
     // get all mentioned nodes, remove the ones that shouldn't be there
+    // also add onDelete prop.
     const modifiedNodes = getOutgoers(rootNode, allElements)
       .filter(el => !gapIds.has(el.id))
       .map((node) => ({
         ...node,
         id: NODE_IDS.TEST_NODE(node.id),
-        type: NODE_TYPE.DETACH_NODE
+        type: NODE_TYPE.DETACH_NODE,
+      }))
+      // separate because we changed id
+      .map((node) => ({
+        ...node,
+        data: {
+          ...node.data,
+          onDelete: () => onClickDeleteIcon(node)
+        }
       }));
 
     const modifiedRoot = {
