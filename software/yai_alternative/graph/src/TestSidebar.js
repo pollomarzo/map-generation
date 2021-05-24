@@ -3,8 +3,8 @@ import React from 'react';
 const nodeStyle = (disabled) => ({
     padding: 10,
     border: '1px solid',
-    borderColor: '#ff0072',
-    background: 'white',
+    borderColor: disabled ? '#828282' : '#ff0072',
+    background: disabled ? '#b5b5b5' : 'white',
     position: 'relative',
     width: 150,
     borderRadius: 3,

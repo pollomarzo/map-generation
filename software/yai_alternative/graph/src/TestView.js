@@ -1,15 +1,14 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback } from 'react';
 import ReactFlow, {
   ReactFlowProvider,
-  addEdge,
   removeElements,
-  Controls,
   getOutgoers,
+  isNode
 } from 'react-flow-renderer';
 import TestFlow from './TestFlow';
 import './dnd.css';
 import { NODE_IDS, EDGE_IDS, NODE_TYPE, FRAGMENT_TYPE } from './const';
-import { getRandom } from './utils';
+import { getRandom, uniq } from './utils';
 import { TEST_CONF } from './config';
 
 import TestSidebar from './TestSidebar';
@@ -41,6 +40,10 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [elements, setElements] = useState([rootNode]);
   const [sidebarElements, setSidebarElements] = useState([]);
+  // sort them based on ID before including them to avoid unwanted reordering
+  const setSidebarSorted = useMemo(() =>
+    (updateF) => setSidebarElements((els) => updateF(els).sort((a, b) => a.id - b.id)),
+    [setSidebarElements]);
 
   const onLoad = (_reactFlowInstance) =>
     setReactFlowInstance(_reactFlowInstance);
@@ -68,7 +71,7 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
 
     setElements((es) => es.concat(newNode));
     // disable corresponding sidebar element
-    setSidebarElements((els) => els.map((el) => el.id === node.id ? {
+    setSidebarSorted((els) => els.map((el) => el.id === node.id ? {
       ...el,
       data: {
         ...el.data,
@@ -84,17 +87,17 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     })));
   };
 
-  const onClickDeleteIcon = (node) => {
+  const onClickDeleteIcon = useCallback((node) => {
     console.log("deleting node...", node);
     setElements((els) => removeElements([node], els));
-    setSidebarElements((els) => els.map((el) => el.id === node.id ? {
+    setSidebarSorted((els) => els.map((el) => el.id === node.id ? {
       ...el,
       data: {
         ...el.data,
         disabled: false
       }
     } : el))
-  }
+  }, [setElements, setSidebarSorted]);
 
 
 
@@ -106,21 +109,26 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     const gapIds = new Set(Array.from(removedGaps).map((el) => el.targetId))
     // get all mentioned nodes, remove the ones that shouldn't be there
     // also add onDelete prop.
-    const modifiedNodes = getOutgoers(rootNode, allElements)
-      .filter(el => !gapIds.has(el.id))
-      .map((node) => ({
-        ...node,
-        id: NODE_IDS.TEST_NODE(node.id),
-        type: NODE_TYPE.DETACH_NODE,
-      }))
-      // separate because we changed id
-      .map((node) => ({
-        ...node,
-        data: {
-          ...node.data,
-          onDelete: () => onClickDeleteIcon(node)
-        }
-      }));
+    const modifiedNodes = uniq(
+      getOutgoers(rootNode, allElements)
+        .filter(el => !gapIds.has(el.id))
+        .concat(getRandom(
+          allElements.filter((node) => isNode(node) && node.type === NODE_TYPE.OUTPUT),
+          TEST_CONF.NUM_EXTRA_NODES))
+        .map((node) => ({
+          ...node,
+          id: NODE_IDS.TEST_NODE(node.id),
+          type: NODE_TYPE.DETACH_NODE,
+        }))
+        // separate because we changed id
+        .map((node) => ({
+          ...node,
+          data: {
+            ...node.data,
+            onDelete: () => onClickDeleteIcon(node)
+          }
+        })),
+      (el) => el.id);
 
     const modifiedRoot = {
       ...rootNode,
@@ -132,8 +140,8 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
       }
     };
     setElements([modifiedRoot]);
-    setSidebarElements(modifiedNodes);
-  }, [setElements, rootNode, allElements])
+    setSidebarSorted(() => modifiedNodes);
+  }, [setElements, rootNode, allElements, setSidebarSorted, onClickDeleteIcon])
 
 
   return (

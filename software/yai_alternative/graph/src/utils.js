@@ -7,7 +7,7 @@ const DEFAULT_POSITION = { x: 0, y: 0 }
 
 var parser = new DOMParser();
 
-function uniq(arr, f) {
+export function uniq(arr, f) {
     let seen = new Set();
     return arr.filter(item => {
         let k = f(item);
