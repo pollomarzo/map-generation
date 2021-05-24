@@ -13,10 +13,8 @@ const TestFlow = ({ rootNode, elements, setElements,
     shouldLayout,
     setShouldLayout,
     flowProps }) => {
-    const { fitView } = useZoomPanHelper();
     const edges = useMemo(() => elements.filter(isEdge), [elements]);
 
-    const nodes = useStoreState(state => state.nodes);
     const { setCenter } = useZoomPanHelper();
 
 
@@ -38,17 +36,8 @@ const TestFlow = ({ rootNode, elements, setElements,
     // ouch. nodes is a new array every time, even if only position changes.
     // i'll just keep the warning for now
     useEffect(() => {
-        // setShouldLayout(true);
-        if (nodes.length > 0) {
-            const node = nodes[0];
-
-            const x = node.__rf.position.x + 150;
-            const y = node.__rf.position.y + 100;
-            const zoom = 1.85;
-
-            setCenter(x, y, zoom);
-        }
-    }, [setShouldLayout, fitView, setCenter]);
+        // setShouldLayout(() => setCenter(0, 0, 1.85));
+    });
 
 
 

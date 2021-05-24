@@ -81,7 +81,11 @@ const CollapseNode = ({ id, data }) => {
     // console.log(gappedText);
 
     return (
-        <div style={{ padding: 20, backgroundColor: '#ffff', width: '300px', position: 'relative' }}>
+        <div style={{
+            padding: 20, backgroundColor: '#ffff',
+            width: '300px', position: 'relative',
+            border: '1px solid #6068ff', borderRadius: '2%'
+        }}>
 
             { noTargetHandle || <Handle
                 type={HANDLE_TYPE.TARGET}

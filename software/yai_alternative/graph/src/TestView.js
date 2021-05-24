@@ -47,7 +47,7 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
 
   const onLoad = (_reactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance);
-    _reactFlowInstance.fitView();
+    // _reactFlowInstance.fitView();
   };
 
   const onDragOver = (event) => {
@@ -102,7 +102,6 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
   }, [setElements, setSidebarSorted]);
 
 
-
   //should this be moved to upper component?
   useEffect(() => {
     // remove unnecessary gaps
@@ -144,7 +143,8 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     };
     setElements([modifiedRoot]);
     setSidebarSorted(() => modifiedNodes);
-  }, [setElements, rootNode, allElements, setSidebarSorted, onClickDeleteIcon])
+    setShouldLayout((els) => () => { });
+  }, [setElements, rootNode, allElements, setSidebarSorted, onClickDeleteIcon, setShouldLayout])
 
 
   return (
@@ -160,7 +160,8 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
             flowProps={{
               onDrop,
               onDragOver,
-              onLoad
+              onLoad,
+              reactFlowInstance
             }}
           />
         </div>

@@ -12,7 +12,7 @@ export default function App() {
 
   const [elements, setElements] = useState([]);
   // going to keep this here to call a graph layout when it's needed
-  const [shouldLayout, setShouldLayout] = useState(true);
+  const [shouldLayout, setShouldLayout] = useState(() => () => { });
   const [test, setTest] = useState(false);
   // TODO: does this need to exist?
   const [testRoot, setTestRoot] = useState();
@@ -30,6 +30,7 @@ export default function App() {
       }
     };
     setTestRoot(target);
+    setShouldLayout(() => () => { });
   };
 
   // fetch initial data and parse it into a graph 

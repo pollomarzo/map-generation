@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, } from 'react';
 import ReactFlow, {
     isNode,
     useStoreState,
     Position,
     Controls,
-    ControlButton
+    ControlButton,
+    useStoreActions
 } from 'react-flow-renderer';
 import dagre from 'dagre';
 import CollapseNode from '../custom_nodes/CollapseNode';
@@ -30,7 +31,7 @@ const LayoutFlow = ({
         onConnect,
         onDrop,
         onDragOver,
-        onLoad } = flowProps;
+        onLoad, reactFlowInstance } = flowProps;
 
 
     const nodes = useStoreState(store => store.nodes);
@@ -60,6 +61,7 @@ const LayoutFlow = ({
 
             return el;
         });
+        console.log("layouted are: ", layoutedElements);
 
         setElements(layoutedElements);
     }, [edges, elements, nodes, setElements]);
@@ -69,7 +71,9 @@ const LayoutFlow = ({
             nodes.every((node) => node.__rf.width &&
                 node.__rf.height)) {
             onLayout();
-            setShouldLayout(false);
+            console.log("ran effect");
+            shouldLayout();
+            setShouldLayout(undefined);
         }
     }, [elements, nodes, onLayout, shouldLayout, setShouldLayout]);
 
