@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
   ReactFlowProvider,
+  isNode
 } from 'react-flow-renderer';
-import { questionToElements, decisionToElements, GET_DATA_URL } from './utils';
+import { questionToElements, decisionToElements, GET_DATA_URL, getRandom } from './utils';
 import axios from 'axios';
 import ViewFlow from './flows/ViewFlow';
 import TestView from './TestView';
+import { NODE_TYPE } from './const';
+import { TEST_CONF } from './config';
 
 
 export default function App() {
@@ -15,21 +18,29 @@ export default function App() {
   const [shouldLayout, setShouldLayout] = useState(() => () => { });
   const [test, setTest] = useState(false);
   // TODO: does this need to exist?
-  const [testRoot, setTestRoot] = useState();
+  const [testRoots, setTestRoots] = useState([]);
+  const [currentTest, setCurrentTest] = useState();
+
+  const nextTest = () => setCurrentTest(curr => curr + 1);
+  const prevTest = () => setCurrentTest(curr => curr - 1);
 
   const prepareForTest = () => {
     console.log("preparing for test!");
     setTest(!test);
 
-    let target = elements.find((e) => e.id === 'my:risk-What?');
-    target = {
-      ...target,
-      data: {
-        ...target.data,
-        open: true,
-      }
-    };
-    setTestRoot(target);
+    if (testRoots.length === 0) {
+      setTestRoots(getRandom(
+        elements.filter(isNode).filter((e) => e.type === NODE_TYPE.COLLAPSE_NODE),
+        TEST_CONF.NUM_NODES
+      ).map(e => ({
+        ...e,
+        data: {
+          ...e.data,
+          open: true
+        }
+      })));
+      setCurrentTest(0);
+    }
     setShouldLayout(() => () => { });
   };
 
@@ -67,7 +78,10 @@ export default function App() {
         onClick={prepareForTest}>{!test ? 'Test me baby' : 'Please no more'}</button>
       {test ?
         <TestView
-          rootNode={testRoot}
+          rootNodes={testRoots}
+          currentTest={currentTest}
+          nextTest={nextTest}
+          prevTest={prevTest}
           allElements={elements}
           shouldLayout={shouldLayout}
           setShouldLayout={setShouldLayout} />

@@ -35,10 +35,11 @@ const shrinkGappedText = (gappedText) => {
   }
 };
 
-const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
+const TestView = ({ rootNodes, currentTest, nextTest, prevTest,
+  allElements, shouldLayout, setShouldLayout }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [elements, setElements] = useState([rootNode]);
+  const [elements, setElements] = useState([rootNodes[currentTest]]);
   const [sidebarElements, setSidebarElements] = useState([]);
   // sort them based on ID before including them to avoid unwanted reordering
   const setSidebarSorted = useMemo(() =>
@@ -104,8 +105,9 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
 
   //should this be moved to upper component?
   useEffect(() => {
+    const rootNode = rootNodes[currentTest];
     // remove unnecessary gaps
-    const { gappedText: rootText, removedGaps } = shrinkGappedText(rootNode.data.gappedText);
+    const { gappedText: rootText, removedGaps } = shrinkGappedText(rootNodes[currentTest].data.gappedText);
 
     const gapIds = new Set(Array.from(removedGaps).map((el) => el.targetId))
     // get all mentioned nodes, remove the ones that shouldn't be there
@@ -131,6 +133,7 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
         })),
       (el) => el.id);
 
+
     const modifiedRoot = {
       ...rootNode,
       id: NODE_IDS.TEST_NODE(rootNode.id),
@@ -144,7 +147,7 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
     setElements([modifiedRoot]);
     setSidebarSorted(() => modifiedNodes);
     setShouldLayout((els) => () => { });
-  }, [setElements, rootNode, allElements, setSidebarSorted, onClickDeleteIcon, setShouldLayout])
+  }, [setElements, rootNodes, currentTest, allElements, setSidebarSorted, onClickDeleteIcon, setShouldLayout])
 
 
   return (
@@ -152,7 +155,7 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
       <ReactFlowProvider>
         <div className="reactflow-wrapper" ref={reactFlowWrapper}>
           <TestFlow
-            rootNode={rootNode}
+            rootNode={rootNodes[currentTest]}
             elements={elements}
             setElements={setElements}
             shouldLayout={shouldLayout}
@@ -169,6 +172,15 @@ const TestView = ({ rootNode, allElements, shouldLayout, setShouldLayout }) => {
           nodes={sidebarElements}
         />
       </ReactFlowProvider>
+      <button
+        style={{ position: 'absolute', bottom: '5%', right: '40%', zIndex: '5' }}
+        onClick={nextTest}
+        disabled={currentTest === rootNodes.length - 1}>
+        Next slideeee</button>
+      <button style={{ position: 'absolute', bottom: '5%', left: '20%', zIndex: '5' }}
+        onClick={prevTest}
+        disabled={currentTest === 0}>
+        Go back</button>
     </div>
   );
 };

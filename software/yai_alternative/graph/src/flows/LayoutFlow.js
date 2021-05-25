@@ -46,22 +46,29 @@ const LayoutFlow = ({
             dagreGraph.setEdge(ed.source, ed.target));
 
         dagre.layout(dagreGraph);
+        let layouted = false;
 
         const layoutedElements = elements.map((el) => {
             if (isNode(el)) {
                 const nodeWithPosition = dagreGraph.node(el.id);
-                el.targetPosition = Position.Left;
-                el.sourcePosition = Position.Right;
-                // we need to pass a slighlty different position in order to notify react flow about the change
-                el.position = {
-                    x: nodeWithPosition.x - nodeWithPosition.width / 2 + Math.random() / 1000,
-                    y: nodeWithPosition.y - nodeWithPosition.height / 2,
-                };
+                // because of rendering sometimes this gets called too early. 
+                // not the greatest fix, but...
+                if (nodeWithPosition) {
+                    layouted = true
+                    el.targetPosition = Position.Left;
+                    el.sourcePosition = Position.Right;
+                    // we need to pass a slighlty different position in order to notify react flow about the change
+                    el.position = {
+                        x: nodeWithPosition.x - nodeWithPosition.width / 2 + Math.random() / 1000,
+                        y: nodeWithPosition.y - nodeWithPosition.height / 2,
+                    };
+                }
+                else return el
             }
 
             return el;
         });
-        console.log("layouted are: ", layoutedElements);
+        console.log(layouted ? "actually doing something!" : "didn't really layout anything");
 
         setElements(layoutedElements);
     }, [edges, elements, nodes, setElements]);

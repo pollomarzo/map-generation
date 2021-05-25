@@ -67,15 +67,17 @@ const TestFlow = ({ rootNode, elements, setElements,
 
 
     return (
-        <LayoutFlow
-            elements={elements} // put setView in useEffect on render []
-            setElements={setElements}
-            shouldLayout={shouldLayout}
-            setShouldLayout={setShouldLayout}
-            flowProps={{
-                ...flowProps,
-                onConnect
-            }}
-        />);
+        <>
+            <LayoutFlow
+                elements={elements} // put setView in useEffect on render []
+                setElements={setElements}
+                shouldLayout={shouldLayout}
+                setShouldLayout={setShouldLayout}
+                flowProps={{
+                    ...flowProps,
+                    onConnect
+                }}
+            />);
+        </>)
 };
 export default TestFlow;
