@@ -71,16 +71,17 @@ const LayoutFlow = ({
         console.log(layouted ? "actually doing something!" : "didn't really layout anything");
 
         setElements(layoutedElements);
+        return layouted;
     }, [edges, elements, nodes, setElements]);
 
     useEffect(() => {
         if (shouldLayout && nodes.length > 0 &&
             nodes.every((node) => node.__rf.width &&
                 node.__rf.height)) {
-            onLayout();
+            const layouted = onLayout();
             console.log("ran effect");
             shouldLayout();
-            setShouldLayout(undefined);
+            setShouldLayout(layouted ? undefined : (e) => () => { });
         }
     }, [elements, nodes, onLayout, shouldLayout, setShouldLayout]);
 

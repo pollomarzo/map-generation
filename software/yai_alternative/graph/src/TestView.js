@@ -132,6 +132,7 @@ const TestView = ({ rootNodes, currentTest, nextTest, prevTest,
           }
         })),
       (el) => el.id);
+    console.log("nodes are: ", modifiedNodes);
 
 
     const modifiedRoot = {
