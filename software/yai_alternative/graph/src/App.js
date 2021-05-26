@@ -21,26 +21,35 @@ export default function App() {
   const [testRoots, setTestRoots] = useState([]);
   const [currentTest, setCurrentTest] = useState();
 
-  const nextTest = () => setCurrentTest(curr => curr + 1);
-  const prevTest = () => setCurrentTest(curr => curr - 1);
+  const [results, setResults] = useState('');
+
+  const nextTest = (ans) => {
+    console.log("next please!");
+    if (currentTest < testRoots.length - 1) setCurrentTest(curr => curr + 1);
+    else {
+      setTest(false);
+      const correctAns = ans.reduce((a, c) => a + c.correct ? 1 : 0, 0);
+      setResults(`you got ${correctAns} "questions" correct. Thanks for trying!`);
+      console.log("we're done with tests");
+    }
+  };
 
   const prepareForTest = () => {
     console.log("preparing for test!");
     setTest(!test);
+    setResults('');
 
-    if (testRoots.length === 0) {
-      setTestRoots(getRandom(
-        elements.filter(isNode).filter((e) => e.type === NODE_TYPE.COLLAPSE_NODE),
-        TEST_CONF.NUM_NODES
-      ).map(e => ({
-        ...e,
-        data: {
-          ...e.data,
-          open: true
-        }
-      })));
-      setCurrentTest(0);
-    }
+    setTestRoots(getRandom(
+      elements.filter(isNode).filter((e) => e.type === NODE_TYPE.COLLAPSE_NODE),
+      TEST_CONF.NUM_NODES
+    ).map(e => ({
+      ...e,
+      data: {
+        ...e.data,
+        open: true
+      }
+    })));
+    setCurrentTest(0);
     setShouldLayout(true);
   };
 
@@ -73,22 +82,19 @@ export default function App() {
       setElements(els => removeElements(elementsToRemove, els));
   */
   return (
-    <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
-      <button style={{ position: 'absolute', bottom: '5%', right: '10%', zIndex: '5' }}
-        onClick={prepareForTest}>{!test ? 'Test me baby' : 'Please no more'}</button>
+    <div style={{ height: '80vh', width: '100%', position: 'relative' }}>
       {test ?
-        <ReactFlowProvider>
-          <TestView
-            rootNodes={testRoots}
-            currentTest={currentTest}
-            nextTest={nextTest}
-            prevTest={prevTest}
-            allElements={elements}
-            shouldLayout={shouldLayout}
-            setShouldLayout={setShouldLayout} />
-        </ReactFlowProvider>
+        <TestView
+          rootNodes={testRoots}
+          currentTest={currentTest}
+          nextTest={nextTest}
+          allElements={elements}
+          shouldLayout={shouldLayout}
+          setShouldLayout={setShouldLayout} />
         :
         <ReactFlowProvider>
+          <button style={{ position: 'absolute', bottom: '5%', right: '10%', zIndex: '5' }}
+            onClick={prepareForTest}>{'Test me baby'}</button>
           <ViewFlow
             elements={elements}
             setElements={setElements}
@@ -96,8 +102,12 @@ export default function App() {
             setShouldLayout={setShouldLayout}
           //onConnect={onConnect}
           //onElementsRemove={onElementsRemove}
-          /></ReactFlowProvider>
+          />
+        </ReactFlowProvider>
       }
+      <div>
+        {results}
+      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import {
   removeElements,
   getOutgoers,
   isNode,
-  useStoreState,
+  isEdge,
   useZoomPanHelper,
 } from 'react-flow-renderer';
 import TestFlow from './flows/TestFlow';
@@ -37,11 +37,18 @@ const shrinkGappedText = (gappedText) => {
   }
 };
 
-const TestView = ({ rootNodes, currentTest, nextTest, prevTest,
+const TestView = ({ rootNodes, currentTest, nextTest,
   allElements, shouldLayout, setShouldLayout }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [elements, setElements] = useState([rootNodes[currentTest]]);
+  const [answers, setAnswers] = useState([]);
+  /**[{
+   * gap: ,
+   * answerNodeId: ,
+   * connected: true/false,
+   * correct: true/false,
+   * }, ...] */
   const [sidebarElements, setSidebarElements] = useState([]);
   // sort them based on ID before including them to avoid unwanted reordering
   const setSidebarSorted = useMemo(() =>
@@ -92,6 +99,39 @@ const TestView = ({ rootNodes, currentTest, nextTest, prevTest,
     })));
   };
 
+  // i could move this into an effect... but who cares
+  const saveAns = () => {
+    const rootId = NODE_IDS.TEST_NODE(rootNodes[currentTest].id);
+    const root = elements.find((n) => n.id === rootId);
+    let ans = [];
+    const connectedEdges = elements.filter((edge) => isEdge(edge) && edge.source === rootId);
+
+    // find the gaps
+    ans = root.data.gappedText.filter((g) => g.type === FRAGMENT_TYPE.GAP)
+      // append answers
+      .reduce((acc, curr) => {
+        // only one edge per handle :)
+        const edge = connectedEdges.find((edge) => (edge.source === rootId &&
+          edge.sourceHandle === curr.handleId));
+        let newAns;
+        if (edge) newAns = {
+          gap: curr,
+          answerNodeId: edge.target,
+          connected: true,
+          correct: edge.target === curr.targetId,
+        }
+        else newAns = {
+          gap: curr,
+          answerNodeId: undefined,
+          connected: false,
+          correct: false,
+        };
+        return [...acc, newAns];
+      }, ans)
+    setAnswers(prev => [...prev, ...ans]);
+    console.log("answers: ", ans);
+  }
+
   const onClickDeleteIcon = useCallback((node) => {
     console.log("deleting node...", node);
     setElements((els) => removeElements([node], els));
@@ -109,7 +149,8 @@ const TestView = ({ rootNodes, currentTest, nextTest, prevTest,
   useEffect(() => {
     const rootNode = rootNodes[currentTest];
     // remove unnecessary gaps
-    const { gappedText: rootText, removedGaps } = shrinkGappedText(rootNodes[currentTest].data.gappedText);
+    const { gappedText: rootText, removedGaps } =
+      shrinkGappedText(rootNodes[currentTest].data.gappedText);
 
     const gapIds = new Set(Array.from(removedGaps).map((el) => el.targetId))
     // get all mentioned nodes, remove the ones that shouldn't be there
@@ -155,37 +196,34 @@ const TestView = ({ rootNodes, currentTest, nextTest, prevTest,
 
   return (
     <div className="dndflow">
-
-      <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-        <TestFlow
-          rootNode={rootNodes[currentTest]}
-          elements={elements}
-          setElements={setElements}
-          shouldLayout={shouldLayout}
-          setShouldLayout={setShouldLayout}
-          flowProps={{
-            onDrop,
-            onDragOver,
-            onLoad
-          }}
+      <ReactFlowProvider>
+        <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+          <TestFlow
+            rootNode={rootNodes[currentTest]}
+            elements={elements}
+            setElements={setElements}
+            shouldLayout={shouldLayout}
+            setShouldLayout={setShouldLayout}
+            flowProps={{
+              onDrop,
+              onDragOver,
+              onLoad
+            }}
+          />
+        </div>
+        <TestSidebar
+          nodes={sidebarElements}
         />
-      </div>
-      <TestSidebar
-        nodes={sidebarElements}
-      />
-      <button
-        style={{ position: 'absolute', bottom: '5%', right: '40%', zIndex: '5' }}
-        onClick={() => {
-          nextTest();
-        }}
-        disabled={currentTest === rootNodes.length - 1}>
-        Next slideeee</button>
-      <button style={{ position: 'absolute', bottom: '5%', left: '20%', zIndex: '5' }}
-        onClick={() => {
-          prevTest();
-        }}
-        disabled={currentTest === 0}>
-        Go back</button>
+        <button
+          style={{ position: 'absolute', bottom: '5%', right: '40%', zIndex: '5' }}
+          onClick={() => {
+            saveAns();
+            // maybe i should just move answers to higher component... but that's so messy
+            nextTest(answers);
+          }}>
+          {currentTest < rootNodes.length - 1 ? 'Next slideeee' : 'Lessgoo'}</button>
+
+      </ReactFlowProvider>
     </div >
   );
 };
