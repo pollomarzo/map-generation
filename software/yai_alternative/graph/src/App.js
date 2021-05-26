@@ -15,7 +15,7 @@ export default function App() {
 
   const [elements, setElements] = useState([]);
   // going to keep this here to call a graph layout when it's needed
-  const [shouldLayout, setShouldLayout] = useState(() => () => { });
+  const [shouldLayout, setShouldLayout] = useState(true);
   const [test, setTest] = useState(false);
   // TODO: does this need to exist?
   const [testRoots, setTestRoots] = useState([]);
@@ -41,7 +41,7 @@ export default function App() {
       })));
       setCurrentTest(0);
     }
-    setShouldLayout(() => () => { });
+    setShouldLayout(true);
   };
 
   // fetch initial data and parse it into a graph 
@@ -77,14 +77,16 @@ export default function App() {
       <button style={{ position: 'absolute', bottom: '5%', right: '10%', zIndex: '5' }}
         onClick={prepareForTest}>{!test ? 'Test me baby' : 'Please no more'}</button>
       {test ?
-        <TestView
-          rootNodes={testRoots}
-          currentTest={currentTest}
-          nextTest={nextTest}
-          prevTest={prevTest}
-          allElements={elements}
-          shouldLayout={shouldLayout}
-          setShouldLayout={setShouldLayout} />
+        <ReactFlowProvider>
+          <TestView
+            rootNodes={testRoots}
+            currentTest={currentTest}
+            nextTest={nextTest}
+            prevTest={prevTest}
+            allElements={elements}
+            shouldLayout={shouldLayout}
+            setShouldLayout={setShouldLayout} />
+        </ReactFlowProvider>
         :
         <ReactFlowProvider>
           <ViewFlow

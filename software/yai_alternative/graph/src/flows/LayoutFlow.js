@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useLayoutEffect, } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactFlow, {
     isNode,
     useStoreState,
     Position,
     Controls,
     ControlButton,
-    useStoreActions
+    useStoreActions,
+    useZoomPanHelper
 } from 'react-flow-renderer';
 import dagre from 'dagre';
 import CollapseNode from '../custom_nodes/CollapseNode';
@@ -17,13 +18,14 @@ const nodeTypes = {
     collapseNode: CollapseNode,
     detachNode: DetachNode,
 };
+
 const dagreGraph = new dagre.graphlib.Graph()
     .setGraph({ rankdir: 'LR', edgesep: 10, ranksep: 100, nodesep: 20 });
-dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const LayoutFlow = ({
     elements, setElements,
     shouldLayout, setShouldLayout,
+    fitView,
     onElementsRemove,
     flowProps }) => {
 
@@ -31,13 +33,14 @@ const LayoutFlow = ({
         onConnect,
         onDrop,
         onDragOver,
-        onLoad, reactFlowInstance } = flowProps;
+        onLoad } = flowProps;
 
-
+    const [shouldFitView, setShouldFitView] = useState(false);
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
 
     const onLayout = useCallback(() => {
+        dagreGraph.setDefaultEdgeLabel(() => ({}));
         console.log("reviewing layout...");
         nodes.forEach((el) =>
             dagreGraph.setNode(el.id, { width: el.__rf.width, height: el.__rf.height })
@@ -54,7 +57,7 @@ const LayoutFlow = ({
                 // because of rendering sometimes this gets called too early. 
                 // not the greatest fix, but...
                 if (nodeWithPosition) {
-                    layouted = true
+                    layouted = true;
                     el.targetPosition = Position.Left;
                     el.sourcePosition = Position.Right;
                     // we need to pass a slighlty different position in order to notify react flow about the change
@@ -79,11 +82,19 @@ const LayoutFlow = ({
             nodes.every((node) => node.__rf.width &&
                 node.__rf.height)) {
             const layouted = onLayout();
-            console.log("ran effect");
-            shouldLayout();
-            setShouldLayout(layouted ? undefined : (e) => () => { });
+
+            setShouldLayout(!layouted);
+            setShouldFitView(layouted);
         }
     }, [elements, nodes, onLayout, shouldLayout, setShouldLayout]);
+
+    useEffect(() => {
+        if (shouldFitView && fitView) {
+            console.log("asing for new fit");
+            const fitted = fitView(nodes);
+            setShouldFitView(!fitted);
+        }
+    }, [shouldFitView, fitView, nodes]);
 
 
     return (
@@ -100,7 +111,7 @@ const LayoutFlow = ({
                 onLoad={onLoad}
             >
                 <Controls showInteractive={false}>
-                    <ControlButton onClick={onLayout}>
+                    <ControlButton onClick={() => { setShouldLayout(true); /* reactFlowInstance.fitView();  */ }}>
                         <FilterCenterFocusIcon />
                     </ControlButton>
                 </Controls>

@@ -3,13 +3,15 @@ import { NODE_TYPE, COLLAPSE_HANDLE_IDS, EDGE_DATA_TYPE } from '../const';
 import {
     removeElements,
     useStoreState,
-    getConnectedEdges
+    getConnectedEdges,
+    useZoomPanHelper
 } from 'react-flow-renderer';
 
 const ViewFlow = ({ elements, setElements, shouldLayout, setShouldLayout }) => {
 
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
+    const { fitView: originalFitView, setCenter } = useZoomPanHelper();
 
     const onElementClick = (_, element) => {
         // if it's a collapse node and we're opening it
@@ -45,12 +47,21 @@ const ViewFlow = ({ elements, setElements, shouldLayout, setShouldLayout }) => {
         }
         else console.log(element);
     };
+
+    const fitView = (_) => {
+        let fitted = true;
+        originalFitView();
+        return fitted;
+    }
+
+
     return (
         <LayoutFlow
             elements={elements}
             setElements={setElements}
             shouldLayout={shouldLayout}
             setShouldLayout={setShouldLayout}
+            fitView={fitView}
             flowProps={{
                 onElementClick
             }}

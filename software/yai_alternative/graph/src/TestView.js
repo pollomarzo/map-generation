@@ -4,6 +4,8 @@ import {
   removeElements,
   getOutgoers,
   isNode,
+  useStoreState,
+  useZoomPanHelper,
 } from 'react-flow-renderer';
 import TestFlow from './flows/TestFlow';
 import './dnd.css';
@@ -48,7 +50,7 @@ const TestView = ({ rootNodes, currentTest, nextTest, prevTest,
 
   const onLoad = (_reactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance);
-    // _reactFlowInstance.fitView();
+    setShouldLayout(true);
   };
 
   const onDragOver = (event) => {
@@ -147,42 +149,44 @@ const TestView = ({ rootNodes, currentTest, nextTest, prevTest,
     };
     setElements([modifiedRoot]);
     setSidebarSorted(() => modifiedNodes);
-    setShouldLayout((els) => () => { });
+    setShouldLayout(true);
   }, [setElements, rootNodes, currentTest, allElements, setSidebarSorted, onClickDeleteIcon, setShouldLayout])
 
 
   return (
     <div className="dndflow">
-      <ReactFlowProvider>
-        <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-          <TestFlow
-            rootNode={rootNodes[currentTest]}
-            elements={elements}
-            setElements={setElements}
-            shouldLayout={shouldLayout}
-            setShouldLayout={setShouldLayout}
-            flowProps={{
-              onDrop,
-              onDragOver,
-              onLoad,
-              reactFlowInstance
-            }}
-          />
-        </div>
-        <TestSidebar
-          nodes={sidebarElements}
+
+      <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+        <TestFlow
+          rootNode={rootNodes[currentTest]}
+          elements={elements}
+          setElements={setElements}
+          shouldLayout={shouldLayout}
+          setShouldLayout={setShouldLayout}
+          flowProps={{
+            onDrop,
+            onDragOver,
+            onLoad
+          }}
         />
-      </ReactFlowProvider>
+      </div>
+      <TestSidebar
+        nodes={sidebarElements}
+      />
       <button
         style={{ position: 'absolute', bottom: '5%', right: '40%', zIndex: '5' }}
-        onClick={nextTest}
+        onClick={() => {
+          nextTest();
+        }}
         disabled={currentTest === rootNodes.length - 1}>
         Next slideeee</button>
       <button style={{ position: 'absolute', bottom: '5%', left: '20%', zIndex: '5' }}
-        onClick={prevTest}
+        onClick={() => {
+          prevTest();
+        }}
         disabled={currentTest === 0}>
         Go back</button>
-    </div>
+    </div >
   );
 };
 

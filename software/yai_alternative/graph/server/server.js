@@ -65,7 +65,7 @@ app.post('/question', function (req, res) {
 app.post('/approval', function (req, res) {
     console.log("received this: ", req.body);
     if (req.body.is_approved && req.body.factors) {
-        CACHE.is_approved = req.body.is_approved;
+        CACHE.is_approved = req.body.is_approved !== 'false';
         CACHE.factors = req.body.factors.map(text => cleanup(text));
         /** or maybe this looks better
          * CACHE = {
