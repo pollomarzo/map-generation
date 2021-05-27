@@ -40,6 +40,7 @@ const LayoutFlow = ({
     const edges = useStoreState(store => store.edges);
 
     const onLayout = useCallback(() => {
+        console.log("in onLayout, nodes are: ", nodes);
         dagreGraph.setDefaultEdgeLabel(() => ({}));
         console.log("reviewing layout...");
         nodes.forEach((el) =>
@@ -83,8 +84,8 @@ const LayoutFlow = ({
                 node.__rf.height)) {
             const layouted = onLayout();
 
-            setShouldLayout(!layouted);
-            setShouldFitView(layouted);
+            setShouldLayout(false);
+            setShouldFitView(true);
         }
     }, [elements, nodes, onLayout, shouldLayout, setShouldLayout]);
 
@@ -109,6 +110,7 @@ const LayoutFlow = ({
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onLoad={onLoad}
+                onlyRenderVisibleElements={false}
             >
                 <Controls showInteractive={false}>
                     <ControlButton onClick={() => { setShouldLayout(true); /* reactFlowInstance.fitView();  */ }}>
