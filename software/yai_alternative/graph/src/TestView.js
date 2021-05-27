@@ -100,7 +100,7 @@ const TestView = ({ rootNodes, currentTest, nextTest,
   };
 
   // i could move this into an effect... but who cares
-  const saveAns = () => {
+  const saveAns = (prev) => {
     const rootId = NODE_IDS.TEST_NODE(rootNodes[currentTest].id);
     const root = elements.find((n) => n.id === rootId);
     let ans = [];
@@ -128,8 +128,7 @@ const TestView = ({ rootNodes, currentTest, nextTest,
         };
         return [...acc, newAns];
       }, ans)
-    setAnswers(prev => [...prev, ...ans]);
-    console.log("answers: ", ans);
+    return [...prev, ...ans];
   }
 
   const onClickDeleteIcon = useCallback((node) => {
@@ -217,9 +216,13 @@ const TestView = ({ rootNodes, currentTest, nextTest,
         <button
           style={{ position: 'absolute', bottom: '5%', right: '40%', zIndex: '5' }}
           onClick={() => {
-            saveAns();
+            setAnswers(prev => {
+              const newval = saveAns(prev);
+              nextTest(newval);
+              return newval;
+            });
             // maybe i should just move answers to higher component... but that's so messy
-            nextTest(answers);
+            // nextTest(answers);
           }}>
           {currentTest < rootNodes.length - 1 ? 'Next slideeee' : 'Lessgoo'}</button>
 

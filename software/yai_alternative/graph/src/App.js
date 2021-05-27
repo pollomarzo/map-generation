@@ -29,6 +29,7 @@ export default function App() {
     else {
       setTest(false);
       const correctAns = ans.reduce((a, c) => a + c.correct ? 1 : 0, 0);
+      console.log("received ans are: ", ans);
       setResults(`you got ${correctAns} "questions" correct. Thanks for trying!`);
       console.log("we're done with tests");
     }
