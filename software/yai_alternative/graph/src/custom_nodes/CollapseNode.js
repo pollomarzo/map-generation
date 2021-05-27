@@ -44,7 +44,7 @@ const CollapseNode = ({ id, data }) => {
     const onGapClick = useCallback((edge, gap) => {
         // click twice to remove
         setSelected(gap.selected ? undefined : gap);
-        propagateGapClick(edge);
+        propagateGapClick && propagateGapClick(edge);
     }, [propagateGapClick]);
 
     const handles = useMemo(() => gappedText.filter((el) => (el.type === FRAGMENT_TYPE.GAP)).map((el, idx) => (
