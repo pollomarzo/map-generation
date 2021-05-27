@@ -9,7 +9,7 @@ import {
 } from 'react-flow-renderer';
 import TestFlow from './flows/TestFlow';
 import './dnd.css';
-import { NODE_IDS, NODE_TYPE, FRAGMENT_TYPE } from './const';
+import { NODE_IDS, NODE_TYPE, FRAGMENT_TYPE, NODE_DATA_TYPE } from './const';
 import { getRandom, uniq } from './utils';
 import { TEST_CONF } from './config';
 
@@ -52,7 +52,11 @@ const TestView = ({ rootNodes, currentTest, nextTest,
   const [sidebarElements, setSidebarElements] = useState([]);
   // sort them based on ID before including them to avoid unwanted reordering
   const setSidebarSorted = useMemo(() =>
-    (updateF) => setSidebarElements((els) => updateF(els).sort((a, b) => a.id - b.id)),
+    (updateF) => setSidebarElements((els) => {
+      const newval = updateF(els).sort((a, b) => a.id - b.id);
+      console.log("sidebar stuff: ", newval);
+      return newval
+    }),
     [setSidebarElements]);
 
   const onLoad = (_reactFlowInstance) => {
@@ -153,30 +157,37 @@ const TestView = ({ rootNodes, currentTest, nextTest,
 
     const gapIds = new Set(Array.from(removedGaps).map((el) => el.targetId))
     // get all mentioned nodes, remove the ones that shouldn't be there
-    // also add onDelete prop.
-    const modifiedNodes = uniq(
+    const modifiedNodes =
       getOutgoers(rootNode, allElements)
-        .filter(el => !gapIds.has(el.id))
-        .concat(getRandom(
-          allElements.filter((node) => isNode(node) && node.type === NODE_TYPE.OUTPUT),
-          TEST_CONF.NUM_EXTRA_NODES))
-        .map((node) => ({
-          ...node,
-          id: NODE_IDS.TEST_NODE(node.id),
-          type: NODE_TYPE.DETACH_NODE,
-        }))
-        // separate because we changed id
-        .map((node) => ({
-          ...node,
-          data: {
-            ...node.data,
-            onDelete: () => onClickDeleteIcon(node)
-          }
-        })),
-      (el) => el.id);
-    console.log("nodes are: ", modifiedNodes);
+        .filter(el => !gapIds.has(el.id) && el.data.type !== NODE_DATA_TYPE.QUESTION)
 
+    // how many nodes are left?
+    const remaining = allElements.filter((node) => isNode(node) &&
+      node.data.type !== NODE_DATA_TYPE.QUESTION &&
+      !modifiedNodes.find(n => n.id === node.id))
 
+    // select a random set of nodes to integrate
+    const randomAddition = getRandom(
+      remaining,
+      Math.min(remaining.length, TEST_CONF.NUM_EXTRA_NODES));
+
+    // merge and cleanup
+    const sidebarNodes = modifiedNodes.concat(randomAddition)
+      .map((node) => ({
+        ...node,
+        id: NODE_IDS.TEST_NODE(node.id),
+        type: NODE_TYPE.DETACH_NODE,
+      }))
+      // separate because we changed id
+      .map((node) => ({
+        ...node,
+        data: {
+          ...node.data,
+          onDelete: () => onClickDeleteIcon(node)
+        }
+      }));
+
+    // clean modifiedRoot
     const modifiedRoot = {
       ...rootNode,
       id: NODE_IDS.TEST_NODE(rootNode.id),
@@ -188,7 +199,7 @@ const TestView = ({ rootNodes, currentTest, nextTest,
       }
     };
     setElements([modifiedRoot]);
-    setSidebarSorted(() => modifiedNodes);
+    setSidebarSorted(() => sidebarNodes);
     setShouldLayout(true);
   }, [setElements, rootNodes, currentTest, allElements, setSidebarSorted, onClickDeleteIcon, setShouldLayout])
 

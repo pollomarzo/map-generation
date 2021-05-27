@@ -10,6 +10,12 @@ export const NODE_TYPE = {
     DETACH_NODE: 'detachNode'
 };
 
+export const NODE_DATA_TYPE = {
+    QUESTION: 'question',
+    FACTOR: 'factor',
+    ABSTRACT: 'abstract'
+}
+
 export const NODE_IDS = {
     DECISION_NODE: 'decision_node',
     QUESTION_NODE: (topicId, question) => `${topicId}-${question}`,
