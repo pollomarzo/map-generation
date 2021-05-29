@@ -155,18 +155,18 @@ const TestView = ({ rootNodes, currentTest, nextTest,
 
     const gapIds = new Set(Array.from(removedGaps).map((el) => el.targetId))
 
-    const acceptableNodes = allElements.filter(n => isNode(n) &&
+    const acceptableNode = (n => isNode(n) &&
       n.data.type !== NODE_DATA_TYPE.QUESTION &&
-      n.data.type !== NODE_DATA_TYPE.DECISION
-    )
+      n.data.type !== NODE_DATA_TYPE.DECISION);
+
     // get all mentioned nodes, remove the ones that shouldn't be there
     const modifiedNodes =
-      getOutgoers(rootNode, acceptableNodes)
-        .filter(el => !gapIds.has(el.id))
+      getOutgoers(rootNode, allElements)
+        .filter(el => !gapIds.has(el.id) && acceptableNode(el))
 
     // how many nodes are left?
-    const remaining = acceptableNodes.filter((node) =>
-      !modifiedNodes.find(n => n.id === node.id))
+    const remaining = allElements.filter((node) =>
+      !modifiedNodes.find(n => n.id === node.id) && acceptableNode(node))
 
     // select a random set of nodes to integrate
     const randomAddition = getRandom(
