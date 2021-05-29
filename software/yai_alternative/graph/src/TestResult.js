@@ -24,7 +24,7 @@ const TestResult = ({ answers }) => {
     `On average, you got ${round(averageCorrect * 100)}% correct connections for each node.`];
 
   return (
-    <div>
+    <div style={{ padding: 25 }}>
       {text.map((text, idx) => <div key={idx}>{text}</div>)}
       {/** charts or something? */}
 

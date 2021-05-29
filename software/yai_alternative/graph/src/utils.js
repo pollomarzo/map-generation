@@ -1,7 +1,6 @@
 import { NODE_TYPE, EDGE_IDS, NODE_IDS, FRAGMENT_TYPE, COLLAPSE_HANDLE_IDS, NODE_DATA_TYPE } from './const';
 
-const SERVER_URL = 'http://localhost:8080'
-export const GET_DATA_URL = SERVER_URL + '/data'
+export const GET_DATA_URL = '/data'
 
 const DEFAULT_POSITION = { x: 0, y: 0 }
 
@@ -111,6 +110,9 @@ const inflateWithAbstracts = (nodes, abstracts) => {
                 source: curr.id,
                 sourceHandle: COLLAPSE_HANDLE_IDS.DEFAULT,
                 target: node.id,
+                data: {
+                    type: 'abstract'
+                },
                 animated: false
             }));
             // add inflated node, changing props if present

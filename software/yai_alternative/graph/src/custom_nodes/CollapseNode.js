@@ -1,6 +1,6 @@
-import React, { memo, useCallback, useMemo, useState, useLayoutEffect } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 
-import { Handle, Position, useStoreState, useUpdateNodeInternals } from 'react-flow-renderer';
+import { Handle, Position, useStoreState } from 'react-flow-renderer';
 
 import Collapse from 'react-collapse';
 
@@ -28,8 +28,6 @@ const CollapseNode = ({ id, data }) => {
     const { label, gappedText, open, hasQuestions, onGapClick: propagateGapClick, noTargetHandle } = data;
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
-    // not 100% sure i need this, but i saw some weird behavior sometimes
-    const updateNodeInternals = useUpdateNodeInternals();
     const [selected, setSelected] = useState();
 
     // this sets selected gap
@@ -59,9 +57,6 @@ const CollapseNode = ({ id, data }) => {
         />
     )), [gappedText, open]);
 
-    useLayoutEffect(() => {
-        updateNodeInternals(id);
-    }, [handles, id, updateNodeInternals])
 
     const populateContent = useCallback(() => {
         const connectedEdges = edges.filter((edge) => edge.source === id);
@@ -84,7 +79,6 @@ const CollapseNode = ({ id, data }) => {
     }, [edges, editedGappedText, id, nodes, onGapClick]);
 
     const content = useMemo(() => populateContent(), [populateContent]);
-    // console.log(gappedText);
 
     return (
         <div style={{

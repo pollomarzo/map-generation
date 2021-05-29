@@ -26,7 +26,15 @@ const ViewFlow = ({ elements, setElements, shouldLayout, setShouldLayout }) => {
             // ignore question nodes. immutable
             let modifEdges = getConnectedEdges([element], edges).filter((edge) =>
                 edge.source === element.id && edge.data.type !== EDGE_DATA_TYPE.QUESTION);
-            const remainingNodes = nodes.filter((node) => node.id !== element.id);
+            const remainingNodes = nodes.filter((node) => node.id !== element.id)
+                .map(n => ({
+                    id: n.id,
+                    type: n.type,
+                    data: {
+                        ...n.data
+                    },
+                    position: n.position
+                }));
             const remainingEdges = removeElements(modifEdges, edges);
             // then we need to update some edges... without CREATING any. just update present ones
             if (element.data.open) {

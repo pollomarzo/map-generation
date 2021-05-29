@@ -17,7 +17,7 @@ app.use(express.json());
 
 // just allow all requests 
 app.use(cors())
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, '../build')));
 
 
 app.get('/ping', function (req, res) {
@@ -29,7 +29,7 @@ app.get('/data', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../build/', 'index.html'));
 });
 
 app.post('/abstract', function (req, res) {

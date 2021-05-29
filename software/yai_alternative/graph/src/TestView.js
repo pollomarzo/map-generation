@@ -5,12 +5,11 @@ import {
   getOutgoers,
   isNode,
   isEdge,
-  useZoomPanHelper,
 } from 'react-flow-renderer';
 import TestFlow from './flows/TestFlow';
 import './dnd.css';
 import { NODE_IDS, NODE_TYPE, FRAGMENT_TYPE, NODE_DATA_TYPE } from './const';
-import { getRandom, uniq } from './utils';
+import { getRandom, } from './utils';
 import { TEST_CONF } from './config';
 
 import TestSidebar from './TestSidebar';
@@ -43,12 +42,6 @@ const TestView = ({ rootNodes, currentTest, nextTest,
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [elements, setElements] = useState([rootNodes[currentTest]]);
   const [answers, setAnswers] = useState([]);
-  /**[{
-   * gap: ,
-   * answerNodeId: ,
-   * connected: true/false,
-   * correct: true/false,
-   * }, ...] */
   const [sidebarElements, setSidebarElements] = useState([]);
 
   // sort them based on ID before including them to avoid unwanted reordering
@@ -59,7 +52,7 @@ const TestView = ({ rootNodes, currentTest, nextTest,
 
   const onLoad = (_reactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance);
-    setShouldLayout(true);
+    // setShouldLayout(false);
   };
 
   const onDragOver = (event) => {
@@ -157,7 +150,8 @@ const TestView = ({ rootNodes, currentTest, nextTest,
 
     const acceptableNode = (n => isNode(n) &&
       n.data.type !== NODE_DATA_TYPE.QUESTION &&
-      n.data.type !== NODE_DATA_TYPE.DECISION);
+      n.data.type !== NODE_DATA_TYPE.DECISION &&
+      n.id !== rootNode.id);
 
     // get all mentioned nodes, remove the ones that shouldn't be there
     const modifiedNodes =
@@ -188,7 +182,7 @@ const TestView = ({ rootNodes, currentTest, nextTest,
         data: {
           ...node.data,
           onDelete: () => onClickDeleteIcon(node)
-        }
+        },
       }));
 
     // clean modifiedRoot
@@ -200,6 +194,7 @@ const TestView = ({ rootNodes, currentTest, nextTest,
         onGapClick,
         noTargetHandle: true,
         gappedText: rootText,
+        inTest: true
       }
     };
     setElements([modifiedRoot]);
@@ -239,7 +234,7 @@ const TestView = ({ rootNodes, currentTest, nextTest,
             // maybe i should just move answers to higher component... but that's so messy
             // nextTest(answers);
           }}>
-          {currentTest < rootNodes.length - 1 ? 'Next slideeee' : 'Lessgoo'}</button>
+          {currentTest < rootNodes.length - 1 ? 'Next' : 'All done!'}</button>
 
       </ReactFlowProvider>
     </div >

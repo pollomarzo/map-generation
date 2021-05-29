@@ -5,7 +5,7 @@ import ReactFlow, {
     Position,
     Controls,
     ControlButton,
-    useStoreActions,
+    useUpdateNodeInternals,
     useZoomPanHelper
 } from 'react-flow-renderer';
 import dagre from 'dagre';
@@ -29,6 +29,8 @@ const LayoutFlow = ({
     onElementsRemove,
     flowProps }) => {
 
+    const { fitView: originalFitView } = useZoomPanHelper();
+
     const { onElementClick,
         onConnect,
         onDrop,
@@ -38,6 +40,7 @@ const LayoutFlow = ({
     const [shouldFitView, setShouldFitView] = useState(false);
     const nodes = useStoreState(store => store.nodes);
     const edges = useStoreState(store => store.edges);
+    const updateNodeInternals = useUpdateNodeInternals();
 
     const onLayout = useCallback(() => {
         console.log("in onLayout, nodes are: ", nodes);
@@ -82,7 +85,7 @@ const LayoutFlow = ({
         if (shouldLayout && nodes.length > 0 &&
             nodes.every((node) => node.__rf.width &&
                 node.__rf.height)) {
-            const layouted = onLayout();
+            onLayout();
 
             setShouldLayout(false);
             setShouldFitView(true);
@@ -90,12 +93,12 @@ const LayoutFlow = ({
     }, [elements, nodes, onLayout, shouldLayout, setShouldLayout]);
 
     useEffect(() => {
-        if (shouldFitView && fitView) {
+        if (shouldFitView) {
             console.log("asing for new fit");
-            const fitted = fitView(nodes);
-            setShouldFitView(!fitted);
+            fitView ? fitView(nodes) : originalFitView();
+            setShouldFitView(false);
         }
-    }, [shouldFitView, fitView, nodes]);
+    }, [shouldFitView, fitView, nodes, updateNodeInternals, originalFitView]);
 
 
     return (
@@ -112,11 +115,7 @@ const LayoutFlow = ({
                 onLoad={onLoad}
                 onlyRenderVisibleElements={false}
             >
-                <Controls showInteractive={false}>
-                    <ControlButton onClick={() => { setShouldLayout(true); /* reactFlowInstance.fitView();  */ }}>
-                        <FilterCenterFocusIcon />
-                    </ControlButton>
-                </Controls>
+                <Controls showInteractive={false} />
             </ReactFlow>
         </div >
     );

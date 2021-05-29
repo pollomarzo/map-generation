@@ -1,19 +1,19 @@
 import LayoutFlow from './LayoutFlow';
-import { useCallback, useEffect, useMemo } from 'react';
 import {
     useZoomPanHelper,
     removeElements,
     isEdge,
 } from 'react-flow-renderer';
-import { EDGE_IDS } from '../const';
+import { EDGE_IDS, NODE_IDS } from '../const';
 
 
-const TestFlow = ({ rootNode, elements, setElements,
+const TestFlow = ({ rootNode,
+    elements, setElements,
     shouldLayout,
     setShouldLayout,
     flowProps }) => {
-    const edges = useMemo(() => elements.filter(isEdge), [elements]);
-    const { fitView: originalFitView, setCenter } = useZoomPanHelper();
+    const edges = elements.filter(isEdge);
+    const { fitView: originalFitView, zoomTo } = useZoomPanHelper();
 
 
 
@@ -32,42 +32,44 @@ const TestFlow = ({ rootNode, elements, setElements,
 
 
     const fitView = (nodes) => {
-        let fitted = false;
-        const node = nodes[0];
-        if (node) {
-            fitted = true;
-            const x = node.__rf.position.x + node.__rf.width;
-            const y = node.__rf.position.y + node.__rf.height;
-            const zoom = 0.90;
-            setCenter(x, y, zoom);
-        }
-        console.log("setting shouldFitView to: ", !fitted);
-        return fitted;
+        // const node = nodes[0];
+        // if (node) {
+        //     fitted = true;
+        //     const x = node.__rf.position.x + node.__rf.width;
+        //     const y = node.__rf.position.y + node.__rf.height;
+        //     const zoom = 0.90;
+        //     setCenter(x, y, zoom);
+        // }
+        // console.log("setting shouldFitView to: ", !fitted);
+        originalFitView();
+        zoomTo(0.85);
+        return true;
     }
 
 
 
+
     const onConnect = params => {
+        console.log("params: ", params);
         // make sure the edge doesn't exist already. only one edge per handle
         if (!edges.find(edge => edge.sourceHandle === params.sourceHandle || edge.target === params.target)) {
-            const edgeId = EDGE_IDS.TEST_EDGE(rootNode.id, params.target);
+            const edgeId = EDGE_IDS.TEST_EDGE(NODE_IDS.TEST_NODE(rootNode.id), params.target);
             const newEdge = {
                 ...params,
                 id: edgeId,
                 animated: false,
                 data: { type: 'test' }
             }
-            let node = elements.find((el) => el.id === params.target);
-            const remainingElements = elements.filter((el) => el.id !== params.target);
-            node = {
-                ...node,
+            const oldNode = elements.find((el) => el.id === params.target);
+            const newNode = {
+                ...oldNode,
                 data: {
-                    ...node.data,
+                    ...oldNode.data,
                     onHandleClick: () => onRemoveEdge(newEdge, params.target),
                     connected: true,
                 }
             };
-            setElements([...remainingElements, node, newEdge]);
+            setElements(elements => [...removeElements([oldNode], elements), newNode, newEdge]);
         }
     };
 
@@ -75,8 +77,8 @@ const TestFlow = ({ rootNode, elements, setElements,
     return (
         <>
             <LayoutFlow
-                fitView={fitView}
                 elements={elements} // put setView in useEffect on render []
+                fitView={fitView}
                 setElements={setElements}
                 shouldLayout={shouldLayout}
                 setShouldLayout={setShouldLayout}

@@ -49,7 +49,7 @@ export default function App() {
       }
     })));
     setCurrentTest(0);
-    setShouldLayout(true);
+    // setShouldLayout(true);
   };
 
   // fetch initial data and parse it into a graph 

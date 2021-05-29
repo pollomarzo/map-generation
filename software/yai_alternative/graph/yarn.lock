@@ -1098,7 +1098,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.12.1", "@babel/runtime@^7.13.17", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.12.1", "@babel/runtime@^7.14.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.14.0"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.14.0.tgz"
   integrity sha512-JELkvo/DlpNdJ7dlyw/eY7E0suy5i5GQH+Vlxaq1nsNJ+H7f4Vtv3jMeCEgRhZZQFXTjldYfQgv2qmM6M1v5wA==
@@ -1883,10 +1883,10 @@
     "@types/d3-interpolate" "*"
     "@types/d3-selection" "*"
 
-"@types/d3@^6.3.0":
-  version "6.3.0"
-  resolved "https://registry.npmjs.org/@types/d3/-/d3-6.3.0.tgz"
-  integrity sha512-YILdGsjNTbvkWZKsBasB4cVDwNPnni7ILMJg9keMErQHyuII2yO2jyFdUy5E+7k/HTNP/AucrPddQuu27udbeA==
+"@types/d3@^6.7.0":
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/@types/d3/-/d3-6.7.0.tgz#e801778cfcf3b5e52ad4dae0d21263b2511d314f"
+  integrity sha512-QOf+58QAvNcqpfIdAfdHe7wDWnIra1YvgCJh2Lxw5FY9dZ+6XVbN63DVoJLnDGpGNBycqUvj5rjHlKZkoz1PtQ==
   dependencies:
     "@types/d3-array" "*"
     "@types/d3-axis" "*"
@@ -9442,13 +9442,13 @@ react-error-overlay@^6.0.9:
   resolved "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.9.tgz"
   integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
 
-react-flow-renderer@^9.5.4:
-  version "9.5.4"
-  resolved "https://registry.npmjs.org/react-flow-renderer/-/react-flow-renderer-9.5.4.tgz"
-  integrity sha512-46Oors0UZubD7tYEnvN0+iS7YITKu2YkTnNSX32rTCAVj35kB2RHXaVPUGK5grURnWbWyPjAuV6qLWzlRPjQpg==
+react-flow-renderer@^9.5.5:
+  version "9.5.5"
+  resolved "https://registry.yarnpkg.com/react-flow-renderer/-/react-flow-renderer-9.5.5.tgz#b6f5039405d99fe25559f28a9242f620e7c5322c"
+  integrity sha512-PIDy8bnJ+KLpNbbQqgTqZiC2Gsvhfb1aB8LFhdZZycKDGAguioAqiIvUKxMKg7SfkMhBPx0tIj21MaTQXnKQaQ==
   dependencies:
-    "@babel/runtime" "^7.13.17"
-    "@types/d3" "^6.3.0"
+    "@babel/runtime" "^7.14.0"
+    "@types/d3" "^6.7.0"
     "@types/react-redux" "^7.1.16"
     classcat "^5.0.3"
     d3-selection "^2.0.0"
