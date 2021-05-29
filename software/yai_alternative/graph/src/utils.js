@@ -1,4 +1,4 @@
-import { NODE_TYPE, EDGE_IDS, NODE_IDS, FRAGMENT_TYPE, COLLAPSE_HANDLE_IDS } from './const';
+import { NODE_TYPE, EDGE_IDS, NODE_IDS, FRAGMENT_TYPE, COLLAPSE_HANDLE_IDS, NODE_DATA_TYPE } from './const';
 
 const SERVER_URL = 'http://localhost:8080'
 export const GET_DATA_URL = SERVER_URL + '/data'
@@ -31,7 +31,7 @@ export function getRandom(arr, n) {
     return result;
 }
 
-// extract nodes from HTML string
+// extract nodes from HTML string, return nodes and text with gaps
 const parseHTMLString = (text, parentNodeId) => {
 
     // parse String into HTML
@@ -101,7 +101,7 @@ const inflateWithAbstracts = (nodes, abstracts) => {
                 type: NODE_TYPE.COLLAPSE_NODE,
                 data: {
                     ...curr.data,
-                    type: 'factor',
+                    type: NODE_DATA_TYPE.ABSTRACT,
                     gappedText: gaps,
                     open: false,
                 }
@@ -111,9 +111,6 @@ const inflateWithAbstracts = (nodes, abstracts) => {
                 source: curr.id,
                 sourceHandle: COLLAPSE_HANDLE_IDS.DEFAULT,
                 target: node.id,
-                data: {
-                    type: 'abstract'
-                },
                 animated: false
             }));
             // add inflated node, changing props if present
@@ -150,10 +147,15 @@ export const decisionToElements = (is_approved, factors, abstracts) => {
     const startNode = {
         id: NODE_IDS.DECISION_NODE,
         type: NODE_TYPE.INPUT,
-        data: { label: is_approved ? 'YES' : 'NO' },
+        data: {
+            label: is_approved ? 'YES' : 'NO',
+            type: NODE_DATA_TYPE.DECISION
+        },
         position: DEFAULT_POSITION
     };
-    let factorsNodes = factors.reduce((acc, factor) => acc.concat(parseHTMLString(factor, startNode.id).nodes), []);
+    let factorsNodes = factors.reduce((acc, factor) =>
+        acc.concat(parseHTMLString(factor, startNode.id).nodes), []);
+
     // connect start and factors
     const factorsEdges = factorsNodes.map(node => ({
         id: EDGE_IDS.FACTOR_EDGE(node.id),
@@ -163,7 +165,7 @@ export const decisionToElements = (is_approved, factors, abstracts) => {
         target: node.id,
         animated: false,
         data: {
-            type: 'node'
+            type: NODE_DATA_TYPE.FACTOR
         },
         arrowHeadType: 'full'
     }));
@@ -197,7 +199,7 @@ export const questionToElements = (
         type: NODE_TYPE.COLLAPSE_NODE,
         data: {
             label: question,
-            type: 'question',
+            type: NODE_DATA_TYPE.QUESTION,
             gappedText: gaps,
             open: false
         },

@@ -13,7 +13,8 @@ export const NODE_TYPE = {
 export const NODE_DATA_TYPE = {
     QUESTION: 'question',
     FACTOR: 'factor',
-    ABSTRACT: 'abstract'
+    ABSTRACT: 'abstract',
+    DECISION: 'decision',
 }
 
 export const NODE_IDS = {

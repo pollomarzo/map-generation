@@ -50,13 +50,11 @@ const TestView = ({ rootNodes, currentTest, nextTest,
    * correct: true/false,
    * }, ...] */
   const [sidebarElements, setSidebarElements] = useState([]);
+
   // sort them based on ID before including them to avoid unwanted reordering
   const setSidebarSorted = useMemo(() =>
-    (updateF) => setSidebarElements((els) => {
-      const newval = updateF(els).sort((a, b) => a.id - b.id);
-      console.log("sidebar stuff: ", newval);
-      return newval
-    }),
+    (updateF) => setSidebarElements((els) =>
+      updateF(els).sort((a, b) => (a.id < b.id) ? -1 : (b.id < a.id) ? 1 : 0)),
     [setSidebarElements]);
 
   const onLoad = (_reactFlowInstance) => {
@@ -156,19 +154,25 @@ const TestView = ({ rootNodes, currentTest, nextTest,
       shrinkGappedText(rootNodes[currentTest].data.gappedText);
 
     const gapIds = new Set(Array.from(removedGaps).map((el) => el.targetId))
+
+    const acceptableNodes = allElements.filter(n => isNode(n) &&
+      n.data.type !== NODE_DATA_TYPE.QUESTION &&
+      n.data.type !== NODE_DATA_TYPE.DECISION
+    )
     // get all mentioned nodes, remove the ones that shouldn't be there
     const modifiedNodes =
-      getOutgoers(rootNode, allElements)
-        .filter(el => !gapIds.has(el.id) && el.data.type !== NODE_DATA_TYPE.QUESTION)
+      getOutgoers(rootNode, acceptableNodes)
+        .filter(el => !gapIds.has(el.id))
 
     // how many nodes are left?
-    const remaining = allElements.filter((node) => isNode(node) &&
-      node.data.type !== NODE_DATA_TYPE.QUESTION &&
+    const remaining = acceptableNodes.filter((node) =>
       !modifiedNodes.find(n => n.id === node.id))
 
     // select a random set of nodes to integrate
     const randomAddition = getRandom(
       remaining,
+      // if there are not enough nodes... don't generate. 
+      // if someone wants to add it feel free though!
       Math.min(remaining.length, TEST_CONF.NUM_EXTRA_NODES));
 
     // merge and cleanup
