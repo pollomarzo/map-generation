@@ -132,7 +132,7 @@ const TestView = ({ rootNodes, currentTest, nextTest,
         };
         return [...acc, newAns];
       }, ans)
-    return [...prev, ...ans];
+    return [...prev, ans];
   }
 
   const onClickDeleteIcon = useCallback((node) => {

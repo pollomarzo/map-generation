@@ -9,6 +9,7 @@ import ViewFlow from './flows/ViewFlow';
 import TestView from './TestView';
 import { NODE_TYPE } from './const';
 import { TEST_CONF } from './config';
+import TestResult from './TestResult';
 
 
 export default function App() {
@@ -21,24 +22,21 @@ export default function App() {
   const [testRoots, setTestRoots] = useState([]);
   const [currentTest, setCurrentTest] = useState();
 
-  const [results, setResults] = useState('');
+  const [results, setResults] = useState(undefined);
 
   const nextTest = (ans) => {
-    console.log("next please!");
     if (currentTest < testRoots.length - 1) setCurrentTest(curr => curr + 1);
     else {
       setTest(false);
-      const correctAns = ans.reduce((a, c) => a + c.correct ? 1 : 0, 0);
       console.log("received ans are: ", ans);
-      setResults(`you got ${correctAns} "questions" correct. Thanks for trying!`);
-      console.log("we're done with tests");
+      setResults(ans);
     }
   };
 
   const prepareForTest = () => {
     console.log("preparing for test!");
     setTest(!test);
-    setResults('');
+    setResults(undefined);
 
     setTestRoots(getRandom(
       elements.filter(isNode).filter((e) => e.type === NODE_TYPE.COLLAPSE_NODE),
@@ -107,7 +105,7 @@ export default function App() {
         </ReactFlowProvider>
       }
       <div>
-        {results}
+        {results && <TestResult answers={results} />}
       </div>
     </div>
   );
