@@ -3,7 +3,7 @@ This is a way to test user's understanding for the explanations given by a (cred
 The basic interaction revolves around completing a graph built from what the user viewed during the explanation. Its grading capabilities are limited to say the least. It uses, react, react-flow for the graph, and a couple material ui icons.
 
 ## How do I use this
-The interface isn't quite as clean as I would have liked, so I left a video with some basic usage information.
+The interface isn't quite as clean as I would have liked, so I left a video (internship.mp4) with some basic usage information.
 
 ## How do I use this NOW
 It's not really meant to be used on its own, but if you want I left a file called `setup.sh` that curls a couple requests to the server so that you can try it out. You may need to change the port to the one you used.
