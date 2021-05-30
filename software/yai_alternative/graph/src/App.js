@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   ReactFlowProvider,
-  isNode
+  isNode,
+  removeElements
 } from 'react-flow-renderer';
 import { questionToElements, decisionToElements, GET_DATA_URL, getRandom } from './utils';
 import axios from 'axios';
 import ViewFlow from './flows/ViewFlow';
 import TestView from './TestView';
-import { NODE_TYPE } from './const';
-import { TEST_CONF } from './config';
+import { NODE_DATA_TYPE, NODE_TYPE } from './const';
+import { TEST_CONF, VIEW_CONF } from './config';
 import TestResult from './TestResult';
 
 
 export default function App() {
 
+  // all we found
+  const [parsed, setParsed] = useState([]);
+  // what's in the actual graph
   const [elements, setElements] = useState([]);
   // going to keep this here to call a graph layout when it's needed
   const [shouldLayout, setShouldLayout] = useState(true);
@@ -52,6 +56,26 @@ export default function App() {
     // setShouldLayout(true);
   };
 
+  const simplified = useMemo(() => {
+    if (elements.length > VIEW_CONF.MAX_GRAPH) {
+      let remaining = elements;
+      console.log("wayyy too many elements. I'll simplify this a bit!")
+      const elementsToRemove = elements.filter(n =>
+        // keep factors for readability
+        n.type === NODE_TYPE.OUTPUT && n.data.type !== NODE_DATA_TYPE.FACTOR);
+      const toRemove = new Set(elementsToRemove);
+      console.log("toRemove: ", toRemove);
+      const difference = elements.filter(x => !toRemove.has(x));
+      console.log("difference", difference)
+      remaining = [...difference, ...elementsToRemove.map(n => ({
+        ...n,
+        isHidden: true,
+      }))]
+      console.log("updated: ", remaining);
+      return remaining;
+    } else return elements;
+  }, [elements])
+
   // fetch initial data and parse it into a graph 
   useEffect(() => {
     axios.get(GET_DATA_URL)
@@ -68,18 +92,30 @@ export default function App() {
           questionToElements(acc, curr, abstracts), updatedElements);
 
         console.log("final updatedElements: ", updatedElements);
+
+        let remaining = updatedElements;
+
+        // if (updatedElements.length > VIEW_CONF.MAX_GRAPH) {
+        //   remaining = simplify(updatedElements);
+        //   console.log("wayyy too many elements. I'll simplify this a bit!")
+        //   const elementsToRemove = updatedElements.filter(n =>
+        //     // keep factors for readability
+        //     n.type === NODE_TYPE.OUTPUT && n.data.type !== NODE_DATA_TYPE.FACTOR);
+        //   const toRemove = new Set(elementsToRemove);
+        //   console.log("toRemove: ", toRemove);
+        //   const difference = updatedElements.filter(x => !toRemove.has(x));
+        //   console.log("difference", difference)
+        //   remaining = [...difference, ...elementsToRemove.map(n => ({
+        //     ...n,
+        //     isHidden: true,
+        //   }))]
+        //   console.log("updated: ", remaining);
+        // }
         return setElements([...updatedElements]);
       })
       .catch(err => console.error(err));
   }, []);
-  /*
-    const onConnect = params =>
-      setElements(els =>
-        addEdge({ ...params, type: 'smoothstep', animated: true }, els)
-      );
-    const onElementsRemove = elementsToRemove =>
-      setElements(els => removeElements(elementsToRemove, els));
-  */
+
   return (
     <div style={{ height: '80vh', width: '100%', position: 'relative' }}>
       {test ?
@@ -95,7 +131,7 @@ export default function App() {
           <button style={{ position: 'absolute', bottom: '5%', right: '10%', zIndex: '5' }}
             onClick={prepareForTest}>{'Test me baby'}</button>
           <ViewFlow
-            elements={elements}
+            elements={simplified}
             setElements={setElements}
             shouldLayout={shouldLayout}
             setShouldLayout={setShouldLayout}

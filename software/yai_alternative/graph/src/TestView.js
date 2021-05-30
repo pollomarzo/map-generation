@@ -74,6 +74,7 @@ const TestView = ({ rootNodes, currentTest, nextTest,
     const newNode = {
       ...node,
       position,
+      isHidden: false,
     };
 
     setElements((es) => es.concat(newNode));

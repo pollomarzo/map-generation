@@ -80,6 +80,7 @@ const parseHTMLString = (text, parentNodeId) => {
     const nodes = cleanSpanList.map((it) => ({
         id: it.getAttribute('data-topic'),
         type: NODE_TYPE.OUTPUT,
+        sourcePosition: 'left',
         data: { label: it.innerText },
         position: DEFAULT_POSITION
     }));
@@ -149,6 +150,7 @@ export const decisionToElements = (is_approved, factors, abstracts) => {
     const startNode = {
         id: NODE_IDS.DECISION_NODE,
         type: NODE_TYPE.INPUT,
+        targetPosition: 'right',
         data: {
             label: is_approved ? 'YES' : 'NO',
             type: NODE_DATA_TYPE.DECISION
@@ -156,12 +158,19 @@ export const decisionToElements = (is_approved, factors, abstracts) => {
         position: DEFAULT_POSITION
     };
     let factorsNodes = factors.reduce((acc, factor) =>
-        acc.concat(parseHTMLString(factor, startNode.id).nodes), []);
+        acc.concat(parseHTMLString(factor, startNode.id).nodes), []).map(n => ({
+            ...n,
+            sourcePosition: 'left',
+            data: {
+                ...n.data, type: NODE_DATA_TYPE.FACTOR
+            }
+        }));
 
     // connect start and factors
     const factorsEdges = factorsNodes.map(node => ({
         id: EDGE_IDS.FACTOR_EDGE(node.id),
         type: NODE_TYPE.OUTPUT,
+        sourcePosition: 'left',
         source: NODE_IDS.DECISION_NODE,
         sourceHandle: COLLAPSE_HANDLE_IDS.DEFAULT,
         target: node.id,
@@ -189,7 +198,7 @@ export const questionToElements = (
         id: original_uri,
         data: {
             label: original_label,
-            type: 'topic',
+            type: NODE_DATA_TYPE.TOPIC,
             hasQuestions: true,
         },
         position: DEFAULT_POSITION
@@ -226,6 +235,7 @@ export const questionToElements = (
     const singleNodes = els.map(node => ({
         id: node.id,
         type: NODE_TYPE.OUTPUT,
+        sourcePosition: 'left',
         data: { ...node.data, type: 'single' },
         position: node.position
     }));

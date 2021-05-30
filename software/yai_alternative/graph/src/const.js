@@ -15,6 +15,7 @@ export const NODE_DATA_TYPE = {
     FACTOR: 'factor',
     ABSTRACT: 'abstract',
     DECISION: 'decision',
+    TOPIC: 'topic',
 }
 
 export const NODE_IDS = {

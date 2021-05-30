@@ -83,8 +83,8 @@ const LayoutFlow = ({
 
     useEffect(() => {
         if (shouldLayout && nodes.length > 0 &&
-            nodes.every((node) => node.__rf.width &&
-                node.__rf.height)) {
+            nodes.every((node) => node.isHidden || (node.__rf.width &&
+                node.__rf.height))) {
             onLayout();
 
             setShouldLayout(false);
@@ -94,7 +94,7 @@ const LayoutFlow = ({
 
     useEffect(() => {
         if (shouldFitView) {
-            console.log("asing for new fit");
+            console.log("asking for new fit");
             fitView ? fitView(nodes) : originalFitView();
             setShouldFitView(false);
         }
@@ -113,7 +113,7 @@ const LayoutFlow = ({
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onLoad={onLoad}
-                onlyRenderVisibleElements={false}
+                onlyRenderVisibleElements={true}
             >
                 <Controls showInteractive={false} />
             </ReactFlow>
