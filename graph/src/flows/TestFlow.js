@@ -7,7 +7,7 @@ import {
 import { EDGE_IDS, NODE_IDS } from '../const';
 
 
-const TestFlow = ({ rootNode,
+const TestFlow = ({
     elements, setElements,
     shouldLayout,
     setShouldLayout,
@@ -46,14 +46,11 @@ const TestFlow = ({ rootNode,
         return true;
     }
 
-
-
-
     const onConnect = params => {
         console.log("params: ", params);
         // make sure the edge doesn't exist already. only one edge per handle
         if (!edges.find(edge => edge.sourceHandle === params.sourceHandle || edge.target === params.target)) {
-            const edgeId = EDGE_IDS.TEST_EDGE(NODE_IDS.TEST_NODE(rootNode.id), params.target);
+            const edgeId = `${params.source}-${params.target}-edge`;
             const newEdge = {
                 ...params,
                 id: edgeId,

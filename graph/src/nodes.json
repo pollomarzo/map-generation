@@ -1,0 +1,26 @@
+[
+    {
+        "id": "001",
+        "type": "output",
+        "sourcePosition": "left",
+        "data": {
+            "label": "taxes"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "002",
+        "type": "output",
+        "sourcePosition": "left",
+        "data": {
+            "label": "payment"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    }
+]

@@ -21,7 +21,6 @@ export const NODE_DATA_TYPE = {
 export const NODE_IDS = {
     DECISION_NODE: 'decision_node',
     QUESTION_NODE: (topicId, question) => `${topicId}-${question}`,
-    TEST_NODE: (oldId) => `${oldId}-test`,
 };
 
 export const EDGE_IDS = {
@@ -29,7 +28,6 @@ export const EDGE_IDS = {
     ABSTRACT_EDGE: (subjId, topicId) => `${subjId}-${topicId}-edge`,
     TOPIC_QUESTION_EDGE: (topicId, question) => `${NODE_IDS.QUESTION_NODE(topicId, question)}-edge`,
     QUESTION_NODE_EDGE: (topicId, question, nodeId) => `${NODE_IDS.QUESTION_NODE(topicId, question)}-${nodeId}-edge`,
-    TEST_EDGE: (rootId, targetId) => `${rootId}-${targetId}-test-edge`,
 };
 
 export const EDGE_DATA_TYPE = {
