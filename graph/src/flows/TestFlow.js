@@ -19,14 +19,7 @@ const TestFlow = ({
 
     const onRemoveEdge = (edge, targetId) => {
         const node = elements.find((el) => targetId === el.id);
-        const updatedNode = {
-            ...node,
-            data: {
-                ...node.data,
-                connected: false
-            }
-        };
-        setElements(els => [updatedNode, ...removeElements([updatedNode, edge], els)]);
+        setElements(els => [node, ...removeElements([node, edge], els)]);
     }
 
 
@@ -47,15 +40,21 @@ const TestFlow = ({
     }
 
     const onConnect = params => {
-        console.log("params: ", params);
+        console.log("connecting params: ", params);
         // make sure the edge doesn't exist already. only one edge per handle
         if (!edges.find(edge => edge.sourceHandle === params.sourceHandle || edge.target === params.target)) {
             const edgeId = `${params.source}-${params.target}-edge`;
-            const newEdge = {
+            let newEdge = {
                 ...params,
                 id: edgeId,
                 animated: false,
-                data: { type: 'test' }
+                data: {
+                    type: 'test'
+                }
+            }
+            newEdge.data = {
+                ...newEdge.data,
+                onClick: () => onRemoveEdge(newEdge, newEdge.target),
             }
             const oldNode = elements.find((el) => el.id === params.target);
             const newNode = {
@@ -63,10 +62,15 @@ const TestFlow = ({
                 data: {
                     ...oldNode.data,
                     onHandleClick: () => onRemoveEdge(newEdge, params.target),
-                    connected: true,
                 }
             };
             setElements(elements => [...removeElements([oldNode], elements), newNode, newEdge]);
+        }
+    };
+
+    const onElementClick = (_, el) => {
+        if (isEdge(el)) {
+            onRemoveEdge(el, el.target);
         }
     };
 
@@ -81,7 +85,8 @@ const TestFlow = ({
                 setShouldLayout={setShouldLayout}
                 flowProps={{
                     ...flowProps,
-                    onConnect
+                    onConnect,
+                    onElementClick,
                 }}
             />);
         </>)

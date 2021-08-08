@@ -81,7 +81,7 @@ const TestView = ({ allElements, shouldLayout, setShouldLayout }) => {
     const sidebarNodes = allElements.map((node) => ({
       ...node,
       id: node.id,
-      // TODO: edit detach node, needs two handles
+      // TODO: edit detach node, needs two handles. for now, just use default
       type: NODE_TYPE.DETACH_NODE,
       data: {
         ...node.data,

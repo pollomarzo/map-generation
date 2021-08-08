@@ -15,7 +15,6 @@ import DetachNode from '../custom_nodes/DetachNode';
 
 
 const nodeTypes = {
-    collapseNode: CollapseNode,
     detachNode: DetachNode,
 };
 

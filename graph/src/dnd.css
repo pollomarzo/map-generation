@@ -46,4 +46,12 @@
       max-width: 250px;
     }
   }
+
+  .react-flow__connection-path{
+    stroke-width: 10;
+  }
+  .react-flow__edge-path{
+    stroke-width: 10;
+    cursor: pointer;
+  }
   

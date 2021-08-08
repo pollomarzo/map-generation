@@ -3,8 +3,13 @@ import React, { memo } from 'react';
 import { Handle } from 'react-flow-renderer';
 import './DetachNodeStyle.css';
 
+const handleStyle = {
+    width: 15,
+    height: 15,
+}
+
 const DetachNode = memo(({ id, data }) => {
-    const { label, connected, onHandleClick, onDelete } = data;
+    const { label, onDelete } = data;
 
     return (
         <div style={{
@@ -16,30 +21,16 @@ const DetachNode = memo(({ id, data }) => {
             width: 150,
             borderRadius: 3
         }}>
-
             <Handle
                 type="target"
                 position="left"
-                style={{ display: connected ? 'none' : 'inline-block' }}
+                style={handleStyle}
             />
-            {/* removal handle */}
             <Handle
-                className="handle"
-                type="target"
-                position="left"
-                style={{
-                    width: '10px',
-                    height: '10px',
-                    boxSizing: 'border-box',
-                    border: 2,
-                    borderRadius: '0',
-                    position: 'absolute',
-                    zIndex: 3,
-                    cursor: 'pointer',
-                    display: !connected ? 'none' : 'inline-block'
-                }}
-                onClick={onHandleClick} />
-
+                type="source"
+                position="right"
+                style={handleStyle}
+            />
             <div style={{ textAlign: 'center' }}>
                 {label}
             </div>
