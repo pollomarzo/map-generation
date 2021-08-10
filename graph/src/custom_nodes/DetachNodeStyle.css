@@ -5,5 +5,5 @@
 /* sure they should be IDs not classes whatever */
 .removeIcon{
     background: url('../res/delete_black_24dp.svg');
-    background-size: 10px 10px;
+    background-size: 100%;
 }

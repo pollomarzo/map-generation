@@ -9,7 +9,6 @@ import ReactFlow, {
     useZoomPanHelper
 } from 'react-flow-renderer';
 import dagre from 'dagre';
-import CollapseNode from '../custom_nodes/CollapseNode';
 import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
 import DetachNode from '../custom_nodes/DetachNode';
 

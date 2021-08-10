@@ -12,10 +12,7 @@ const Flow = ({
     shouldLayout,
     setShouldLayout,
     flowProps }) => {
-    const edges = elements.filter(isEdge);
     const { fitView: originalFitView, zoomTo } = useZoomPanHelper();
-
-
 
     const onRemoveEdge = (edge, targetId) => {
         const node = elements.find((el) => targetId === el.id);
@@ -41,30 +38,21 @@ const Flow = ({
 
     const onConnect = params => {
         console.log("connecting params: ", params);
-        // make sure the edge doesn't exist already. only one edge per handle
-        if (!edges.find(edge => edge.sourceHandle === params.sourceHandle || edge.target === params.target)) {
+        // make sure the two nodes are different types
+        const sourceType = elements.find(el => el.id === params.source).data.type;
+        const targetType = elements.find(el => el.id === params.target).data.type;
+
+        if (sourceType !== targetType) {
             const edgeId = `${params.source}-${params.target}-edge`;
             let newEdge = {
                 ...params,
                 id: edgeId,
                 animated: false,
                 data: {
-                    type: 'test'
+                    onClick: () => onRemoveEdge(newEdge, newEdge.target),
                 }
             }
-            newEdge.data = {
-                ...newEdge.data,
-                onClick: () => onRemoveEdge(newEdge, newEdge.target),
-            }
-            const oldNode = elements.find((el) => el.id === params.target);
-            const newNode = {
-                ...oldNode,
-                data: {
-                    ...oldNode.data,
-                    onHandleClick: () => onRemoveEdge(newEdge, params.target),
-                }
-            };
-            setElements(elements => [...removeElements([oldNode], elements), newNode, newEdge]);
+            setElements(elements => [...elements, newEdge]);
         }
     };
 

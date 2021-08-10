@@ -9,6 +9,7 @@ import {
 import Flow from './flows/Flow';
 import './dnd.css';
 import { NODE_IDS, NODE_DATA_TYPE, NODE_TYPE, FRAGMENT_TYPE } from './const';
+import { ID } from './utils';
 
 import { NodeSidebar, LabelSidebar } from './Sidebar';
 
@@ -66,11 +67,17 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout }) 
     }
     else if (nodeType === NODE_DATA_TYPE.EDGE_LABEL) {
       node = sidebarLabels.find((node) => node.id === nodeId)
+      node.originalId = node.id
+      node.id = node.id + ID()
     }
 
     node = {
       ...node,
       position,
+      data: {
+        ...node.data,
+        onDelete: () => onClickDeleteIcon(node)
+      }
     }
 
     console.log("adding node: ", node);
@@ -97,25 +104,13 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout }) 
     // update sidebar nodes, then edge labels
     const sidebarNodes = nodes.map((node) => ({
       ...node,
-      id: node.id,
       type: NODE_TYPE.DETACH_NODE,
-      data: {
-        ...node.data,
-        type: NODE_DATA_TYPE.NODE,
-        onDelete: () => onClickDeleteIcon(node)
-      }
     }))
     setSidebarNodesSorted(() => sidebarNodes);
     // labels
     const sidebarLabels = labels.map((node) => ({
       ...node,
-      id: node.id,
       type: NODE_TYPE.DETACH_NODE,
-      data: {
-        ...node.data,
-        type: NODE_DATA_TYPE.EDGE_LABEL,
-        onDelete: () => onClickDeleteIcon(node)
-      }
     }))
     setSidebarLabelsSorted(() => sidebarLabels);
 
