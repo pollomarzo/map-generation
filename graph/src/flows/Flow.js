@@ -7,7 +7,7 @@ import {
 import { EDGE_IDS, NODE_IDS } from '../const';
 
 
-const TestFlow = ({
+const Flow = ({
     elements, setElements,
     shouldLayout,
     setShouldLayout,
@@ -91,4 +91,4 @@ const TestFlow = ({
             />);
         </>)
 };
-export default TestFlow;
+export default Flow;

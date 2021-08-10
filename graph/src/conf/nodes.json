@@ -1,7 +1,6 @@
 [
     {
         "id": "001",
-        "type": "output",
         "sourcePosition": "left",
         "data": {
             "label": "taxes"
@@ -13,10 +12,20 @@
     },
     {
         "id": "002",
-        "type": "output",
         "sourcePosition": "left",
         "data": {
             "label": "payment"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "003",
+        "sourcePosition": "left",
+        "data": {
+            "label": "government"
         },
         "position": {
             "x": 0,

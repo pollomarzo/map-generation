@@ -15,7 +15,7 @@ import DetachNode from '../custom_nodes/DetachNode';
 
 
 const nodeTypes = {
-    detachNode: DetachNode,
+    detach_node: DetachNode,
 };
 
 const dagreGraph = new dagre.graphlib.Graph()

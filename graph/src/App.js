@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import TestView from './TestView';
-import nodes from './nodes.json';
+import MapView from './MapView';
+import { nodes, labels } from './conf';
+
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 
 
 export default function App() {
-
   // all possible nodes
   const [elements, setElements] = useState(nodes);
   // going to keep this here to call a graph layout when it's needed
@@ -13,8 +13,10 @@ export default function App() {
 
   return (<>
     <div style={{ height: '90vh', width: '100%', position: 'relative' }}>
-      <TestView
+      <MapView
         allElements={elements}
+        nodes={nodes}
+        labels={labels}
         shouldLayout={shouldLayout}
         setShouldLayout={setShouldLayout} />
       <div

@@ -2,21 +2,14 @@ export const EDGE_TYPE = {
     STRAIGHT: 'straight'
 };
 
-export const NODE_TYPE = {
-    INPUT: 'input',
-    DEFAULT: 'default',
-    OUTPUT: 'output',
-    COLLAPSE_NODE: 'collapseNode',
-    DETACH_NODE: 'detachNode'
+export const NODE_DATA_TYPE = {
+    NODE: 'node',
+    EDGE_LABEL: 'edge_label',
 };
 
-export const NODE_DATA_TYPE = {
-    QUESTION: 'question',
-    FACTOR: 'factor',
-    ABSTRACT: 'abstract',
-    DECISION: 'decision',
-    TOPIC: 'topic',
-}
+export const NODE_TYPE = {
+    DETACH_NODE: 'detach_node',
+};
 
 export const NODE_IDS = {
     DECISION_NODE: 'decision_node',
