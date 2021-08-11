@@ -2,9 +2,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import MapView from './MapView';
 import { nodes, labels } from './conf';
 import { TimeoutModal } from './modal';
+import Modal from 'react-modal';
 
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 
+Modal.setAppElement(document.getElementById('root'));
 
 export default function App() {
   // all possible nodes
@@ -12,9 +14,13 @@ export default function App() {
   // going to keep this here to call a graph layout when it's needed
   const [shouldLayout, setShouldLayout] = useState(true);
   // when timer expires
-  const [expired, setExpired] = useState(false);
+  const [inCreation, setInCreation] = useState(true);
   // modal for timer expired
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  // needed for rerendering "new" timer
+  const [timerKey, setTimerKey] = useState(0);
+  // once timer is reset, put in new duration and switch key
+  const [duration, setDuration] = useState(10);
 
   const checkNodes = () => { };
 
@@ -26,7 +32,7 @@ export default function App() {
         labels={labels}
         shouldLayout={shouldLayout}
         setShouldLayout={setShouldLayout}
-        expired={expired} />
+        inCreation={inCreation} />
       <div
         style={{
           position: 'fixed',
@@ -35,15 +41,16 @@ export default function App() {
           // TODO: what to we wanna do? above? below?
         }}>
         <CountdownCircleTimer
+          key={timerKey}
           isPlaying={true}
-          duration={2}
+          duration={duration}
           colors={[
             ['#004777', 0.33],
             ['#F7B801', 0.33],
             ['#A30000', 0.33],
           ]}
           onComplete={() => {
-            setExpired(true);
+            setInCreation(false);
             checkNodes();
             setModalIsOpen(true);
           }}
@@ -61,7 +68,11 @@ export default function App() {
       </div>
       <TimeoutModal
         isOpen={modalIsOpen}
-        onClose={() => setModalIsOpen(false)}
+        onClose={() => {
+          setModalIsOpen(false);
+          setDuration(20);
+          setTimerKey(1);
+        }}
       />
     </div>
   </>

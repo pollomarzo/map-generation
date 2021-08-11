@@ -54,7 +54,7 @@ const Flow = ({
     };
 
     const onElementClick = (_, el) => {
-        if (isEdge(el)) {
+        if (isEdge(el) && flowProps.inCreation) {
             onRemoveEdge(el, el.target);
         }
     };

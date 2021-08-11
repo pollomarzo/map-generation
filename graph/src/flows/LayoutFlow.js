@@ -33,7 +33,7 @@ const LayoutFlow = ({
         onConnect,
         onDrop,
         onDragOver,
-        onLoad } = flowProps;
+        onLoad, inCreation } = flowProps;
 
     const [shouldFitView, setShouldFitView] = useState(false);
     const nodes = useStoreState(store => store.nodes);
@@ -112,6 +112,7 @@ const LayoutFlow = ({
                 onDragOver={onDragOver}
                 onLoad={onLoad}
                 onlyRenderVisibleElements={true}
+                nodesConnectable={inCreation}
             >
                 <Controls showInteractive={false} />
             </ReactFlow>

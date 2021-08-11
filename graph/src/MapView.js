@@ -13,7 +13,7 @@ import { ID } from './utils';
 
 import { NodeSidebar, LabelSidebar } from './Sidebar';
 
-const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout, expired }) => {
+const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout, inCreation }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
@@ -87,16 +87,18 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout, ex
   };
 
   const onClickDeleteIcon = useCallback((node) => {
-    console.log("deleting node...", node);
-    setElements((els) => removeElements([node], els));
-    setSidebarNodesSorted((els) => els.map((el) => el.id === node.id ? {
-      ...el,
-      data: {
-        ...el.data,
-        disabled: false
-      }
-    } : el))
-  }, [setElements, setSidebarNodesSorted]);
+    if (inCreation) {
+      console.log("deleting node...", node);
+      setElements((els) => removeElements([node], els));
+      setSidebarNodesSorted((els) => els.map((el) => el.id === node.id ? {
+        ...el,
+        data: {
+          ...el.data,
+          disabled: false
+        }
+      } : el))
+    }
+  }, [setElements, setSidebarNodesSorted, inCreation]);
 
 
   //should this be moved to upper component?
@@ -131,11 +133,12 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout, ex
             flowProps={{
               onDrop,
               onDragOver,
-              onLoad
+              onLoad,
+              inCreation,
             }}
           />
         </div>
-        {!expired && <>
+        {inCreation && <>
           <NodeSidebar
             nodes={sidebarNodes}
           />
