@@ -13,7 +13,7 @@ import { ID } from './utils';
 
 import { NodeSidebar, LabelSidebar } from './Sidebar';
 
-const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout }) => {
+const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout, expired }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
@@ -135,12 +135,13 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout }) 
             }}
           />
         </div>
-        <NodeSidebar
-          nodes={sidebarNodes}
-        />
-        <LabelSidebar
-          nodes={sidebarLabels}
-        />
+        {!expired && <>
+          <NodeSidebar
+            nodes={sidebarNodes}
+          />
+          <LabelSidebar
+            nodes={sidebarLabels}
+          /></>}
       </ReactFlowProvider>
     </div >
   );

@@ -1,5 +1,5 @@
 .dndflow {
-    flex-direction: column;
+    flex-direction: row;
     display: flex;
     height: 100%;
   }
@@ -9,6 +9,11 @@
     padding: 15px 10px;
     font-size: 12px;
     background: #fcfcfc;
+    width: 20%;
+    max-width: 250px;
+    min-width: 180px;
+    height: 100%;
+    overflow: auto;
   }
   
   .dndflow .dndnode {
@@ -35,18 +40,6 @@
     flex-grow: 1;
     height: 100%;
   }
-  
-  @media screen and (min-width: 768px) {
-    .dndflow {
-      flex-direction: row;
-    }
-  
-    .dndflow aside {
-      width: 20%;
-      max-width: 250px;
-    }
-  }
-
   .react-flow__connection-path{
     stroke-width: 10;
   }
