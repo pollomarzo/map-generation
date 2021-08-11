@@ -14,10 +14,7 @@ const Flow = ({
     flowProps }) => {
     const { fitView: originalFitView, zoomTo } = useZoomPanHelper();
 
-    const onRemoveEdge = (edge, targetId) => {
-        const node = elements.find((el) => targetId === el.id);
-        setElements(els => [node, ...removeElements([node, edge], els)]);
-    }
+    const onRemoveEdge = (edge, targetId) => setElements(els => [...removeElements([edge], els)]);
 
 
 

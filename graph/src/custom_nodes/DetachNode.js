@@ -9,32 +9,34 @@ const handleStyle = {
     height: 15,
 }
 
-const nodeStyle = {
+const nodeStyle = (showResults, correct) => ({
     padding: 10,
     border: '1px solid',
     borderColor: '#ff0072',
-    background: 'white',
+    background: !showResults ? 'white' : correct ? 'green' : 'red',
     position: 'relative',
     width: 150,
-    borderRadius: 100
-}
+    borderRadius: 100,
+})
 
-const labelStyle = {
+const labelStyle = (showResults, correct) => ({
     padding: 10,
     border: '1px solid',
     borderColor: '#1b17ef',
-    background: 'white',
+    background: !showResults ? 'white' : correct ? 'green' : 'red',
     position: 'relative',
     width: 80,
     borderRadius: 3
-}
+})
 
 
 const DetachNode = memo(({ id, data }) => {
     const { label, onDelete } = data;
 
     return (
-        <div style={data.type === NODE_DATA_TYPE.NODE ? nodeStyle : labelStyle}>
+        <div style={(data.type === NODE_DATA_TYPE.NODE) ?
+            nodeStyle(data.showResults, data.correct) :
+            labelStyle(data.showResults, data.correct)}>
             <Handle
                 type="target"
                 position="left"
