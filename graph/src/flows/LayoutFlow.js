@@ -11,6 +11,7 @@ import ReactFlow, {
 import dagre from 'dagre';
 import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
 import DetachNode from '../custom_nodes/DetachNode';
+import { useNodeContext } from '../NodeContext';
 
 
 const nodeTypes = {
@@ -33,7 +34,9 @@ const LayoutFlow = ({
         onConnect,
         onDrop,
         onDragOver,
-        onLoad, inCreation } = flowProps;
+        onLoad } = flowProps;
+
+    const { currentState } = useNodeContext();
 
     const [shouldFitView, setShouldFitView] = useState(false);
     const nodes = useStoreState(store => store.nodes);
@@ -112,7 +115,6 @@ const LayoutFlow = ({
                 onDragOver={onDragOver}
                 onLoad={onLoad}
                 onlyRenderVisibleElements={true}
-                nodesConnectable={inCreation}
             >
                 <Controls showInteractive={false} />
             </ReactFlow>

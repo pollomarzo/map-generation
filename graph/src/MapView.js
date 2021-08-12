@@ -10,12 +10,15 @@ import Flow from './flows/Flow';
 import './dnd.css';
 import { NODE_IDS, NODE_DATA_TYPE, NODE_TYPE, FRAGMENT_TYPE } from './const';
 import { ID } from './utils';
+import { useNodeContext } from './NodeContext';
 
 import { NodeSidebar, LabelSidebar } from './Sidebar';
 
-const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout, inCreation }) => {
+const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  const { currentState } = useNodeContext();
 
   const [elements, setElements] = useState([]);
   const [sidebarNodes, setSidebarNodes] = useState([]);
@@ -87,7 +90,7 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout, in
   };
 
   const onClickDeleteIcon = useCallback((node) => {
-    if (inCreation) {
+    if (currentState.navigation === 0) {
       console.log("deleting node...", node);
       setElements((els) => removeElements([node], els));
       setSidebarNodesSorted((els) => els.map((el) => el.id === node.id ? {
@@ -98,7 +101,7 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout, in
         }
       } : el))
     }
-  }, [setElements, setSidebarNodesSorted, inCreation]);
+  }, [setElements, setSidebarNodesSorted, currentState]);
 
 
   //should this be moved to upper component?
@@ -134,11 +137,10 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout, in
               onDrop,
               onDragOver,
               onLoad,
-              inCreation,
             }}
           />
         </div>
-        {inCreation && <>
+        {currentState.navigation === 0 && <>
           <NodeSidebar
             nodes={sidebarNodes}
           />
