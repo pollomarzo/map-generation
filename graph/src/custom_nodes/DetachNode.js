@@ -32,7 +32,7 @@ const labelStyle = (showResults, correct) => ({
 
 const DetachNode = memo(({ id, data }) => {
     const { label, onDelete } = data;
-    const { currentState } = useNodeContext();
+    const { navigationState } = useNodeContext();
 
     return (
         <div style={(data.type === NODE_DATA_TYPE.NODE) ?
@@ -41,18 +41,18 @@ const DetachNode = memo(({ id, data }) => {
             <Handle
                 type="target"
                 position="left"
-                style={handleStyle(currentState.navigation === 0)}
+                style={handleStyle(navigationState === 0)}
             />
             <Handle
                 type="source"
                 position="right"
-                style={handleStyle(currentState.navigation === 0)}
+                style={handleStyle(navigationState === 0)}
             />
             <div style={{ textAlign: 'center' }}>
                 {label}
             </div>
             <div className="removeIcon" onClick={() => onDelete()} style={{
-                display: currentState.navigation === 0 ? undefined : 'none',
+                display: navigationState === 0 ? undefined : 'none',
                 width: '20px',
                 height: '20px',
                 cursor: 'pointer',

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import MapView from './MapView';
-import { nodes, labels } from './conf';
+import { nodes, labels, creationDuration, reviewDuration } from './conf';
 import { TimeoutModal } from './modal';
 import Modal from 'react-modal';
 import { NodeProvider } from './NodeContext';
@@ -10,10 +10,8 @@ import { Timer } from './Timer';
 Modal.setAppElement(document.getElementById('root'));
 
 export default function App() {
-  // state context
-  const state = {
-    navigation: 0,
-  };
+  // navigation starts from zero
+  const navigationStart = 0;
   // all possible nodes
   const [elements, setElements] = useState(nodes);
   // going to keep this here to call a graph layout when it's needed
@@ -23,12 +21,12 @@ export default function App() {
   // needed for rerendering "new" timer
   const [timerKey, setTimerKey] = useState(0);
   // once timer is reset, put in new duration and switch key
-  const [duration, setDuration] = useState(10);
+  const [duration, setDuration] = useState(creationDuration);
 
   const checkNodes = () => { };
 
   return (
-    <NodeProvider state={state}>
+    <NodeProvider state={navigationStart}>
       <div style={{ height: '90vh', width: '100%', position: 'relative' }}>
         <MapView
           allElements={elements}
@@ -48,7 +46,7 @@ export default function App() {
           isOpen={modalIsOpen}
           onClose={() => {
             setModalIsOpen(false);
-            setDuration(20);
+            setDuration(reviewDuration);
             setTimerKey(1);
           }}
         />

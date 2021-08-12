@@ -2,10 +2,10 @@ import React from 'react';
 import { useNodeContext } from './NodeContext';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 
+const redirect = () => { }
 
 export const Timer = ({ timerKey, duration, onComplete }) => {
-    const { currentState, setCurrentState } = useNodeContext();
-    console.log(currentState);
+    const { navigationState, setNavigationState } = useNodeContext();
     return (
         <div
             style={{
@@ -23,7 +23,11 @@ export const Timer = ({ timerKey, duration, onComplete }) => {
                     ['#F7B801', 0.33],
                     ['#A30000', 0.33],
                 ]}
-                onComplete={() => { onComplete(); setCurrentState({ navigation: 1 }); }}
+                onComplete={() => {
+                    onComplete();
+                    if (navigationState === 0);
+                    else redirect()
+                }}
                 style={{
                     zIndex: '5',
                 }}
