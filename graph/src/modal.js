@@ -3,19 +3,11 @@ import Modal from 'react-modal';
 import { endCreationMessage, endReviewMessage } from './conf'
 import { useNodeContext } from './NodeContext';
 
-export const TimeoutModal = ({ isOpen, onClose }) => {
-
-    const { navigationState, setNavigationState } = useNodeContext();
-    const closable = (navigationState === 0);
-    const inCreation = (navigationState === 0);
-
-    const close = () => {
-        closable && onClose(); setNavigationState((nav) => nav + 1)
-    }
+const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={close}
+            onRequestClose={onClose}
             contentLabel="Timer expired"
             style={{
                 overlay: {
@@ -40,12 +32,12 @@ export const TimeoutModal = ({ isOpen, onClose }) => {
                 justifyContent: 'space-between',
                 height: '100%',
             }}>
-                <h2>{inCreation ? 'Creation' : 'Review'} time completed!</h2>
+                <h2>{title}</h2>
 
-                <div style={{ flexGrow: 1 }}>{inCreation ? endCreationMessage : endReviewMessage}</div>
-                {inCreation && <div style={{ flex: '0 1 150px' }}>
+                <div style={{ flexGrow: 1 }}>{content}</div>
+                {closable && <div style={{ flex: '0 1 150px' }}>
                     <button
-                        onClick={close}
+                        onClick={onClose}
                         style={{
                             float: 'right',
                             backgroundColor: '#fff',
@@ -63,4 +55,22 @@ export const TimeoutModal = ({ isOpen, onClose }) => {
                 </div>}
             </div>
         </Modal>)
+}
+
+export const TimeoutModal = ({ isOpen, onClose }) => {
+    const { navigationState, setNavigationState } = useNodeContext();
+    const closable = (navigationState === 0);
+    const inCreation = (navigationState === 0);
+
+    return (
+        <Modal__
+            isOpen={isOpen}
+            onClose={() => {
+                closable && onClose(); setNavigationState((nav) => nav + 1)
+            }}
+            closable={closable}
+            title={inCreation ? 'Creation' : 'Review' + ' section completed!'}
+            content={inCreation ? endCreationMessage : endReviewMessage}
+        />
+    )
 }
