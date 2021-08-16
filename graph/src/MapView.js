@@ -14,14 +14,13 @@ import { useNodeContext } from './NodeContext';
 
 import { NodeSidebar, LabelSidebar } from './Sidebar';
 
-const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout }) => {
+const MapView = ({ nodes, labels, shouldLayout, setShouldLayout, elements, setElements }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const { navigationState } = useNodeContext();
   console.log("navigationis in", navigationState);
 
-  const [elements, setElements] = useState([]);
   const [sidebarNodes, setSidebarNodes] = useState([]);
   const [sidebarLabels, setSidebarLabels] = useState([]);
 
@@ -61,6 +60,7 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout }) 
     let node;
     if (nodeType === NODE_DATA_TYPE.NODE) {
       node = sidebarNodes.find((node) => node.id === nodeId)
+      node.originalId = node.id
       setSidebarNodesSorted((els) => els.map((el) => el.id === node.id ? {
         ...el,
         data: {
@@ -121,7 +121,7 @@ const MapView = ({ allElements, nodes, labels, shouldLayout, setShouldLayout }) 
     setSidebarLabelsSorted(() => sidebarLabels);
 
     setShouldLayout(true);
-  }, [setElements, allElements, setSidebarNodesSorted,
+  }, [setElements, setSidebarNodesSorted,
     setSidebarLabelsSorted, onClickDeleteIcon, setShouldLayout, labels, nodes])
 
 

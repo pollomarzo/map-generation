@@ -36,8 +36,13 @@ const Flow = ({
     const onConnect = params => {
         console.log("connecting params: ", params);
         // make sure the two nodes are different types
-        const sourceType = elements.find(el => el.id === params.source).data.type;
-        const targetType = elements.find(el => el.id === params.target).data.type;
+        const target = elements.find(el => el.id === params.target);
+        const targetType = target.data.type;
+        const targetOriginalId = target.originalId || target.id;
+
+        const source = elements.find(el => el.id === params.source);
+        const sourceType = source.data.type;
+        const sourceOriginalId = source.originalId || source.id;
 
         if (sourceType !== targetType) {
             const edgeId = `${params.source}-${params.target}-edge`;
@@ -47,7 +52,9 @@ const Flow = ({
                 animated: false,
                 data: {
                     onClick: () => onRemoveEdge(newEdge, newEdge.target),
-                }
+                },
+                sourceOriginalId: sourceOriginalId,
+                targetOriginalId: targetOriginalId,
             }
             setElements(elements => [...elements, newEdge]);
         }

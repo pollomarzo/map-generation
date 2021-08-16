@@ -13,7 +13,7 @@ export default function App() {
   // navigation starts from zero
   const navigationStart = 0;
   // all possible nodes
-  const [elements, setElements] = useState(nodes);
+  const [elements, setElements] = useState([]);
   // going to keep this here to call a graph layout when it's needed
   const [shouldLayout, setShouldLayout] = useState(true);
   // modal for timer expired
@@ -23,17 +23,21 @@ export default function App() {
   // once timer is reset, put in new duration and switch key
   const [duration, setDuration] = useState(creationDuration);
 
-  const checkNodes = () => { };
+  const checkNodes = () => {
+    console.log('elements:', elements);
+  };
 
   return (
     <NodeProvider state={navigationStart}>
       <div style={{ height: '90vh', width: '100%', position: 'relative' }}>
         <MapView
-          allElements={elements}
           nodes={nodes}
           labels={labels}
           shouldLayout={shouldLayout}
-          setShouldLayout={setShouldLayout} />
+          setShouldLayout={setShouldLayout}
+          elements={elements}
+          setElements={setElements}
+        />
         <Timer
           timerKey={timerKey}
           duration={duration}
