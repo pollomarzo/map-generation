@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import MapView from './MapView';
+import React, { useState } from 'react';
+import MapView from './graphs/MapView';
 import { nodes, labels, correctElements, creationDuration, reviewDuration } from './conf';
 import { TimeoutModal } from './modal';
 import Modal from 'react-modal';
 import { NodeProvider } from './NodeContext';
 import { Timer } from './Timer';
-import { correct } from './graph';
+import { correct } from './graphs/graph_utils';
 
 
 Modal.setAppElement(document.getElementById('root'));

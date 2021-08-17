@@ -7,7 +7,7 @@ const incorrectColor = '#ff5757';
 
 const style = (showResults, correct) => ({
     stroke: showResults ? (correct ? correctColor : incorrectColor) : undefined,
-    cursor: showResults && 'pointer',
+    cursor: !showResults && 'pointer',
 });
 
 export default function CustomEdge({

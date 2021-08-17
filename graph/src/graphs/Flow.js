@@ -1,28 +1,30 @@
-import LayoutFlow from './LayoutFlow';
-import {
-    useZoomPanHelper,
+import ReactFlow, {
     removeElements,
     isEdge,
+    Controls
 } from 'react-flow-renderer';
 import { EDGE_TYPE } from '../const';
+import DetachNode from '../custom_elements/DetachNode';
+import ColoredEdge from '../custom_elements/ColoredEdge';
+
+const nodeTypes = {
+    detach_node: DetachNode,
+};
+
+const edgeTypes = {
+    colored_edge: ColoredEdge,
+};
+
 
 
 const Flow = ({
     elements, setElements,
-    shouldLayout,
-    setShouldLayout,
     flowProps }) => {
-    const { fitView: originalFitView, zoomTo } = useZoomPanHelper();
+    const { onDrop,
+        onDragOver,
+        onLoad } = flowProps;
 
-    const onRemoveEdge = (edge, targetId) => setElements(els => [...removeElements([edge], els)]);
-
-
-
-    const fitView = (nodes) => {
-        originalFitView();
-        zoomTo(0.85);
-        return true;
-    }
+    const onRemoveEdge = (edge) => setElements(els => [...removeElements([edge], els)]);
 
     const onConnect = params => {
         console.log("connecting params: ", params);
@@ -58,21 +60,22 @@ const Flow = ({
         }
     };
 
-
     return (
-        <>
-            <LayoutFlow
-                elements={elements} // put setView in useEffect on render []
-                fitView={fitView}
-                setElements={setElements}
-                shouldLayout={shouldLayout}
-                setShouldLayout={setShouldLayout}
-                flowProps={{
-                    ...flowProps,
-                    onConnect,
-                    onElementClick,
-                }}
-            />);
-        </>)
+        <div style={{ height: '100%' }}>
+            <ReactFlow
+                elements={elements}
+                nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
+                elementsSelectable={false}
+                onElementClick={onElementClick}
+                onConnect={onConnect}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                onLoad={onLoad}
+                onlyRenderVisibleElements={true}
+            >
+                <Controls showInteractive={false} />
+            </ReactFlow>
+        </div>)
 };
 export default Flow;

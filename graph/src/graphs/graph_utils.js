@@ -1,4 +1,3 @@
-import { nodes as correctNodes, edges as correctEdges } from './conf';
 import { isNode } from 'react-flow-renderer';
 
 

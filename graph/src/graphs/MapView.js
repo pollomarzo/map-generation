@@ -2,15 +2,12 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import {
   ReactFlowProvider,
   removeElements,
-  getOutgoers,
-  isNode,
-  isEdge,
 } from 'react-flow-renderer';
-import Flow from './flows/Flow';
+import Flow from './Flow';
 import './dnd.css';
-import { NODE_IDS, NODE_DATA_TYPE, NODE_TYPE, FRAGMENT_TYPE } from './const';
-import { ID } from './utils';
-import { useNodeContext } from './NodeContext';
+import { NODE_DATA_TYPE, NODE_TYPE } from '../const';
+import { ID } from '../utils';
+import { useNodeContext } from '../NodeContext';
 
 import { NodeSidebar, LabelSidebar } from './Sidebar';
 
@@ -19,7 +16,6 @@ const MapView = ({ nodes, labels, shouldLayout, setShouldLayout, elements, setEl
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const { navigationState } = useNodeContext();
-  console.log("navigationis in", navigationState);
 
   const [sidebarNodes, setSidebarNodes] = useState([]);
   const [sidebarLabels, setSidebarLabels] = useState([]);
