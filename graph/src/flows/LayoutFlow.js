@@ -9,12 +9,15 @@ import ReactFlow, {
     useZoomPanHelper
 } from 'react-flow-renderer';
 import dagre from 'dagre';
-import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
-import DetachNode from '../custom_nodes/DetachNode';
-
+import DetachNode from '../custom_elements/DetachNode';
+import ColoredEdge from '../custom_elements/ColoredEdge';
 
 const nodeTypes = {
     detach_node: DetachNode,
+};
+
+const edgeTypes = {
+    colored_edge: ColoredEdge,
 };
 
 const dagreGraph = new dagre.graphlib.Graph()
@@ -105,6 +108,7 @@ const LayoutFlow = ({
                 elements={elements}
                 onElementsRemove={onElementsRemove}
                 nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
                 elementsSelectable={false}
                 onElementClick={onElementClick}
                 onConnect={onConnect}

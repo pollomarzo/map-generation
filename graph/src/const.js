@@ -1,5 +1,5 @@
 export const EDGE_TYPE = {
-    STRAIGHT: 'straight'
+    COLORED_EDGE: 'colored_edge'
 };
 
 export const NODE_DATA_TYPE = {

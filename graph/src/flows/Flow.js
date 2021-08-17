@@ -4,7 +4,7 @@ import {
     removeElements,
     isEdge,
 } from 'react-flow-renderer';
-import { EDGE_IDS, NODE_IDS } from '../const';
+import { EDGE_TYPE } from '../const';
 
 
 const Flow = ({
@@ -19,15 +19,6 @@ const Flow = ({
 
 
     const fitView = (nodes) => {
-        // const node = nodes[0];
-        // if (node) {
-        //     fitted = true;
-        //     const x = node.__rf.position.x + node.__rf.width;
-        //     const y = node.__rf.position.y + node.__rf.height;
-        //     const zoom = 0.90;
-        //     setCenter(x, y, zoom);
-        // }
-        // console.log("setting shouldFitView to: ", !fitted);
         originalFitView();
         zoomTo(0.85);
         return true;
@@ -50,6 +41,7 @@ const Flow = ({
                 ...params,
                 id: edgeId,
                 animated: false,
+                type: EDGE_TYPE.COLORED_EDGE,
                 data: {
                     onClick: () => onRemoveEdge(newEdge, newEdge.target),
                 },
