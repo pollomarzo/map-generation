@@ -4,9 +4,10 @@ const NodeContext = React.createContext(null)
 
 export const NodeProvider = ({ state, children }) => {
     const [navigationState, setNavigationState] = React.useState(state);
+    const [showResults, setShowResults] = React.useState(false);
 
     return (
-        <NodeContext.Provider value={{ navigationState, setNavigationState }}>
+        <NodeContext.Provider value={{ navigationState, setNavigationState, showResults, setShowResults }}>
             {children}
         </NodeContext.Provider>
     )

@@ -11,7 +11,7 @@ import { isNode } from 'react-flow-renderer';
  * - id: the id of the node
  * - correct: true if the node is correct, false otherwise
  * */
-const correct = (elements, corrNodes, corrEdges) => {
+export const correct = (elements, corrNodes, corrEdges) => {
     let nodes = [], edges = [], missingNodes = [], missingEdges = [];
     elements.map(el => isNode(el) ? nodes.push(el) : edges.push(el));
 
@@ -22,10 +22,11 @@ const correct = (elements, corrNodes, corrEdges) => {
     corrNodes = corrNodes.sort((a, b) => a.id < b.id ? -1 : 1);
     corrEdges = corrEdges.sort((a, b) => a.id < b.id ? -1 : 1);
 
-    ({ nodes, missingNodes }) = verify(nodes, corrNodes, (a, b) => a.originalId === b.id);
-    ({ edges, missingEdges }) = verify(edges, corrEdges, (a, b) =>
+    [nodes, missingNodes] = verify(nodes, corrNodes, (a, b) => a.originalId === b.id);
+    [edges, missingEdges] = verify(edges, corrEdges, (a, b) =>
         a.sourceOriginalId === b.source &&
         a.targetOriginalId === b.target);
+    console.log("final node tally", nodes);
     return { nodes, edges, missingNodes, missingEdges };
 
 }
@@ -37,14 +38,20 @@ const verify = (els, corrEls, equal) => {
         if (equal(els[i], corrEls[j])) {
             nodes.push({
                 ...els[i],
-                correct: true
+                data: {
+                    ...els[i].data,
+                    correct: true
+                }
             });
             i++;
             j++;
         } else if (els[i].id < corrEls[j].id) {
             nodes.push({
                 ...els[i],
-                correct: false
+                data: {
+                    ...els[i].data,
+                    correct: false
+                }
             });
             i++;
         } else {
@@ -53,8 +60,8 @@ const verify = (els, corrEls, equal) => {
             j++;
         }
     }
-    return {
+    return [
         nodes,
         missing
-    };
+    ];
 }

@@ -1,5 +1,5 @@
-export const creationDuration = 5;
-export const reviewDuration = 5;
+export const creationDuration = 10;
+export const reviewDuration = 500;
 
 export const endCreationMessage = <div>
     <p>

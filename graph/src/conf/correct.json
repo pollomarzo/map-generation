@@ -1,0 +1,804 @@
+{
+    "nodes": [
+        {
+            "id": "application, Loan Application",
+            "data": {
+                "label": "application, Loan Application",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Credit score, FICO Score, Score",
+            "data": {
+                "label": "Credit score, FICO Score, Score",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Credit",
+            "data": {
+                "label": "Credit",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Lender",
+            "data": {
+                "label": "Lender",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Loan",
+            "data": {
+                "label": "Loan",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Finances",
+            "data": {
+                "label": "Finances",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Bad",
+            "data": {
+                "label": "Bad",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "AI models, Model",
+            "data": {
+                "label": "AI models, Model",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "borrower",
+            "data": {
+                "label": "borrower",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "card, credit card",
+            "data": {
+                "label": "card, credit card",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "satisfactory trades",
+            "data": {
+                "label": "satisfactory trades",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "credit bureau risk score",
+            "data": {
+                "label": "credit bureau risk score",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "People",
+            "data": {
+                "label": "People",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "account, Satisfactory Accounts",
+            "data": {
+                "label": "account, Satisfactory Accounts",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "on-time payments",
+            "data": {
+                "label": "on-time payments",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Inquiry",
+            "data": {
+                "label": "Inquiry",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "rate shopping for a single loan",
+            "data": {
+                "label": "rate shopping for a single loan",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "several hard inquiries in a short time frame",
+            "data": {
+                "label": "several hard inquiries in a short time frame",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Credit report, report",
+            "data": {
+                "label": "Credit report, report",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Risk",
+            "data": {
+                "label": "Risk",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Rate",
+            "data": {
+                "label": "Rate",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Balance",
+            "data": {
+                "label": "Balance",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "industry standard for determining a person's credit risk",
+            "data": {
+                "label": "industry standard for determining a person's credit risk",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "history, payment history",
+            "data": {
+                "label": "history, payment history",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "Bureau",
+            "data": {
+                "label": "Bureau",
+                "type": "node"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "is evaluated through",
+            "data": {
+                "label": "is evaluated through",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "determines request for",
+            "data": {
+                "label": "determines request for",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "granted by lender",
+            "data": {
+                "label": "granted by lender",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "used by borrowers to apply for",
+            "data": {
+                "label": "used by borrowers to apply for",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "can reveal key details about",
+            "data": {
+                "label": "can reveal key details about",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "is denied when Risk Performance is predicted to be",
+            "data": {
+                "label": "is denied when Risk Performance is predicted to be",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "can be decided by",
+            "data": {
+                "label": "can be decided by",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "is used, to apply for a loan, by",
+            "data": {
+                "label": "is used, to apply for a loan, by",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "can be affected by",
+            "data": {
+                "label": "can be affected by",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "is used to refer to",
+            "data": {
+                "label": "is used to refer to",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "can make get a loan faster/slower to",
+            "data": {
+                "label": "can make get a loan faster/slower to",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "impacted by",
+            "data": {
+                "label": "impacted by",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "greatly impacted by",
+            "data": {
+                "label": "greatly impacted by",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "used to decide your",
+            "data": {
+                "label": "used to decide your",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "is not increased by an action to close down balance",
+            "data": {
+                "label": "is not increased by an action to close down balance",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "is",
+            "data": {
+                "label": "is",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "count the number of past credit agreements resulted in",
+            "data": {
+                "label": "count the number of past credit agreements resulted in",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "is when a lender makes a request for",
+            "data": {
+                "label": "is when a lender makes a request for",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "are on",
+            "data": {
+                "label": "are on",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "often can play a part in assessing",
+            "data": {
+                "label": "often can play a part in assessing",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "identified by",
+            "data": {
+                "label": "identified by",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "is summarised by",
+            "data": {
+                "label": "is summarised by",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        },
+        {
+            "id": "is reported to",
+            "data": {
+                "label": "is reported to",
+                "type": "edge_label"
+            },
+            "position": {
+                "x": 0,
+                "y": 0
+            }
+        }
+    ],
+    "edges": [
+        {
+            "id": "application, Loan Application-is evaluated through-edge",
+            "source": "application, Loan Application",
+            "target": "is evaluated through"
+        },
+        {
+            "id": "is evaluated through-Credit score, FICO Score, Score-edge",
+            "source": "is evaluated through",
+            "target": "Credit score, FICO Score, Score"
+        },
+        {
+            "id": "application, Loan Application-determines request for-edge",
+            "source": "application, Loan Application",
+            "target": "determines request for"
+        },
+        {
+            "id": "determines request for-Credit-edge",
+            "source": "determines request for",
+            "target": "Credit"
+        },
+        {
+            "id": "application, Loan Application-granted by lender-edge",
+            "source": "application, Loan Application",
+            "target": "granted by lender"
+        },
+        {
+            "id": "granted by lender-Lender-edge",
+            "source": "granted by lender",
+            "target": "Lender"
+        },
+        {
+            "id": "application, Loan Application-used by borrowers to apply for-edge",
+            "source": "application, Loan Application",
+            "target": "used by borrowers to apply for"
+        },
+        {
+            "id": "used by borrowers to apply for-Loan-edge",
+            "source": "used by borrowers to apply for",
+            "target": "Loan"
+        },
+        {
+            "id": "application, Loan Application-can reveal key details about-edge",
+            "source": "application, Loan Application",
+            "target": "can reveal key details about"
+        },
+        {
+            "id": "can reveal key details about-Finances-edge",
+            "source": "can reveal key details about",
+            "target": "Finances"
+        },
+        {
+            "id": "application, Loan Application-is denied when Risk Performance is predicted to be-edge",
+            "source": "application, Loan Application",
+            "target": "is denied when Risk Performance is predicted to be"
+        },
+        {
+            "id": "is denied when Risk Performance is predicted to be-Bad-edge",
+            "source": "is denied when Risk Performance is predicted to be",
+            "target": "Bad"
+        },
+        {
+            "id": "application, Loan Application-can be decided by-edge",
+            "source": "application, Loan Application",
+            "target": "can be decided by"
+        },
+        {
+            "id": "can be decided by-AI models, Model-edge",
+            "source": "can be decided by",
+            "target": "AI models, Model"
+        },
+        {
+            "id": "application, Loan Application-is used, to apply for a loan, by-edge",
+            "source": "application, Loan Application",
+            "target": "is used, to apply for a loan, by"
+        },
+        {
+            "id": "is used, to apply for a loan, by-borrower-edge",
+            "source": "is used, to apply for a loan, by",
+            "target": "borrower"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-can be affected by-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "can be affected by"
+        },
+        {
+            "id": "can be affected by-card, credit card-edge",
+            "source": "can be affected by",
+            "target": "card, credit card"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-can be affected by-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "can be affected by"
+        },
+        {
+            "id": "can be affected by-satisfactory trades-edge",
+            "source": "can be affected by",
+            "target": "satisfactory trades"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-is used to refer to-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "is used to refer to"
+        },
+        {
+            "id": "is used to refer to-credit bureau risk score-edge",
+            "source": "is used to refer to",
+            "target": "credit bureau risk score"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-can make get a loan faster/slower to-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "can make get a loan faster/slower to"
+        },
+        {
+            "id": "can make get a loan faster/slower to-People-edge",
+            "source": "can make get a loan faster/slower to",
+            "target": "People"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-can be affected by-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "can be affected by"
+        },
+        {
+            "id": "can be affected by-account, Satisfactory Accounts-edge",
+            "source": "can be affected by",
+            "target": "account, Satisfactory Accounts"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-impacted by-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "impacted by"
+        },
+        {
+            "id": "impacted by-rate shopping for a single loan-edge",
+            "source": "impacted by",
+            "target": "rate shopping for a single loan"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-greatly impacted by-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "greatly impacted by"
+        },
+        {
+            "id": "greatly impacted by-several hard inquiries in a short time frame-edge",
+            "source": "greatly impacted by",
+            "target": "several hard inquiries in a short time frame"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-can be affected by-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "can be affected by"
+        },
+        {
+            "id": "can be affected by-Inquiry-edge",
+            "source": "can be affected by",
+            "target": "Inquiry"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-used to decide your-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "used to decide your"
+        },
+        {
+            "id": "used to decide your-Rate-edge",
+            "source": "used to decide your",
+            "target": "Rate"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-is not increased by an action to close down balance-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "is not increased by an action to close down balance"
+        },
+        {
+            "id": "is not increased by an action to close down balance-Balance-edge",
+            "source": "is not increased by an action to close down balance",
+            "target": "Balance"
+        },
+        {
+            "id": "Credit score, FICO Score, Score-is-edge",
+            "source": "Credit score, FICO Score, Score",
+            "target": "is"
+        },
+        {
+            "id": "is-industry standard for determining a person's credit risk-edge",
+            "source": "is",
+            "target": "industry standard for determining a person's credit risk"
+        },
+        {
+            "id": "account, Satisfactory Accounts-count the number of past credit agreements resulted in-edge",
+            "source": "account, Satisfactory Accounts",
+            "target": "count the number of past credit agreements resulted in"
+        },
+        {
+            "id": "count the number of past credit agreements resulted in-on-time payments-edge",
+            "source": "count the number of past credit agreements resulted in",
+            "target": "on-time payments"
+        },
+        {
+            "id": "Inquiry-is when a lender makes a request for-edge",
+            "source": "Inquiry",
+            "target": "is when a lender makes a request for"
+        },
+        {
+            "id": "is when a lender makes a request for-Credit score, FICO Score, Score-edge",
+            "source": "is when a lender makes a request for",
+            "target": "Credit score, FICO Score, Score"
+        },
+        {
+            "id": "Inquiry-are on-edge",
+            "source": "Inquiry",
+            "target": "are on"
+        },
+        {
+            "id": "are on-Credit report, report-edge",
+            "source": "are on",
+            "target": "Credit report, report"
+        },
+        {
+            "id": "Inquiry-often can play a part in assessing-edge",
+            "source": "Inquiry",
+            "target": "often can play a part in assessing"
+        },
+        {
+            "id": "often can play a part in assessing-Risk-edge",
+            "source": "often can play a part in assessing",
+            "target": "Risk"
+        },
+        {
+            "id": "rate shopping for a single loan-identified by-edge",
+            "source": "rate shopping for a single loan",
+            "target": "identified by"
+        },
+        {
+            "id": "identified by-Inquiry-edge",
+            "source": "identified by",
+            "target": "Inquiry"
+        },
+        {
+            "id": "Credit report, report-is summarised by-edge",
+            "source": "Credit report, report",
+            "target": "is summarised by"
+        },
+        {
+            "id": "is summarised by-Credit score, FICO Score, Score-edge",
+            "source": "is summarised by",
+            "target": "Credit score, FICO Score, Score"
+        },
+        {
+            "id": "history, payment history-is summarised by-edge",
+            "source": "history, payment history",
+            "target": "is summarised by"
+        },
+        {
+            "id": "is summarised by-Credit score, FICO Score, Score-edge",
+            "source": "is summarised by",
+            "target": "Credit score, FICO Score, Score"
+        },
+        {
+            "id": "history, payment history-is reported to-edge",
+            "source": "history, payment history",
+            "target": "is reported to"
+        },
+        {
+            "id": "is reported to-Bureau-edge",
+            "source": "is reported to",
+            "target": "Bureau"
+        }
+    ]
+}

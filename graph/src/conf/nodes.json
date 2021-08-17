@@ -1,9 +1,8 @@
 [
     {
-        "id": "001",
-        "sourcePosition": "left",
+        "id": "application, Loan Application",
         "data": {
-            "label": "taxes",
+            "label": "application, Loan Application",
             "type": "node"
         },
         "position": {
@@ -12,10 +11,9 @@
         }
     },
     {
-        "id": "002",
-        "sourcePosition": "left",
+        "id": "Credit score, FICO Score, Score",
         "data": {
-            "label": "payment",
+            "label": "Credit score, FICO Score, Score",
             "type": "node"
         },
         "position": {
@@ -24,10 +22,251 @@
         }
     },
     {
-        "id": "003",
-        "sourcePosition": "left",
+        "id": "Credit",
         "data": {
-            "label": "government",
+            "label": "Credit",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Lender",
+        "data": {
+            "label": "Lender",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Loan",
+        "data": {
+            "label": "Loan",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Finances",
+        "data": {
+            "label": "Finances",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Bad",
+        "data": {
+            "label": "Bad",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "AI models, Model",
+        "data": {
+            "label": "AI models, Model",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "borrower",
+        "data": {
+            "label": "borrower",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "card, credit card",
+        "data": {
+            "label": "card, credit card",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "satisfactory trades",
+        "data": {
+            "label": "satisfactory trades",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "credit bureau risk score",
+        "data": {
+            "label": "credit bureau risk score",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "People",
+        "data": {
+            "label": "People",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "account, Satisfactory Accounts",
+        "data": {
+            "label": "account, Satisfactory Accounts",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "on-time payments",
+        "data": {
+            "label": "on-time payments",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Inquiry",
+        "data": {
+            "label": "Inquiry",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "rate shopping for a single loan",
+        "data": {
+            "label": "rate shopping for a single loan",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "several hard inquiries in a short time frame",
+        "data": {
+            "label": "several hard inquiries in a short time frame",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Credit report, report",
+        "data": {
+            "label": "Credit report, report",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Risk",
+        "data": {
+            "label": "Risk",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Rate",
+        "data": {
+            "label": "Rate",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Balance",
+        "data": {
+            "label": "Balance",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "industry standard for determining a person's credit risk",
+        "data": {
+            "label": "industry standard for determining a person's credit risk",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "history, payment history",
+        "data": {
+            "label": "history, payment history",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Bureau",
+        "data": {
+            "label": "Bureau",
             "type": "node"
         },
         "position": {

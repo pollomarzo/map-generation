@@ -58,7 +58,7 @@ const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
 }
 
 export const TimeoutModal = ({ isOpen, onClose }) => {
-    const { navigationState, setNavigationState } = useNodeContext();
+    const { navigationState, setNavigationState, setShowResults } = useNodeContext();
     const closable = (navigationState === 0);
     const inCreation = (navigationState === 0);
 
@@ -66,7 +66,9 @@ export const TimeoutModal = ({ isOpen, onClose }) => {
         <Modal__
             isOpen={isOpen}
             onClose={() => {
-                closable && onClose(); setNavigationState((nav) => nav + 1)
+                closable && onClose();
+                setNavigationState((nav) => nav + 1);
+                setShowResults(true);
             }}
             closable={closable}
             title={inCreation ? 'Creation' : 'Review' + ' section completed!'}

@@ -1,9 +1,8 @@
 [
     {
-        "id": "a",
-        "sourcePosition": "left",
+        "id": "is evaluated through",
         "data": {
-            "label": "is a form of",
+            "label": "is evaluated through",
             "type": "edge_label"
         },
         "position": {
@@ -12,10 +11,240 @@
         }
     },
     {
-        "id": "b",
-        "sourcePosition": "left",
+        "id": "determines request for",
         "data": {
-            "label": "is collected by",
+            "label": "determines request for",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "granted by lender",
+        "data": {
+            "label": "granted by lender",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "used by borrowers to apply for",
+        "data": {
+            "label": "used by borrowers to apply for",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "can reveal key details about",
+        "data": {
+            "label": "can reveal key details about",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "is denied when Risk Performance is predicted to be",
+        "data": {
+            "label": "is denied when Risk Performance is predicted to be",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "can be decided by",
+        "data": {
+            "label": "can be decided by",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "is used, to apply for a loan, by",
+        "data": {
+            "label": "is used, to apply for a loan, by",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "can be affected by",
+        "data": {
+            "label": "can be affected by",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "is used to refer to",
+        "data": {
+            "label": "is used to refer to",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "can make get a loan faster/slower to",
+        "data": {
+            "label": "can make get a loan faster/slower to",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "impacted by",
+        "data": {
+            "label": "impacted by",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "greatly impacted by",
+        "data": {
+            "label": "greatly impacted by",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "used to decide your",
+        "data": {
+            "label": "used to decide your",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "is not increased by an action to close down balance",
+        "data": {
+            "label": "is not increased by an action to close down balance",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "is",
+        "data": {
+            "label": "is",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "count the number of past credit agreements resulted in",
+        "data": {
+            "label": "count the number of past credit agreements resulted in",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "is when a lender makes a request for",
+        "data": {
+            "label": "is when a lender makes a request for",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "are on",
+        "data": {
+            "label": "are on",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "often can play a part in assessing",
+        "data": {
+            "label": "often can play a part in assessing",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "identified by",
+        "data": {
+            "label": "identified by",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "is summarised by",
+        "data": {
+            "label": "is summarised by",
+            "type": "edge_label"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "is reported to",
+        "data": {
+            "label": "is reported to",
             "type": "edge_label"
         },
         "position": {

@@ -11,11 +11,14 @@ const handleStyle = (clickable) => ({
     height: 15,
 })
 
+const correctColor = '#99ff66';
+const incorrectColor = '#ff5757';
+
 const nodeStyle = (showResults, correct) => ({
     padding: 10,
     border: '1px solid',
     borderColor: '#ff0072',
-    background: !showResults ? 'white' : correct ? 'green' : 'red',
+    background: !showResults ? 'white' : correct ? correctColor : incorrectColor,
     width: 150,
     borderRadius: 100,
 })
@@ -24,7 +27,7 @@ const labelStyle = (showResults, correct) => ({
     padding: 10,
     border: '1px solid',
     borderColor: '#1b17ef',
-    background: !showResults ? 'white' : correct ? 'green' : 'red',
+    background: !showResults ? 'white' : correct ? correctColor : incorrectColor,
     width: 80,
     borderRadius: 3
 })
@@ -32,12 +35,12 @@ const labelStyle = (showResults, correct) => ({
 
 const DetachNode = memo(({ id, data }) => {
     const { label, onDelete } = data;
-    const { navigationState } = useNodeContext();
+    const { navigationState, showResults } = useNodeContext();
 
     return (
         <div style={(data.type === NODE_DATA_TYPE.NODE) ?
-            nodeStyle(data.showResults, data.correct) :
-            labelStyle(data.showResults, data.correct)}>
+            nodeStyle(showResults, data.correct) :
+            labelStyle(showResults, data.correct)}>
             <Handle
                 type="target"
                 position="left"

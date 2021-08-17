@@ -6,6 +6,12 @@ const redirect = () => { }
 
 export const Timer = ({ timerKey, duration, onComplete }) => {
     const { navigationState, setNavigationState } = useNodeContext();
+    const complete = () => {
+        console.log("CLICKED!")
+        onComplete();
+        if (navigationState === 0);
+        else redirect()
+    }
     return (
         <div
             style={{
@@ -13,6 +19,7 @@ export const Timer = ({ timerKey, duration, onComplete }) => {
                 top: '30px',
                 left: '30px',
                 // TODO: what to we wanna do? above? below?
+                zIndex: '5',
             }}>
             <CountdownCircleTimer
                 key={timerKey}
@@ -23,11 +30,7 @@ export const Timer = ({ timerKey, duration, onComplete }) => {
                     ['#F7B801', 0.33],
                     ['#A30000', 0.33],
                 ]}
-                onComplete={() => {
-                    onComplete();
-                    if (navigationState === 0);
-                    else redirect()
-                }}
+                onComplete={complete}
                 style={{
                     zIndex: '5',
                 }}
@@ -36,8 +39,17 @@ export const Timer = ({ timerKey, duration, onComplete }) => {
                     const minutes = Math.floor(remainingTime / 60)
                     const seconds = remainingTime % 60
 
-                    return `${minutes}:${seconds}`
+                    return <div style={{
+                        display: 'flex', flexDirection: 'column',
+                        justifyContent: 'space-evenly', textAlign: 'center'
+                    }}>
+                        {minutes}:{seconds}
+                        <button onClick={() => complete()}>
+                            SKIP
+                        </button>
+                    </div>
                 }}
-            </CountdownCircleTimer>
-        </div>)
+
+            </CountdownCircleTimer >
+        </div >)
 }

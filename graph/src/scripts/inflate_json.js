@@ -1,6 +1,14 @@
 let graph = require('./CA_concept_map_small.json')
 let fs = require('fs')
 
+function uniq(arr, f) {
+    let seen = new Set();
+    return arr.filter(item => {
+        let k = f(item);
+        return seen.has(k) ? false : seen.add(k);
+    });
+}
+
 const NODE_DATA_TYPE = {
     NODE: 'node',
     EDGE_LABEL: 'edge_label',
@@ -37,6 +45,8 @@ let inflatedLabels = edges.map((edge) => ({
         "y": 0
     }
 }));
+
+inflatedLabels = uniq(inflatedLabels, label => label.id);
 
 let correctNodes = [...inflatedNodes, ...inflatedLabels];
 

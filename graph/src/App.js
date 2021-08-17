@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import MapView from './MapView';
-import { nodes, labels, creationDuration, reviewDuration } from './conf';
+import { nodes, labels, correctElements, creationDuration, reviewDuration } from './conf';
 import { TimeoutModal } from './modal';
 import Modal from 'react-modal';
 import { NodeProvider } from './NodeContext';
 import { Timer } from './Timer';
+import { correct } from './graph';
 
 
 Modal.setAppElement(document.getElementById('root'));
@@ -24,7 +25,12 @@ export default function App() {
   const [duration, setDuration] = useState(creationDuration);
 
   const checkNodes = () => {
-    console.log('elements:', elements);
+    setElements((els) => {
+      // dunno if we need to do something with missing stuff
+      const { nodes, edges, missingNodes, missingEdges } = correct(els, correctElements.nodes, correctElements.edges);
+      return [...nodes, ...edges]
+    }
+    );
   };
 
   return (
