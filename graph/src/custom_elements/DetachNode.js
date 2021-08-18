@@ -19,7 +19,7 @@ const nodeStyle = (showResults, correct) => ({
     border: '1px solid',
     borderColor: '#ff0072',
     background: !showResults ? 'white' : correct ? correctColor : incorrectColor,
-    width: 170,
+    width: 120,
     borderRadius: 100,
 })
 
@@ -28,7 +28,7 @@ const labelStyle = (showResults, correct) => ({
     border: '2px solid',
     borderColor: '#1b17ef',
     background: !showResults ? 'white' : correct ? correctColor : incorrectColor,
-    width: 120,
+    width: 250,
     borderRadius: 3
 })
 
@@ -40,7 +40,8 @@ const DetachNode = memo(({ id, data }) => {
     return (
         <div style={(data.type === NODE_DATA_TYPE.NODE) ?
             nodeStyle(showResults, data.correct) :
-            labelStyle(showResults, data.correct)}>
+            labelStyle(showResults, data.correct)}
+            onDrop={data.onDrop}>
             <Handle
                 type="target"
                 position="left"

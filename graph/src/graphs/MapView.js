@@ -1,15 +1,27 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import {
-  ReactFlowProvider,
+import ReactFlow, {
   removeElements,
+  isEdge,
+  Controls,
+  ReactFlowProvider
 } from 'react-flow-renderer';
-import Flow from './Flow';
 import './dnd.css';
 import { NODE_DATA_TYPE, NODE_TYPE } from '../const';
 import { ID } from '../utils';
 import { useNodeContext } from '../NodeContext';
+import { EDGE_TYPE } from '../const';
+import DetachNode from '../custom_elements/DetachNode';
+import ColoredEdge from '../custom_elements/ColoredEdge';
 
 import { NodeSidebar, LabelSidebar } from './Sidebar';
+
+const nodeTypes = {
+  detach_node: DetachNode,
+};
+
+const edgeTypes = {
+  colored_edge: ColoredEdge,
+};
 
 
 const MapView = ({ nodes, labels, elements, setElements }) => {
@@ -34,18 +46,27 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
       sort((a, b) =>
         a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' })));
 
-  // sort everything based on label before including them to avoid unwanted reordering
+  // sort everything based on label before including them to avoid inconsistent order
   const setSidebarNodesSorted = useMemo(() =>
     (updateF) => setSidebarNodes((els) =>
       updateF(els).sort((a, b) =>
         a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' }))),
     [setSidebarNodes]);
 
-  const setSidebarLabelsSorted = useMemo(() =>
-    (updateF) => setSidebarLabels((els) =>
-      updateF(els).sort((a, b) =>
-        a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' }))),
-    [setSidebarLabels]);
+  // const setSidebarLabelsSorted = useMemo(() =>
+  //   (updateF) => setSidebarLabels((els) =>
+  //     updateF(els).sort((a, b) =>
+  //       a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' }))),
+  //   [setSidebarLabels]);
+
+
+  const onRemoveEdge = (edge) => setElements(els => [...removeElements([edge], els)]);
+
+  const onElementClick = (_, el) => {
+    if (isEdge(el)) {
+      onRemoveEdge(el, el.target);
+    }
+  };
 
   const onLoad = (_reactFlowInstance) => {
     setReactFlowInstance(_reactFlowInstance);
@@ -57,16 +78,18 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
     event.dataTransfer.dropEffect = 'move';
   };
 
-  const onDrop = (event) => {
+  const onDrop = (event, offsetX) => {
     event.preventDefault();
 
     const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
     const nodeId = event.dataTransfer.getData('application/reactflow/id');
     const nodeType = event.dataTransfer.getData('application/reactflow/type');
 
+    console.log("onDrop from flow, with id and type", nodeId, nodeType);
+
     const position = reactFlowInstance.project({
-      x: event.clientX - reactFlowBounds.left,
-      y: event.clientY - reactFlowBounds.top,
+      x: event.clientX - reactFlowBounds.left - 50 + (offsetX || 0),
+      y: event.clientY - reactFlowBounds.top - 30,
     });
 
     let node;
@@ -92,12 +115,25 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
       position,
       data: {
         ...node.data,
-        onDelete: () => onClickDeleteIcon(node)
+        onDelete: () => onClickDeleteIcon(node),
+        onDrop: (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const nodeId = event.dataTransfer.getData('application/reactflow/id');
+          console.log("onDrop from node, with id", nodeId);
+          onDrop(event, 200);
+          setElements(els => {
+            const targetId = els.find(el => el.originalId === nodeId).id;
+            onConnect({
+              source: node.id,
+              target: targetId,
+            })
+            return els;
+          })
+        }
       }
     }
-
     console.log("adding node: ", node);
-
     setElements((es) => es.concat(node));
     // disable corresponding sidebar element
   };
@@ -116,22 +152,59 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
     }
   }, [setElements, setSidebarNodesSorted, navigationState]);
 
+  const onConnect = params => {
+    // make sure the two nodes are different types
+    setElements(elements => {
+      console.log(elements)
+      const target = elements.find(el => el.id === params.target);
+      const targetType = target.data.type;
+      const targetOriginalId = target.originalId || target.id;
 
+      const source = elements.find(el => el.id === params.source);
+      const sourceType = source.data.type;
+      const sourceOriginalId = source.originalId || source.id;
+
+      if (sourceType !== targetType) {
+        console.log("connecting params: ", params);
+        const edgeId = `${params.source}-${params.target}-edge`;
+        let newEdge = {
+          ...params,
+          id: edgeId,
+          animated: false,
+          type: EDGE_TYPE.COLORED_EDGE,
+          data: {
+            onClick: () => onRemoveEdge(newEdge, newEdge.target),
+          },
+          sourceOriginalId: sourceOriginalId,
+          targetOriginalId: targetOriginalId,
+        }
+        return [...elements, newEdge]
+      }
+      return elements;
+    });
+  };
 
 
   return (
     <div className="dndflow">
       <ReactFlowProvider>
         <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-          <Flow
-            elements={elements}
-            setElements={setElements}
-            flowProps={{
-              onDrop,
-              onDragOver,
-              onLoad,
-            }}
-          />
+          <div style={{ height: '100%' }}>
+            <ReactFlow
+              elements={elements}
+              nodeTypes={nodeTypes}
+              edgeTypes={edgeTypes}
+              elementsSelectable={false}
+              onElementClick={onElementClick}
+              onConnect={onConnect}
+              onDrop={onDrop}
+              onDragOver={onDragOver}
+              onLoad={onLoad}
+              onlyRenderVisibleElements={true}
+            >
+              <Controls showInteractive={false} />
+            </ReactFlow>
+          </div>
         </div>
         {navigationState === 0 && <>
           <NodeSidebar
