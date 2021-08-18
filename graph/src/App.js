@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import MapView from './graphs/MapView';
-import { nodes, labels, correctElements, creationDuration, reviewDuration } from './conf';
+import {
+  nodes, labels, decoyNodes,
+  correctElements, creationDuration,
+  reviewDuration
+} from './conf';
 import { TimeoutModal } from './modal';
 import Modal from 'react-modal';
 import { NodeProvider } from './NodeContext';
@@ -37,7 +41,7 @@ export default function App() {
     <NodeProvider state={navigationStart}>
       <div style={{ height: '90vh', width: '100%', position: 'relative' }}>
         <MapView
-          nodes={nodes}
+          nodes={[...nodes, ...decoyNodes]}
           labels={labels}
           shouldLayout={shouldLayout}
           setShouldLayout={setShouldLayout}

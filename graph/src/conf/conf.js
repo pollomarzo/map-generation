@@ -1,9 +1,9 @@
-export const creationDuration = 10;
+export const creationDuration = 500;
 export const reviewDuration = 500;
 
 export const endCreationMessage = <div>
     <p>
-        Thank you for creating your first concept map. In the next {reviewDuration} minutes,
+        Thank you for creating your first concept map. In the next {reviewDuration} seconds,
         please review the concept map you created and the mistakes you made. </p>
     <p> Your objective going forward will be to try to get a better concept map, as good as you can make it.
         In order to reach this goal, you will be redirected to an explanatory software. Use it

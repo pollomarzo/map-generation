@@ -1,0 +1,112 @@
+[
+    {
+        "id": "denial of credit",
+        "data": {
+            "label": "denial of credit",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Real estate appraisers",
+        "data": {
+            "label": "Real estate appraisers",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "a person 's first credit card",
+        "data": {
+            "label": "a person 's first credit card",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "residential mortgage loan transactions",
+        "data": {
+            "label": "residential mortgage loan transactions",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "Algorithmic fairness",
+        "data": {
+            "label": "Algorithmic fairness",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "art algorithms",
+        "data": {
+            "label": "art algorithms",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "a fast gradient based algorithm",
+        "data": {
+            "label": "a fast gradient based algorithm",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "an important step in effective personal budgeting",
+        "data": {
+            "label": "an important step in effective personal budgeting",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "your credit experience",
+        "data": {
+            "label": "your credit experience",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    {
+        "id": "no estate tax liability",
+        "data": {
+            "label": "no estate tax liability",
+            "type": "node"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    }
+]

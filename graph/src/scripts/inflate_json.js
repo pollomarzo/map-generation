@@ -62,21 +62,21 @@ let correctEdges = edges.map((edge) => ([
         target: edge.target,
     }])).flat();
 
-fs.writeFile('correct.json',
+fs.writeFile('../conf/correct.json',
     JSON.stringify({ nodes: correctNodes, edges: correctEdges }, null, 4), (err) => {
         if (err) {
             throw err;
         }
     });
 
-fs.writeFile('nodes.json',
+fs.writeFile('../conf/nodes.json',
     JSON.stringify(inflatedNodes, null, 4), (err) => {
         if (err) {
             throw err;
         }
     });
 
-fs.writeFile('labels.json',
+fs.writeFile('../conf/labels.json',
     JSON.stringify(inflatedLabels, null, 4), (err) => {
         if (err) {
             throw err;
