@@ -19,8 +19,6 @@ export default function App() {
   const navigationStart = 0;
   // all possible nodes
   const [elements, setElements] = useState([]);
-  // going to keep this here to call a graph layout when it's needed
-  const [shouldLayout, setShouldLayout] = useState(true);
   // modal for timer expired
   const [modalIsOpen, setModalIsOpen] = useState(false);
   // needed for rerendering "new" timer
@@ -43,8 +41,6 @@ export default function App() {
         <MapView
           nodes={[...nodes, ...decoyNodes]}
           labels={labels}
-          shouldLayout={shouldLayout}
-          setShouldLayout={setShouldLayout}
           elements={elements}
           setElements={setElements}
         />

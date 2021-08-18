@@ -71,7 +71,7 @@ export const TimeoutModal = ({ isOpen, onClose }) => {
                 setShowResults(true);
             }}
             closable={closable}
-            title={inCreation ? 'Creation' : 'Review' + ' section completed!'}
+            title={`${inCreation ? 'Creation' : 'Review'} section completed!`}
             content={inCreation ? endCreationMessage : endReviewMessage}
         />
     )

@@ -4,8 +4,10 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 
 const redirect = () => { }
 
+const padZero = n => n < 10 ? `0${n}` : n;
+
 export const Timer = ({ timerKey, duration, onComplete }) => {
-    const { navigationState, setNavigationState } = useNodeContext();
+    const { navigationState } = useNodeContext();
     const complete = () => {
         console.log("CLICKED!")
         onComplete();
@@ -43,7 +45,7 @@ export const Timer = ({ timerKey, duration, onComplete }) => {
                         display: 'flex', flexDirection: 'column',
                         justifyContent: 'space-evenly', textAlign: 'center'
                     }}>
-                        {minutes}:{seconds}
+                        {padZero(minutes)}:{padZero(seconds)}
                         <button onClick={() => complete()}>
                             SKIP
                         </button>

@@ -11,14 +11,28 @@ import { useNodeContext } from '../NodeContext';
 
 import { NodeSidebar, LabelSidebar } from './Sidebar';
 
-const MapView = ({ nodes, labels, shouldLayout, setShouldLayout, elements, setElements }) => {
+
+const MapView = ({ nodes, labels, elements, setElements }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   const { navigationState } = useNodeContext();
 
-  const [sidebarNodes, setSidebarNodes] = useState([]);
-  const [sidebarLabels, setSidebarLabels] = useState([]);
+  // default state is nodes with type detach and sorted
+  const [sidebarNodes, setSidebarNodes] = useState(
+    nodes.map((node) => ({
+      ...node,
+      type: NODE_TYPE.DETACH_NODE,
+    }))
+      .sort((a, b) =>
+        a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' })));
+  const [sidebarLabels, setSidebarLabels] = useState(
+    labels.map((node) => ({
+      ...node,
+      type: NODE_TYPE.DETACH_NODE,
+    })).
+      sort((a, b) =>
+        a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' })));
 
   // sort everything based on label before including them to avoid unwanted reordering
   const setSidebarNodesSorted = useMemo(() =>
@@ -103,24 +117,6 @@ const MapView = ({ nodes, labels, shouldLayout, setShouldLayout, elements, setEl
   }, [setElements, setSidebarNodesSorted, navigationState]);
 
 
-  //should this be moved to upper component?
-  useEffect(() => {
-    // update sidebar nodes, then edge labels
-    const sidebarNodes = nodes.map((node) => ({
-      ...node,
-      type: NODE_TYPE.DETACH_NODE,
-    }))
-    setSidebarNodesSorted(() => sidebarNodes);
-    // labels
-    const sidebarLabels = labels.map((node) => ({
-      ...node,
-      type: NODE_TYPE.DETACH_NODE,
-    }))
-    setSidebarLabelsSorted(() => sidebarLabels);
-
-    setShouldLayout(true);
-  }, [setElements, setSidebarNodesSorted,
-    setSidebarLabelsSorted, onClickDeleteIcon, setShouldLayout, labels, nodes])
 
 
   return (
@@ -130,8 +126,6 @@ const MapView = ({ nodes, labels, shouldLayout, setShouldLayout, elements, setEl
           <Flow
             elements={elements}
             setElements={setElements}
-            shouldLayout={shouldLayout}
-            setShouldLayout={setShouldLayout}
             flowProps={{
               onDrop,
               onDragOver,

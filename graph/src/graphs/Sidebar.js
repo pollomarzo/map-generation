@@ -34,6 +34,7 @@ const onDragStart = (event, node) => {
 };
 
 export const NodeSidebar = ({ nodes }) => {
+    console.log(nodes);
     return (
         <aside style={{ border: '1px solid red' }}>
             <div style={{ marginBottom: '10px', fontSize: '18px' }}>

@@ -19,16 +19,16 @@ const nodeStyle = (showResults, correct) => ({
     border: '1px solid',
     borderColor: '#ff0072',
     background: !showResults ? 'white' : correct ? correctColor : incorrectColor,
-    width: 150,
+    width: 170,
     borderRadius: 100,
 })
 
 const labelStyle = (showResults, correct) => ({
     padding: 10,
-    border: '1px solid',
+    border: '2px solid',
     borderColor: '#1b17ef',
     background: !showResults ? 'white' : correct ? correctColor : incorrectColor,
-    width: 80,
+    width: 120,
     borderRadius: 3
 })
 
