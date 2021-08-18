@@ -33,7 +33,9 @@ const onDragStart = (event, node) => {
     event.dataTransfer.effectAllowed = 'move';
 };
 
-export const NodeSidebar = ({ nodes }) => {
+//TODO: shit duplicate code.. come on
+
+export const NodeSidebar = ({ nodes, setDragging, onDragEnd }) => {
     console.log(nodes);
     return (
         <aside style={{ border: '1px solid red' }}>
@@ -43,7 +45,14 @@ export const NodeSidebar = ({ nodes }) => {
             <div style={{ padding: 10 }}>
                 {
                     nodes.map((node) => (
-                        <div key={node.id} style={nodeStyle(node.data.disabled)} onDragStart={(event) => onDragStart(event, node)} draggable={!node.data.disabled}>
+                        <div key={node.id}
+                            style={nodeStyle(node.data.disabled)}
+                            onDragStart={(event) => {
+                                setDragging(node.data.type);
+                                onDragStart(event, node)
+                            }}
+                            onDragEnd={onDragEnd}
+                            draggable={!node.data.disabled}>
                             {node.data.label}
                         </div>
                     ))
@@ -53,7 +62,7 @@ export const NodeSidebar = ({ nodes }) => {
     );
 };
 
-export const LabelSidebar = ({ nodes }) => {
+export const LabelSidebar = ({ nodes, setDragging, onDragEnd }) => {
     return (
         <aside style={{ margin: '2px', border: '1px solid blue' }}>
             <div style={{ marginBottom: '10px', fontSize: '18px' }}>
@@ -62,7 +71,14 @@ export const LabelSidebar = ({ nodes }) => {
             <div style={{ padding: 10 }}>
                 {
                     nodes.map((node) => (
-                        <div key={node.id} style={edgeStyle} onDragStart={(event) => onDragStart(event, node)} draggable={true}>
+                        <div key={node.id}
+                            style={edgeStyle}
+                            onDragStart={(event) => {
+                                setDragging(node.data.type);
+                                onDragStart(event, node)
+                            }}
+                            onDragEnd={onDragEnd}
+                            draggable={true}>
                             {node.data.label}
                         </div>
                     ))

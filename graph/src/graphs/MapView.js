@@ -27,6 +27,9 @@ const edgeTypes = {
 const MapView = ({ nodes, labels, elements, setElements }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  // this contains the type of the node being dragged to allow for
+  // instructions to be displayed
+  const [dragging, setDragging] = useState(undefined);
 
   const { navigationState } = useNodeContext();
 
@@ -79,8 +82,7 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
   };
 
   const onDrop = (event, offsetX) => {
-    event.preventDefault();
-
+    onDragEnd(event);
     const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
     const nodeId = event.dataTransfer.getData('application/reactflow/id');
     const nodeType = event.dataTransfer.getData('application/reactflow/type');
@@ -117,7 +119,6 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
         ...node.data,
         onDelete: () => onClickDeleteIcon(node),
         onDrop: (event) => {
-          event.preventDefault();
           event.stopPropagation();
           const nodeId = event.dataTransfer.getData('application/reactflow/id');
           console.log("onDrop from node, with id", nodeId);
@@ -184,6 +185,10 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
     });
   };
 
+  const onDragEnd = (event) => {
+    console.log("drag ended");
+    setDragging(undefined);
+  }
 
   return (
     <div className="dndflow">
@@ -209,11 +214,27 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
         {navigationState === 0 && <>
           <NodeSidebar
             nodes={sidebarNodes}
+            setDragging={setDragging}
+            onDragEnd={onDragEnd}
           />
           <LabelSidebar
             nodes={sidebarLabels}
+            setDragging={setDragging}
+            onDragEnd={onDragEnd}
           /></>}
       </ReactFlowProvider>
+      {dragging && <div style={{
+        position: 'absolute',
+        bottom: '10%', right: '50%',
+        textAlign: 'center',
+        backgroundColor: 'black',
+        color: 'white',
+        cornerRadius: '20',
+        padding: 10
+      }}>
+        {(dragging === NODE_DATA_TYPE.NODE) ? "Drop this node on a label to connect them" :
+          "Drop this label on a node to connect them"}
+      </div>}
     </div >
   );
 };
