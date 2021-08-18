@@ -20,15 +20,17 @@ const MapView = ({ nodes, labels, shouldLayout, setShouldLayout, elements, setEl
   const [sidebarNodes, setSidebarNodes] = useState([]);
   const [sidebarLabels, setSidebarLabels] = useState([]);
 
-  // sort everything based on ID before including them to avoid unwanted reordering
+  // sort everything based on label before including them to avoid unwanted reordering
   const setSidebarNodesSorted = useMemo(() =>
     (updateF) => setSidebarNodes((els) =>
-      updateF(els).sort((a, b) => (a.id < b.id) ? -1 : (b.id < a.id) ? 1 : 0)),
+      updateF(els).sort((a, b) =>
+        a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' }))),
     [setSidebarNodes]);
 
   const setSidebarLabelsSorted = useMemo(() =>
     (updateF) => setSidebarLabels((els) =>
-      updateF(els).sort((a, b) => (a.id < b.id) ? -1 : (b.id < a.id) ? 1 : 0)),
+      updateF(els).sort((a, b) =>
+        a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' }))),
     [setSidebarLabels]);
 
   const onLoad = (_reactFlowInstance) => {
