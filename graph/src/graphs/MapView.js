@@ -8,7 +8,6 @@ import ReactFlow, {
 import './dnd.css';
 import { NODE_DATA_TYPE, NODE_TYPE } from '../const';
 import { ID } from '../utils';
-import { useNodeContext } from '../NodeContext';
 import { EDGE_TYPE } from '../const';
 import DetachNode from '../custom_elements/DetachNode';
 import ColoredEdge from '../custom_elements/ColoredEdge';
@@ -24,14 +23,12 @@ const edgeTypes = {
 };
 
 
-const MapView = ({ nodes, labels, elements, setElements }) => {
+const MapView = ({ nodes, labels, elements, setElements, editable }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   // this contains the type of the node being dragged to allow for
   // instructions to be displayed
   const [dragging, setDragging] = useState(undefined);
-
-  const { navigationState } = useNodeContext();
 
   // default state is nodes with type detach and sorted
   const [sidebarNodes, setSidebarNodes] = useState(
@@ -66,7 +63,7 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
   const onRemoveEdge = (edge) => setElements(els => [...removeElements([edge], els)]);
 
   const onElementClick = (_, el) => {
-    if (isEdge(el)) {
+    if (isEdge(el) && editable) {
       onRemoveEdge(el, el.target);
     }
   };
@@ -140,7 +137,7 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
   };
 
   const onClickDeleteIcon = useCallback((node) => {
-    if (navigationState === 0) {
+    if (editable) {
       console.log("deleting node...", node);
       setElements((els) => removeElements([node], els));
       setSidebarNodesSorted((els) => els.map((el) => el.id === node.id ? {
@@ -151,7 +148,7 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
         }
       } : el))
     }
-  }, [setElements, setSidebarNodesSorted, navigationState]);
+  }, [setElements, setSidebarNodesSorted]);
 
   const onConnect = params => {
     // make sure the two nodes are different types
@@ -211,7 +208,7 @@ const MapView = ({ nodes, labels, elements, setElements }) => {
             </ReactFlow>
           </div>
         </div>
-        {navigationState === 0 && <>
+        {editable && <>
           <NodeSidebar
             nodes={sidebarNodes}
             setDragging={setDragging}

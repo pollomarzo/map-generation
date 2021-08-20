@@ -2,12 +2,11 @@ import React from 'react'
 
 const NodeContext = React.createContext(null)
 
-export const NodeProvider = ({ state, children }) => {
-    const [navigationState, setNavigationState] = React.useState(state);
+export const NodeProvider = ({ children }) => {
     const [showResults, setShowResults] = React.useState(false);
 
     return (
-        <NodeContext.Provider value={{ navigationState, setNavigationState, showResults, setShowResults }}>
+        <NodeContext.Provider value={{ showResults, setShowResults }}>
             {children}
         </NodeContext.Provider>
     )

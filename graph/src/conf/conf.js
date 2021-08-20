@@ -16,7 +16,7 @@ export const TIME = [
 ]
 
 export const TEXT = [
-    "ciao",
+    "hey this is stuff and you need to do X",
     <div>
         <p>
             Thank you for creating your first concept map. In the next {TIME[NAV.CREATE]} seconds,

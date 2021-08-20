@@ -4,6 +4,8 @@ import { Handle } from 'react-flow-renderer';
 import './DetachNodeStyle.css';
 import { NODE_DATA_TYPE } from '../const';
 import { useNodeContext } from '../NodeContext';
+import { useNavigationContext } from '../NavigationContext';
+import { NAV } from '../conf';
 
 const handleStyle = (clickable, dragOver) => ({
     pointerEvents: clickable ? 'auto' : 'none',
@@ -38,8 +40,10 @@ const labelStyle = (showResults, correct, dragOver) => ({
 
 const DetachNode = memo(({ id, data }) => {
     const { label, onDelete } = data;
-    const { navigationState, showResults } = useNodeContext();
+    const { showResults } = useNodeContext();
+    const { navigationState } = useNavigationContext();
     const [dragOver, setDragOver] = useState(0);
+    const editable = (navigationState === NAV.CREATE || navigationState === NAV.RECREATE)
 
     return (
         <div style={(data.type === NODE_DATA_TYPE.NODE) ?
@@ -63,18 +67,18 @@ const DetachNode = memo(({ id, data }) => {
             <Handle
                 type="target"
                 position="left"
-                style={handleStyle(navigationState === 0)}
+                style={handleStyle(editable)}
             />
             <Handle
                 type="source"
                 position="right"
-                style={handleStyle(navigationState === 0, dragOver !== 0)}
+                style={handleStyle(editable, dragOver !== 0)}
             />
             <div style={{ textAlign: 'center' }}>
                 {label}
             </div>
             <div className="removeIcon" onClick={() => onDelete()} style={{
-                display: navigationState === 0 ? undefined : 'none',
+                display: editable ? undefined : 'none',
                 width: '20px',
                 height: '20px',
                 cursor: 'pointer',

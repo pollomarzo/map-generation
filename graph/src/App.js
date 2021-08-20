@@ -9,13 +9,13 @@ import Modal from 'react-modal';
 import { NodeProvider } from './NodeContext';
 import { Timer } from './Timer';
 import { correct } from './graphs/graph_utils';
+import YAI from './YAI';
+import { useNavigationContext } from './NavigationContext';
 
 
 Modal.setAppElement(document.getElementById('root'));
 
 export default function App() {
-  // navigation starts from zero
-  const navigationStart = NAV.START;
   // all possible nodes
   const [elements, setElements] = useState([]);
   // modal for timer expired
@@ -24,6 +24,8 @@ export default function App() {
   const [timerKey, setTimerKey] = useState(0);
   // once timer is reset, put in new duration and switch key
   const [duration, setDuration] = useState(0);
+  // we'll keep navigation state here
+  const { navigationState, setNavigationState } = useNavigationContext();
 
   const checkNodes = () => {
     setElements((els) => {
@@ -35,14 +37,15 @@ export default function App() {
   };
 
   return (
-    <NodeProvider state={navigationStart}>
+    <NodeProvider>
       <div style={{ height: '90vh', width: '100%', position: 'relative' }}>
-        <MapView
+        {navigationState !== NAV.YAI ? <MapView
           nodes={[...nodes, ...decoyNodes]}
           labels={labels}
           elements={elements}
           setElements={setElements}
-        />
+          editable={(navigationState === NAV.CREATE || navigationState === NAV.RECREATE)}
+        /> : <YAI />}
         <Timer
           timerKey={timerKey}
           duration={duration}
@@ -55,10 +58,21 @@ export default function App() {
           isOpen={modalIsOpen}
           nextSection={(duration) => {
             setModalIsOpen(false);
-            console.log('duration is', duration)
+            console.log('duration is', duration);
             setDuration(duration);
             setTimerKey(key => key + 1);
+            setNavigationState(navigation => {
+              // this is ugly. I really don't like it but have no better idea.
+              // maybe include it on first render of YAI by passing setElements?
+              if (navigation === NAV.YAI) {
+                setElements([]);
+                // REMEMBER TO SAVE GRAPH SOMEWHERE!
+              }
+              return navigation
+            })
           }}
+          setNavigationState={setNavigationState}
+          navigationState={navigationState}
         />
       </div>
     </NodeProvider>

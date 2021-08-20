@@ -4,6 +4,7 @@ import {
     TIME, TEXT, NAV
 } from './conf'
 import { useNodeContext } from './NodeContext';
+import { useNavigationContext } from './NavigationContext';
 
 const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
     return (
@@ -60,10 +61,11 @@ const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
 }
 
 export const TimeoutModal = ({ isOpen, nextSection }) => {
-    const { navigationState, setNavigationState, setShowResults } = useNodeContext();
+    const { setShowResults } = useNodeContext();
+    const { navigationState, setNavigationState } = useNavigationContext();
+    console.log("navigationSTate is ", navigationState);
 
     const onClose = () => {
-        console.log('navigationState is', navigationState)
         nextSection(TIME[navigationState + 1]);
         if (navigationState === NAV.CREATE ||
             navigationState === NAV.RECREATE) setShowResults(true)
@@ -76,7 +78,8 @@ export const TimeoutModal = ({ isOpen, nextSection }) => {
         isOpen={isOpen}
         onClose={onClose}
         closable={navigationState !== NAV.RESULT}
-        title={"culetto"}
-        content={TEXT[navigationState]}
+        title={"REMEMBER TO INCLUDE ACTUAL TITLES"}
+        // is this right? might be old so showing incorrect version
+        content={TEXT[navigationState + 1]}
     />
 }
