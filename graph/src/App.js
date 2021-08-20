@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import MapView from './graphs/MapView';
 import {
   nodes, labels, decoyNodes,
-  correctElements, creationDuration,
-  reviewDuration
+  correctElements, TEXT, NAV
 } from './conf';
 import { TimeoutModal } from './modal';
 import Modal from 'react-modal';
@@ -16,7 +15,7 @@ Modal.setAppElement(document.getElementById('root'));
 
 export default function App() {
   // navigation starts from zero
-  const navigationStart = 0;
+  const navigationStart = NAV.START;
   // all possible nodes
   const [elements, setElements] = useState([]);
   // modal for timer expired
@@ -24,7 +23,7 @@ export default function App() {
   // needed for rerendering "new" timer
   const [timerKey, setTimerKey] = useState(0);
   // once timer is reset, put in new duration and switch key
-  const [duration, setDuration] = useState(creationDuration);
+  const [duration, setDuration] = useState(0);
 
   const checkNodes = () => {
     setElements((els) => {
@@ -54,10 +53,11 @@ export default function App() {
         />
         <TimeoutModal
           isOpen={modalIsOpen}
-          onClose={() => {
+          nextSection={(duration) => {
             setModalIsOpen(false);
-            setDuration(reviewDuration);
-            setTimerKey(1);
+            console.log('duration is', duration)
+            setDuration(duration);
+            setTimerKey(key => key + 1);
           }}
         />
       </div>

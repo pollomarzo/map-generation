@@ -7,12 +7,9 @@ const redirect = () => { }
 const padZero = n => n < 10 ? `0${n}` : n;
 
 export const Timer = ({ timerKey, duration, onComplete }) => {
-    const { navigationState } = useNodeContext();
     const complete = () => {
         console.log("CLICKED!")
         onComplete();
-        if (navigationState === 0);
-        else redirect()
     }
     return (
         <div
@@ -47,7 +44,7 @@ export const Timer = ({ timerKey, duration, onComplete }) => {
                     }}>
                         {padZero(minutes)}:{padZero(seconds)}
                         <button onClick={() => complete()}>
-                            SKIP
+                            FINISH
                         </button>
                     </div>
                 }}

@@ -1,6 +1,8 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { endCreationMessage, endReviewMessage } from './conf'
+import {
+    TIME, TEXT, NAV
+} from './conf'
 import { useNodeContext } from './NodeContext';
 
 const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
@@ -57,22 +59,24 @@ const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
         </Modal>)
 }
 
-export const TimeoutModal = ({ isOpen, onClose }) => {
+export const TimeoutModal = ({ isOpen, nextSection }) => {
     const { navigationState, setNavigationState, setShowResults } = useNodeContext();
-    const closable = (navigationState === 0);
-    const inCreation = (navigationState === 0);
 
-    return (
-        <Modal__
-            isOpen={isOpen}
-            onClose={() => {
-                closable && onClose();
-                setNavigationState((nav) => nav + 1);
-                setShowResults(true);
-            }}
-            closable={closable}
-            title={`${inCreation ? 'Creation' : 'Review'} section completed!`}
-            content={inCreation ? endCreationMessage : endReviewMessage}
-        />
-    )
+    const onClose = () => {
+        console.log('navigationState is', navigationState)
+        nextSection(TIME[navigationState + 1]);
+        if (navigationState === NAV.CREATE ||
+            navigationState === NAV.RECREATE) setShowResults(true)
+        if (navigationState === NAV.REVIEW) setShowResults(false)
+        console.log("MOOOVING TO ", navigationState + 1)
+        setNavigationState(state => state + 1);
+    }
+
+    return <Modal__
+        isOpen={isOpen}
+        onClose={onClose}
+        closable={navigationState !== NAV.RESULT}
+        title={"culetto"}
+        content={TEXT[navigationState]}
+    />
 }
