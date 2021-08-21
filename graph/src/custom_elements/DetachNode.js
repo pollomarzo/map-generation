@@ -54,7 +54,6 @@ const DetachNode = memo(({ id, data }) => {
                 data.onDrop(e);
             }}
             onDragEnter={(e) => {
-                console.log('onDragEnter', e);
                 e.preventDefault();
                 e.stopPropagation();
                 setDragOver(o => o + 1);

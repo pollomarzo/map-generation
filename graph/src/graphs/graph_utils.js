@@ -25,7 +25,6 @@ export const correct = (elements, corrNodes, corrEdges) => {
     [edges, missingEdges] = verify(edges, corrEdges, (a, b) =>
         a.sourceOriginalId === b.source &&
         a.targetOriginalId === b.target);
-    console.log("final node tally", nodes);
     return { nodes, edges, missingNodes, missingEdges };
 
 }

@@ -58,7 +58,6 @@ export default function App() {
           isOpen={modalIsOpen}
           nextSection={(duration) => {
             setModalIsOpen(false);
-            console.log('duration is', duration);
             setDuration(duration);
             setTimerKey(key => key + 1);
             setNavigationState(navigation => {

@@ -8,7 +8,7 @@ const padZero = n => n < 10 ? `0${n}` : n;
 
 export const Timer = ({ timerKey, duration, onComplete }) => {
     const complete = () => {
-        console.log("CLICKED!")
+        console.log("Skipping to the next task...")
         onComplete();
     }
     return (

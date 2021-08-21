@@ -84,8 +84,6 @@ const MapView = ({ nodes, labels, elements, setElements, editable }) => {
     const nodeId = event.dataTransfer.getData('application/reactflow/id');
     const nodeType = event.dataTransfer.getData('application/reactflow/type');
 
-    console.log("onDrop from flow, with id and type", nodeId, nodeType);
-
     const position = reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left - 50 + (offsetX || 0),
       y: event.clientY - reactFlowBounds.top - 30,
@@ -118,7 +116,6 @@ const MapView = ({ nodes, labels, elements, setElements, editable }) => {
         onDrop: (event) => {
           event.stopPropagation();
           const nodeId = event.dataTransfer.getData('application/reactflow/id');
-          console.log("onDrop from node, with id", nodeId);
           onDrop(event, 200);
           setElements(els => {
             const targetId = els.find(el => el.originalId === nodeId).id;
@@ -182,10 +179,8 @@ const MapView = ({ nodes, labels, elements, setElements, editable }) => {
     });
   };
 
-  const onDragEnd = (event) => {
-    console.log("drag ended");
-    setDragging(undefined);
-  }
+  const onDragEnd = (event) => setDragging(undefined);
+
 
   return (
     <div className="dndflow">

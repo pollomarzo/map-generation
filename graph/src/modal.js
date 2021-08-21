@@ -63,14 +63,13 @@ const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
 export const TimeoutModal = ({ isOpen, nextSection }) => {
     const { setShowResults } = useNodeContext();
     const { navigationState, setNavigationState } = useNavigationContext();
-    console.log("navigationSTate is ", navigationState);
 
     const onClose = () => {
         nextSection(TIME[navigationState + 1]);
         if (navigationState === NAV.CREATE ||
-            navigationState === NAV.RECREATE) setShowResults(true)
-        if (navigationState === NAV.REVIEW) setShowResults(false)
-        console.log("MOOOVING TO ", navigationState + 1)
+            navigationState === NAV.RECREATE) setShowResults(true);
+        if (navigationState === NAV.REVIEW) setShowResults(false);
+        console.log("moving to state: ", navigationState + 1);
         setNavigationState(state => state + 1);
     }
 
