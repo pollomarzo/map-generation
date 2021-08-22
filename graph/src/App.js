@@ -13,6 +13,7 @@ import YAI from './YAI';
 import { useNavigationContext } from './NavigationContext';
 
 
+
 Modal.setAppElement(document.getElementById('root'));
 
 export default function App() {
@@ -45,7 +46,9 @@ export default function App() {
           elements={elements}
           setElements={setElements}
           editable={(navigationState === NAV.CREATE || navigationState === NAV.RECREATE)}
-        /> : <YAI />}
+        /> :
+          <YAI />
+        }
         <Timer
           timerKey={timerKey}
           duration={duration}

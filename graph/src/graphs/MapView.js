@@ -145,7 +145,7 @@ const MapView = ({ nodes, labels, elements, setElements, editable }) => {
         }
       } : el))
     }
-  }, [setElements, setSidebarNodesSorted]);
+  }, [setElements, setSidebarNodesSorted, editable]);
 
   const onConnect = params => {
     // make sure the two nodes are different types
