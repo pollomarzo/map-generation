@@ -12,11 +12,20 @@ import { correct } from './graphs/graph_utils';
 import YAI from './YAI';
 import { useNavigationContext } from './NavigationContext';
 
-
+const SCRIPTS = [
+  //necessary scripts
+]
 
 Modal.setAppElement(document.getElementById('root'));
 
 export default function App() {
+  React.useEffect(() => {
+    SCRIPTS.forEach(script => {
+      const js = document.createElement('script');
+      js.src = script;
+      document.body.appendChild(js);
+    });
+  }, []);
   // all possible nodes
   const [elements, setElements] = useState([]);
   // modal for timer expired
