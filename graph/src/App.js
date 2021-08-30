@@ -2,30 +2,18 @@ import React, { useState } from 'react';
 import MapView from './graphs/MapView';
 import {
   nodes, labels, decoyNodes,
-  correctElements, TEXT, NAV
+  correctElements, NAV
 } from './conf';
 import { TimeoutModal } from './modal';
 import Modal from 'react-modal';
 import { NodeProvider } from './NodeContext';
 import { Timer } from './Timer';
 import { correct } from './graphs/graph_utils';
-import YAI from './YAI';
 import { useNavigationContext } from './NavigationContext';
-
-const SCRIPTS = [
-  //necessary scripts
-]
 
 Modal.setAppElement(document.getElementById('root'));
 
 export default function App() {
-  React.useEffect(() => {
-    SCRIPTS.forEach(script => {
-      const js = document.createElement('script');
-      js.src = script;
-      document.body.appendChild(js);
-    });
-  }, []);
   // all possible nodes
   const [elements, setElements] = useState([]);
   // modal for timer expired
@@ -49,15 +37,15 @@ export default function App() {
   return (
     <NodeProvider>
       <div style={{ height: '90vh', width: '100%', position: 'relative' }}>
-        {navigationState !== NAV.YAI ? <MapView
-          nodes={[...nodes, ...decoyNodes]}
-          labels={labels}
+        <MapView
+          nodes={[...nodes, ...decoyNodes].sort((a, b) =>
+            a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' }))}
+          labels={labels.sort((a, b) =>
+            a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' }))}
           elements={elements}
           setElements={setElements}
           editable={(navigationState === NAV.CREATE || navigationState === NAV.RECREATE)}
-        /> :
-          <YAI />
-        }
+        />
         <Timer
           timerKey={timerKey}
           duration={duration}
@@ -74,8 +62,7 @@ export default function App() {
             setTimerKey(key => key + 1);
             setNavigationState(navigation => {
               // this is ugly. I really don't like it but have no better idea.
-              // maybe include it on first render of YAI by passing setElements?
-              if (navigation === NAV.YAI) {
+              if (navigation === NAV.REVIEW) {
                 setElements([]);
                 // REMEMBER TO SAVE GRAPH SOMEWHERE!
               }

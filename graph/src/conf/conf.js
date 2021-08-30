@@ -1,17 +1,21 @@
+
+export const YAI_URL = "https://google.com"
+
 export const NAV = {
     START: -1,
     CREATE: 0,
     REVIEW: 1,
-    YAI: 2,
-    RECREATE: 3,
-    RESULT: 4
+    // YAI: 2,
+    RECREATE: 2,
+    RESULT: 3
 }
+
 
 export const TIME = [
     500, // CREATE
     500, // REVIEW
     800, // YAI
-    500, // RECREATE
+    // 500, // RECREATE
     10000, // RESULT
 ]
 

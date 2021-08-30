@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import {
-    TIME, TEXT, NAV
+    TIME, TEXT, NAV, YAI_URL
 } from './conf'
 import { useNodeContext } from './NodeContext';
 import { useNavigationContext } from './NavigationContext';
@@ -43,7 +43,7 @@ const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
                         onClick={onClose}
                         style={{
                             float: 'right',
-                            backgroundColor: '#fff',
+                            backgroundColor: '#ddbaf2',
                             border: '1px solid #000',
                             borderRadius: '3px',
                             padding: '10px 20px',
@@ -52,8 +52,9 @@ const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
                             justifyContent: 'flex-end',
                             width: 200,
                             marginTop: '10px',
+                            cursor: 'pointer',
                         }}>
-                        <span>Close</span>
+                        <span>Next</span>
                     </button>
                 </div>}
             </div>
@@ -66,9 +67,15 @@ export const TimeoutModal = ({ isOpen, nextSection }) => {
 
     const onClose = () => {
         nextSection(TIME[navigationState + 1]);
-        if (navigationState === NAV.CREATE ||
-            navigationState === NAV.RECREATE) setShowResults(true);
-        if (navigationState === NAV.REVIEW) setShowResults(false);
+        switch (navigationState) {
+            case NAV.CREATE:
+                setShowResults(true);
+                break;
+            case NAV.REVIEW:
+                window.open(YAI_URL);
+                setShowResults(false);
+                break;
+        }
         console.log("moving to state: ", navigationState + 1);
         setNavigationState(state => state + 1);
     }
