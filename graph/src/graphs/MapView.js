@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 import ReactFlow, {
   removeElements,
   isEdge,
@@ -31,34 +31,20 @@ const MapView = ({ nodes, labels, elements, setElements, editable }) => {
   const [dragging, setDragging] = useState(undefined);
 
   // default state is nodes with type detach and sorted
-  const [sidebarNodes, setSidebarNodes] = useState(
+  const sidebarNodes = useMemo(() =>
     nodes.map((node) => ({
       ...node,
       type: NODE_TYPE.DETACH_NODE,
-    }))
-      .sort((a, b) =>
-        a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' })));
-  const [sidebarLabels, setSidebarLabels] = useState(
+      data: {
+        ...node.data,
+        disabled: !!elements.find((n) => node.id === n.id)
+      }
+    })), [elements, nodes]);
+  const sidebarLabels = useMemo(() =>
     labels.map((node) => ({
       ...node,
       type: NODE_TYPE.DETACH_NODE,
-    })).
-      sort((a, b) =>
-        a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' })));
-
-  // sort everything based on label before including them to avoid inconsistent order
-  const setSidebarNodesSorted = useMemo(() =>
-    (updateF) => setSidebarNodes((els) =>
-      updateF(els).sort((a, b) =>
-        a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' }))),
-    [setSidebarNodes]);
-
-  // const setSidebarLabelsSorted = useMemo(() =>
-  //   (updateF) => setSidebarLabels((els) =>
-  //     updateF(els).sort((a, b) =>
-  //       a.data.label.localeCompare(b.data.label, 'en', { 'sensitivity': 'base' }))),
-  //   [setSidebarLabels]);
-
+    })), [labels]);
 
   const onRemoveEdge = (edge) => setElements(els => [...removeElements([edge], els)]);
 
@@ -92,14 +78,7 @@ const MapView = ({ nodes, labels, elements, setElements, editable }) => {
     let node;
     if (nodeType === NODE_DATA_TYPE.NODE) {
       node = sidebarNodes.find((node) => node.id === nodeId)
-      node.originalId = node.id
-      setSidebarNodesSorted((els) => els.map((el) => el.id === node.id ? {
-        ...el,
-        data: {
-          ...el.data,
-          disabled: true
-        }
-      } : el));
+      node.originalId = node.id;
     }
     else if (nodeType === NODE_DATA_TYPE.EDGE_LABEL) {
       node = sidebarLabels.find((node) => node.id === nodeId)
@@ -137,15 +116,8 @@ const MapView = ({ nodes, labels, elements, setElements, editable }) => {
     if (editable) {
       console.log("deleting node...", node);
       setElements((els) => removeElements([node], els));
-      setSidebarNodesSorted((els) => els.map((el) => el.id === node.id ? {
-        ...el,
-        data: {
-          ...el.data,
-          disabled: false
-        }
-      } : el))
     }
-  }, [setElements, setSidebarNodesSorted, editable]);
+  }, [setElements, editable]);
 
   const onConnect = params => {
     // make sure the two nodes are different types
