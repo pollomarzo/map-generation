@@ -35,6 +35,7 @@ export const TEXT = [
             In this experiment, you will be asked to create concept maps about the concept of <b>{EXPERIMENT_SUBJECT}</b>, with and without the help of an explanatory system.
         </p>
         <p>
+            Once you click "close", we'll open a web page with a few useful links for creating your first concept map.
             To create a concept map, drag a node from the list on the right to the concept map on the left. To attach it to a new node, either drop the new node on top of it or drag the handle to the new node. To remove a node, click the trash icon. Remember, you can only connect nodes of different types (a concept with a relationship, and a relationship with a concept).
         </p>
         <p>
