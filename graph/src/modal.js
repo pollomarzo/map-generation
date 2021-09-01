@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import {
-    TIME, TEXT, NAV, YAI_URL
+    TIME, TEXT, NAV, URL, TITLES,
 } from './conf'
 import { useNodeContext } from './NodeContext';
 import { useNavigationContext } from './NavigationContext';
@@ -61,6 +61,12 @@ const Modal__ = ({ isOpen, onClose, closable, title, content }) => {
         </Modal>)
 }
 
+const check_and_open = (url) => {
+    if (url && url.length > 0) {
+        window.open(url, '_blank');
+    }
+}
+
 export const TimeoutModal = ({ isOpen, nextSection }) => {
     const { setShowResults } = useNodeContext();
     const { navigationState, setNavigationState } = useNavigationContext();
@@ -68,12 +74,17 @@ export const TimeoutModal = ({ isOpen, nextSection }) => {
     const onClose = () => {
         nextSection(TIME[navigationState + 1]);
         switch (navigationState) {
+            case NAV.START:
+                check_and_open(URL.YAI_START);
             case NAV.CREATE:
                 setShowResults(true);
                 break;
             case NAV.REVIEW:
-                window.open(YAI_URL);
+                check_and_open(URL.YAI_FULL);
                 setShowResults(false);
+                break;
+            case NAV.RECREATE:
+                setShowResults(true);
                 break;
         }
         console.log("moving to state: ", navigationState + 1);
@@ -84,8 +95,8 @@ export const TimeoutModal = ({ isOpen, nextSection }) => {
         isOpen={isOpen}
         onClose={onClose}
         closable={navigationState !== NAV.RESULT}
-        title={"REMEMBER TO INCLUDE ACTUAL TITLES"}
-        // is this right? might be old so showing incorrect version
+        // + 1 because we want to show the introduction to the next section
+        title={TITLES[navigationState + 1]}
         content={TEXT[navigationState + 1]}
     />
 }

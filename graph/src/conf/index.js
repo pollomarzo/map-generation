@@ -2,7 +2,7 @@ import labels from './labels.json';
 import nodes from './nodes.json';
 import correctElements from './correct';
 import decoyNodes from './decoyNodes.json';
-import { NAV, TIME, TEXT, YAI_URL } from './conf';
+import { NAV, TIME, TEXT, TITLES, URL } from './conf';
 
 export {
     labels,
@@ -12,5 +12,6 @@ export {
     TIME,
     TEXT,
     NAV,
-    YAI_URL
+    TITLES,
+    URL
 };
