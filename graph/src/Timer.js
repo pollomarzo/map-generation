@@ -1,8 +1,5 @@
 import React from 'react';
-import { useNodeContext } from './NodeContext';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer'
-
-const redirect = () => { }
 
 const padZero = n => n < 10 ? `0${n}` : n;
 

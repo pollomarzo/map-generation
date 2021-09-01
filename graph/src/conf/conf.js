@@ -6,6 +6,7 @@ const YAI_CODE_REPO = "https://github.com/Francesco-Sovrano/YAI4Hu"
 export const URL = {
     YAI_START: '',
     YAI_FULL: '',
+    SAVE_RESULTS: 'http://localhost:8081'
 }
 
 export const NAV = {
@@ -68,7 +69,7 @@ export const TEXT = [
             Thanks for sticking around! We appreciate your dedication and your time, but there really is nothing else.
         </p>
         <p>
-            If you want to see the source code for this page, you can find it <a href={MAP_CODE_REPO} target="_blank">here</a>. If instead you're curious about how YAI works, check it out <a href={YAI_CODE_REPO} target="_blank">here</a>. Thanks again for your participation, and we hope you enjoyed the experiment!
+            If you want to see the source code for this page, you can find it <a href={MAP_CODE_REPO} target="_blank" rel="noreferrer">here</a>. If instead you're curious about how YAI works, check it out <a href={YAI_CODE_REPO} target="_blank" rel="noreferrer">here</a>. Thanks again for your participation, and we hope you enjoyed the experiment!
         </p>
     </div>
 ]

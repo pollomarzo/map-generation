@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MapView from './graphs/MapView';
 import {
   nodes, labels, decoyNodes,
-  correctElements, NAV
+  correctElements, NAV, URL
 } from './conf';
 import { TimeoutModal } from './modal';
 import Modal from 'react-modal';
@@ -25,14 +25,25 @@ export default function App() {
   // we'll keep navigation state here
   const { navigationState, setNavigationState } = useNavigationContext();
 
-  const checkNodes = () => {
-    setElements((els) => {
-      // dunno if we need to do something with missing stuff
-      const { nodes, edges, missingNodes, missingEdges } = correct(els, correctElements.nodes, correctElements.edges);
-      return [...nodes, ...edges]
-    }
-    );
-  };
+  const [results, setResults] = useState({});
+
+  const checkNodes = (els) => correct(els, correctElements.nodes, correctElements.edges);
+
+  const saveResults = () => {
+    setResults(res => {
+      fetch(URL.SAVE_RESULTS, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          results: res,
+        }),
+      });
+      console.log("SAVED!")
+      return res;
+    })
+  }
 
   return (
     <NodeProvider>
@@ -50,8 +61,44 @@ export default function App() {
           timerKey={timerKey}
           duration={duration}
           onComplete={() => {
-            checkNodes();
+            let returnData = {};
+            setElements(els => {
+              returnData = checkNodes(els);
+              // update elements with verified nodes
+              return [...returnData.nodes, ...returnData.edges]
+            });
             setModalIsOpen(true);
+            setNavigationState(navigation => {
+              // this is ugly. I really don't like it but have no better idea.
+              if (navigation === NAV.REVIEW) {
+                // reset elements after saving result
+                setElements(elements => {
+                  setResults(results => ({
+                    ...results,
+                    createdGraph: {
+                      elements: elements,
+                      missing: [...returnData.missingNodes, ...returnData.missingEdges],
+                    },
+                  }));
+                  return []
+                });
+              } else if (navigation === NAV.RECREATE) {
+                // save results but leave elements (using callback to ensure updated elements)
+                setElements(elements => {
+                  setResults(results => ({
+                    ...results,
+                    recreatedGraph: {
+                      elements: elements,
+                      missing: [...returnData.missingNodes, ...returnData.missingEdges],
+                    }
+                  }));
+                  // since they're complete send them uppp
+                  saveResults();
+                  return elements
+                })
+              }
+              return navigation
+            })
           }}
         />
         <TimeoutModal
@@ -60,14 +107,6 @@ export default function App() {
             setModalIsOpen(false);
             setDuration(duration);
             setTimerKey(key => key + 1);
-            setNavigationState(navigation => {
-              // this is ugly. I really don't like it but have no better idea.
-              if (navigation === NAV.REVIEW) {
-                setElements([]);
-                // REMEMBER TO SAVE GRAPH SOMEWHERE!
-              }
-              return navigation
-            })
           }}
           setNavigationState={setNavigationState}
           navigationState={navigationState}

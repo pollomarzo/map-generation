@@ -76,6 +76,7 @@ export const TimeoutModal = ({ isOpen, nextSection }) => {
         switch (navigationState) {
             case NAV.START:
                 check_and_open(URL.YAI_START);
+                break;
             case NAV.CREATE:
                 setShowResults(true);
                 break;
